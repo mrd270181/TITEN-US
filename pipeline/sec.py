@@ -4,7 +4,7 @@ import csv, json, os, sys, tempfile, time, urllib.request
 from datetime import date, timedelta
 import duckdb
 
-UA = os.environ.get("SEC_USER_AGENT") or "TITEN-US titen-us@users.noreply.github.com"
+UA = os.environ.get("SEC_USER_AGENT") or "TITEN-US nama@email.com"   # isi secret SEC_USER_AGENT: "Nama email@anda.com"
 FOLDER = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(FOLDER, "us.duckdb")
 FORM_OK = {"10-K", "10-K/A", "10-Q", "10-Q/A", "20-F", "20-F/A", "40-F", "40-F/A"}
@@ -86,9 +86,14 @@ PETA = {
 
 
 def ambil(url):
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+    import gzip
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Encoding": "gzip, deflate",
+                                               "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=90) as r:
+        isi = r.read()
+        if r.headers.get("Content-Encoding") == "gzip" or isi[:2] == b"\x1f\x8b":
+            isi = gzip.decompress(isi)
+    return json.loads(isi)
 
 
 def gabung_fakta(utama, tambahan):

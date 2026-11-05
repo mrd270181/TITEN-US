@@ -21,8 +21,9 @@ def muat_state(con, folder):
     for t, b in zip(TABEL_STATE, berkas):
         con.execute(f"CREATE OR REPLACE TABLE {t} AS SELECT * FROM read_parquet('{b}')")
     n = con.execute("SELECT COUNT(*) FROM emiten").fetchone()[0]
-    print(f"state dimuat: {n} emiten, {con.execute('SELECT COUNT(*) FROM lk').fetchone()[0]:,} baris lk")
-    return n > 0
+    n_lk = con.execute("SELECT COUNT(*) FROM lk").fetchone()[0]
+    print(f"state dimuat: {n} emiten, {n_lk:,} baris lk")
+    return n > 0 and n_lk > 0          # lk kosong (SEC sempat menolak) -> coba mingguan lagi
 
 
 def simpan_state(con, folder):
@@ -31,7 +32,7 @@ def simpan_state(con, folder):
         con.execute(f"COPY {t} TO '{os.path.join(folder, t + '.parquet')}' (FORMAT parquet, COMPRESSION zstd)")
 
 
-def mingguan(con, folder_cek):
+def mingguan(con, folder_cek, folder_state_lama):
     con.execute("""CREATE OR REPLACE TABLE emiten (ticker VARCHAR, nama VARCHAR, sektor VARCHAR,
                    sp500 BOOLEAN, ndx BOOLEAN, dow BOOLEAN)""")
     con.executemany("INSERT INTO emiten VALUES (?,?,?,?,?,?)", daftar.daftar_emiten(folder_cek))
@@ -39,7 +40,16 @@ def mingguan(con, folder_cek):
                    mulai DATE, akhir DATE, nilai DOUBLE, satuan VARCHAR, tag VARCHAR, turunan BOOLEAN)""")
     con.execute("""CREATE OR REPLACE TABLE fakta (ticker VARCHAR, cik INTEGER, taksonomi VARCHAR, tag VARCHAR,
                    satuan VARCHAR, mulai DATE, akhir DATE, nilai DOUBLE, form VARCHAR, filed DATE)""")
-    peta = sec.peta_cik()
+    try:
+        peta = sec.peta_cik()
+    except Exception as e:
+        # SEC menolak: pakai laporan keuangan dari state lama kalau ada, jangan gagalkan seluruh pembaruan
+        print(f"PERINGATAN: SEC tidak bisa diakses ({e}). Laporan keuangan memakai data terakhir yang ada.")
+        for t in ("lk", "fakta"):
+            b = os.path.join(folder_state_lama, f"{t}.parquet")
+            if os.path.exists(b):
+                con.execute(f"INSERT INTO {t} SELECT * FROM read_parquet('{b}')")
+        return {"tanpa_sec": [], "lk_kosong": [], "sec_gagal": str(e)}
     tickers = [r[0] for r in con.execute("SELECT ticker FROM emiten ORDER BY 1").fetchall()]
     tanpa, kosong = [], []
     for i, t in enumerate(tickers, 1):
@@ -110,10 +120,10 @@ def main():
     con = duckdb.connect()
     mode, info = a.mode, {}
     if mode == "harian" and not muat_state(con, os.path.join(a.lama, "state")):
-        print("state belum ada - jalankan mode mingguan")
+        print("state belum ada / laporan keuangan kosong - jalankan mode mingguan")
         mode = "mingguan"
     if mode == "mingguan":
-        info = mingguan(con, a.keluar)
+        info = mingguan(con, a.keluar, os.path.join(a.lama, "state"))
     else:   # bawa catatan mingguan terakhir
         try:
             import json
