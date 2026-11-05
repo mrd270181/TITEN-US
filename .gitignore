@@ -1,0 +1,4 @@
+situs/
+lama/
+__pycache__/
+*.duckdb

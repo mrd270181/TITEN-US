@@ -1,0 +1,65 @@
+name: Perbarui data TITEN US
+
+on:
+  schedule:
+    - cron: "20 22 * * 1-5"   # 05.20 WIB Selasa–Sabtu: harga penutupan bursa AS semalam
+    - cron: "0 23 * * 6"      # 06.00 WIB Minggu: daftar emiten + laporan keuangan SEC
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "harian = harga saja, mingguan = + laporan keuangan & daftar emiten"
+        type: choice
+        options: [harian, mingguan]
+        default: harian
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: perbarui-data
+  cancel-in-progress: false
+
+jobs:
+  perbarui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ambil situs & state terakhir (cabang gh-pages)
+        run: |
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch --depth 1 origin gh-pages
+            git worktree add lama FETCH_HEAD
+          else
+            mkdir -p lama
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/requirements.txt
+
+      - run: pip install -r pipeline/requirements.txt
+
+      - name: Jalankan pembaruan
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: |
+          MODE="harian"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then MODE="${{ inputs.mode }}"; fi
+          if [ "${{ github.event.schedule }}" = "0 23 * * 6" ]; then MODE="mingguan"; fi
+          echo "Mode: $MODE"
+          python pipeline/jalankan.py --mode "$MODE" --lama lama --keluar situs
+
+      - name: Terbitkan ke gh-pages
+        run: |
+          cd situs
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name="titen-us-bot" -c user.email="titen-us-bot@users.noreply.github.com" \
+              commit -q -m "Data $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" gh-pages
