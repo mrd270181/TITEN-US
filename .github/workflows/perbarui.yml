@@ -3,7 +3,11 @@ name: Perbarui data TITEN US
 on:
   schedule:
     - cron: "20 22 * * 1-5"   # 05.20 WIB Selasa–Sabtu: harga penutupan bursa AS semalam
+    - cron: "20 0 * * 2-6"    # 07.20 WIB  ┐ jadwal cadangan: hanya bekerja kalau
+    - cron: "20 3 * * 2-6"    # 10.20 WIB  │ pembaruan sebelumnya gagal / data
+    - cron: "20 7 * * 2-6"    # 14.20 WIB  ┘ belum terbaru; selain itu dilewati
     - cron: "0 23 * * 6"      # 06.00 WIB Minggu: daftar emiten + laporan keuangan SEC
+    - cron: "0 3 * * 0"       # 10.00 WIB Minggu: cadangan kalau yang 06.00 gagal
   workflow_dispatch:
     inputs:
       mode:
@@ -49,13 +53,22 @@ jobs:
         env:
           SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
         run: |
-          MODE="harian"
+          MODE="harian"; ULANG=""
+          JADWAL="${{ github.event.schedule }}"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then MODE="${{ inputs.mode }}"; fi
-          if [ "${{ github.event.schedule }}" = "0 23 * * 6" ]; then MODE="mingguan"; fi
-          echo "Mode: $MODE"
-          python pipeline/jalankan.py --mode "$MODE" --lama lama --keluar situs
+          case "$JADWAL" in
+            "0 23 * * 6") MODE="mingguan" ;;
+            "20 0 * * 2-6"|"20 3 * * 2-6"|"20 7 * * 2-6") ULANG="--ulang" ;;
+            "0 3 * * 0")
+              # cadangan mingguan: ulang hanya kalau jalan mingguan 06.00 tadi belum tercatat
+              if python3 -c "import json,sys,datetime as d; m=json.load(open('lama/data/manifest.json')); t=d.datetime.fromisoformat(m['dibuat']); sys.exit(0 if m.get('mode')=='mingguan' and (d.datetime.now(d.timezone.utc)-t).total_seconds() < 8*3600 else 1)" 2>/dev/null; then
+                ULANG="--ulang"; else MODE="mingguan"; fi ;;
+          esac
+          echo "Mode: $MODE $ULANG"
+          python pipeline/jalankan.py --mode "$MODE" --lama lama --keluar situs $ULANG
 
       - name: Terbitkan ke gh-pages
+        if: hashFiles('situs/LEWATI') == ''
         run: |
           cd situs
           git init -q -b gh-pages

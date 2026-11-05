@@ -107,30 +107,52 @@ def harian(con, keluar, info):
     ekspor.tulis(con, keluar, batas, info)
 
 
+def sesi_final_terakhir():
+    """Tanggal sesi bursa New York terakhir yang sudah tutup (Senin-Jumat; hari libur bursa tidak dihitung)."""
+    from datetime import timedelta
+    ny = datetime.now(ZoneInfo("America/New_York"))
+    d = ny.date() if (ny.hour, ny.minute) >= (16, 20) else ny.date() - timedelta(days=1)
+    while d.weekday() >= 5:
+        d -= timedelta(days=1)
+    return d
+
+
 def main():
+    import json
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["harian", "mingguan"], default="harian")
     ap.add_argument("--lama", default="lama", help="folder situs sebelumnya (berisi state/)")
     ap.add_argument("--keluar", default="situs", help="folder situs baru")
+    ap.add_argument("--ulang", action="store_true",
+                    help="jadwal cadangan: lewati kalau data sudah terbaru dan laporan keuangan tidak sedang tertunda")
     a = ap.parse_args()
 
     if os.path.exists(a.keluar):
         shutil.rmtree(a.keluar)
     os.makedirs(a.keluar)
+    try:
+        m_lama = json.load(open(os.path.join(a.lama, "data", "manifest.json"), encoding="utf-8"))
+    except Exception:
+        m_lama = {}
+
+    mode = a.mode
+    if m_lama.get("sec_gagal"):
+        print(f"jalan sebelumnya SEC gagal ({m_lama['sec_gagal']}) - ulangi mode mingguan")
+        mode = "mingguan"
+    if a.ulang and mode == "harian" and m_lama.get("batas", "") >= sesi_final_terakhir().isoformat():
+        print(f"data sudah terbaru (per {m_lama['batas']}) - jadwal cadangan tidak perlu jalan")
+        open(os.path.join(a.keluar, "LEWATI"), "w").close()
+        return
+
     con = duckdb.connect()
-    mode, info = a.mode, {}
+    info = {}
     if mode == "harian" and not muat_state(con, os.path.join(a.lama, "state")):
         print("state belum ada / laporan keuangan kosong - jalankan mode mingguan")
         mode = "mingguan"
     if mode == "mingguan":
         info = mingguan(con, a.keluar, os.path.join(a.lama, "state"))
     else:   # bawa catatan mingguan terakhir
-        try:
-            import json
-            m = json.load(open(os.path.join(a.lama, "data", "manifest.json"), encoding="utf-8"))
-            info = {k: m.get(k, []) for k in ("tanpa_sec", "lk_kosong")}
-        except Exception:
-            pass
+        info = {k: m_lama.get(k, []) for k in ("tanpa_sec", "lk_kosong")}
     simpan_state(con, os.path.join(a.keluar, "state"))
     harian(con, a.keluar, {**info, "mode": mode})
 

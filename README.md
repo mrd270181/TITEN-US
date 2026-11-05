@@ -11,7 +11,9 @@ GitHub Actions (`.github/workflows/perbarui.yml`) menjalankan `pipeline/jalankan
 | Jadwal (WIB) | Mode | Isi |
 |---|---|---|
 | Selasa–Sabtu 05.20 | harian | harga & volume ~2 tahun (Yahoo Finance) → rasio & indikator → data aplikasi |
+| Selasa–Sabtu 07.20, 10.20, 14.20 | cadangan | hanya bekerja kalau pembaruan sebelumnya gagal / data belum terbaru |
 | Minggu 06.00 | mingguan | + daftar anggota indeks + laporan keuangan SEC EDGAR |
+| Minggu 10.00 | cadangan | ulang mingguan kalau yang 06.00 gagal; SEC yang gagal juga diulang di jalan berikutnya |
 
 Bisa juga dijalankan kapan saja: tab **Actions** → *Perbarui data TITEN US* → **Run workflow**.
 
