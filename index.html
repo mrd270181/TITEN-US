@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TITEN US</title>
+<meta name="theme-color" content="#4b2a8a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TITEN US">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="ikon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="ikon-192.png">
+<style>
+:root{color-scheme:light; --bg:#f6f4fb; --surface-1:#ffffff; --surface-2:#efebf8; --garis:#e2daf3; --garis-kuat:#cfc5ea; --teks:#1f1a2e; --teks-2:#5b5570; --teks-3:#8d87a3; --merek:#6a3fb5; --merek-tua:#4b2a8a; --merek-lembut:#efe9fb; --naik:#0ca30c; --turun:#d03b3b; --seri1:#2a78d6; --seri2:#f26a2e; --kisi:#ece7f6; --sorot:#fff0e8;}
+@media (prefers-color-scheme: dark){ :root:where(:not([data-tema="terang"])){color-scheme:dark; --bg:#15112a; --surface-1:#1e1838; --surface-2:#2a2247; --garis:#362b63; --garis-kuat:#4a3d80; --teks:#ffffff; --teks-2:#c9c1e3; --teks-3:#9a91b8; --merek:#7b55cc; --merek-tua:#c9b5ff; --merek-lembut:#2a2150; --naik:#0ca30c; --turun:#d03b3b; --seri1:#3987e5; --seri2:#f47a42; --kisi:#2a2247; --sorot:#3a2418;} }
+:root[data-tema="gelap"]{color-scheme:dark; --bg:#15112a; --surface-1:#1e1838; --surface-2:#2a2247; --garis:#362b63; --garis-kuat:#4a3d80; --teks:#ffffff; --teks-2:#c9c1e3; --teks-3:#9a91b8; --merek:#7b55cc; --merek-tua:#c9b5ff; --merek-lembut:#2a2150; --naik:#0ca30c; --turun:#d03b3b; --seri1:#3987e5; --seri2:#f47a42; --kisi:#2a2247; --sorot:#3a2418;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--teks);
+  font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+.angka{font-variant-numeric:tabular-nums}
+button,input,select{font:inherit;color:inherit}
+header.atas{position:sticky;top:0;z-index:20;background:var(--merek);color:#fff;
+  display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+header.atas .logo{font-weight:800;letter-spacing:.04em;white-space:nowrap}
+header.atas .logo span{color:#ffd9c7}
+header.atas .ket{color:rgba(255,255,255,.82);font-size:12px;margin-left:auto;text-align:right;line-height:1.3}
+.ikon-tombol{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+main{max-width:1180px;margin:0 auto;padding:12px 16px}
+nav.bawah{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--surface-1);border-top:1px solid var(--garis);padding-bottom:env(safe-area-inset-bottom)}
+nav.bawah button{flex:1;border:0;background:none;padding:10px 0 12px;font-weight:700;letter-spacing:.06em;color:var(--teks-3);cursor:pointer;font-size:13px}
+nav.bawah button[aria-current="true"]{color:var(--merek);box-shadow:inset 0 3px 0 var(--merek)}
+.halaman{display:none}.halaman.aktif{display:block}
+.catatan{background:var(--merek-lembut);border:1px solid var(--garis);border-radius:10px;padding:10px 12px;color:var(--teks-2);font-size:13px;margin-bottom:12px}
+.catatan b{color:var(--teks)}
+
+/* ---------- kontrol ---------- */
+.baris-kontrol{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.kotak{border:1px solid var(--garis);background:var(--surface-1);border-radius:8px;padding:7px 10px;min-width:0}
+input.kotak{width:170px}
+.chip{border:1px solid var(--garis);background:var(--surface-1);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px;white-space:nowrap;color:var(--teks-2)}
+.chip[aria-pressed="true"]{background:var(--merek);border-color:var(--merek);color:#fff}
+.status{font-size:12px;color:var(--teks-3);margin:0 0 10px}
+.status b{color:var(--teks-2)}
+.memuat{padding:40px;text-align:center;color:var(--teks-3)}
+.rel{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin-bottom:8px}
+.rel::-webkit-scrollbar{display:none}
+.jumlah{color:var(--teks-3);font-size:12px;margin-left:auto}
+.label-kecil{font-size:11px;color:var(--teks-3);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 6px}
+
+/* ---------- tabel: header & kolom pertama beku, bisa diurutkan ---------- */
+.bungkus-tabel{overflow:auto;border:1px solid var(--garis);border-radius:10px;background:var(--surface-1);max-height:calc(100vh - 290px);min-height:240px}
+table.data{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+table.data th,table.data td{padding:7px 10px;border-bottom:1px solid var(--garis);white-space:nowrap;text-align:right}
+table.data th{position:sticky;top:0;z-index:2;background:var(--surface-2);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--teks-2);cursor:pointer;user-select:none}
+table.data th .panah{color:var(--merek);margin-left:3px}
+table.data th:first-child,table.data td:first-child{position:sticky;left:0;z-index:1;background:var(--surface-1);text-align:left;border-right:1px solid var(--garis)}
+table.data th:first-child{z-index:3;background:var(--surface-2)}
+table.data td.kiri,table.data th.kiri{text-align:left}
+table.data tbody tr{cursor:pointer}
+table.data tbody tr:hover td{background:var(--surface-2)}
+.tkr{font-weight:700;color:var(--merek-tua)}
+.nama-kecil{color:var(--teks-3);font-size:11px;display:block;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.naik{color:var(--naik)}.turun{color:var(--turun)}.redup{color:var(--teks-3)}
+.lencana{display:inline-block;font-size:10px;font-weight:700;border:1px solid var(--garis-kuat);color:var(--teks-2);border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:1px}
+.sorot td{background:var(--sorot)!important}
+
+/* ---------- cari ---------- */
+.kepala-emiten{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 16px;background:var(--surface-1);border:1px solid var(--garis);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.kepala-emiten .kode{font-size:22px;font-weight:800;letter-spacing:.02em;color:var(--merek-tua)}
+.kepala-emiten .nm{color:var(--teks-2)}
+.kepala-emiten .harga{font-size:22px;font-weight:700;margin-left:auto}
+.kepala-emiten .ubah{font-weight:700}
+.tab-rel{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--garis);margin-bottom:12px}
+.tab-rel::-webkit-scrollbar{display:none}
+.tab-rel button{border:0;background:none;padding:9px 14px;font-weight:700;font-size:12px;letter-spacing:.07em;color:var(--teks-3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}
+.tab-rel button[aria-selected="true"]{color:var(--merek);border-bottom-color:var(--merek)}
+.panel{display:none}.panel.aktif{display:block}
+.kartu{background:var(--surface-1);border:1px solid var(--garis);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.info-chart{font-size:12px;color:var(--teks-2);min-height:18px;margin-bottom:6px}
+.info-chart b{color:var(--teks)}
+.kanvas-wadah{position:relative;width:100%;height:420px;touch-action:none}
+.kanvas-wadah canvas{position:absolute;inset:0;width:100%;height:100%}
+.legenda{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--teks-2);align-items:center}
+.legenda i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.legenda i.kotak-l{height:10px;width:10px;border-radius:2px}
+.grid-stat{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.stat{background:var(--surface-2);border-radius:8px;padding:8px 10px}
+.stat .k{font-size:11px;color:var(--teks-3)}
+.stat .v{font-size:16px;font-weight:700}
+.stat .s{font-size:11px;color:var(--teks-3)}
+.kosong{color:var(--teks-3);padding:18px;text-align:center}
+.svgwadah{position:relative}
+.tip{position:absolute;pointer-events:none;background:var(--surface-1);border:1px solid var(--garis-kuat);border-radius:8px;padding:6px 9px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.18);display:none;white-space:nowrap;z-index:5}
+.chip-hapus{margin-left:6px;color:var(--teks-3)}
+dl.profil{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
+@media (max-width:640px){
+  .kanvas-wadah{height:340px}
+  .kepala-emiten .harga{margin-left:0}
+  .bungkus-tabel{max-height:calc(100vh - 330px)}
+  input.kotak{width:130px}
+  header.atas .ket{display:none}
+  .ikon-tombol{margin-left:auto}
+}
+</style>
+</head>
+<body>
+<header class="atas">
+  <div class="logo">TITEN <span>US</span></div>
+  <button class="ikon-tombol" id="tombolTema" title="Ganti tema terang/gelap">◐ Tema</button>
+  <div class="ket" id="ketData"></div>
+</header>
+
+<main>
+  <p class="status" id="statusData">Memuat data…</p>
+
+  <!-- ================= SCREENER ================= -->
+  <section class="halaman aktif" id="hal-screener">
+    <div class="baris-kontrol">
+      <input class="kotak" id="cariScreener" placeholder="Cari ticker / nama">
+      <select class="kotak" id="pilihSektor"><option value="">Semua sektor</option></select>
+      <span class="jumlah" id="jumlahScreener"></span>
+    </div>
+    <div class="rel" id="chipIndeks"></div>
+    <div class="label-kecil">Saringan cepat</div>
+    <div class="rel" id="chipPreset"></div>
+    <div class="bungkus-tabel"><table class="data" id="tabelScreener"></table></div>
+  </section>
+
+  <!-- ================= CARI ================= -->
+  <section class="halaman" id="hal-cari">
+    <div class="baris-kontrol">
+      <input class="kotak" id="inputCari" list="daftarTicker" placeholder="Ketik ticker, mis. NVDA">
+      <datalist id="daftarTicker"></datalist>
+      <button class="chip" id="tombolBuka">Buka</button>
+    </div>
+    <div class="kepala-emiten" id="kepalaEmiten"></div>
+    <div class="tab-rel" role="tablist" id="tabCari"></div>
+
+    <div class="panel" id="panel-CHART">
+      <div class="kartu">
+        <div class="baris-kontrol">
+          <label class="redup">Dari <input type="date" class="kotak" id="tglDari"></label>
+          <label class="redup">Sampai <input type="date" class="kotak" id="tglSampai"></label>
+          <button class="chip" id="tombolTerbaru">Terbaru</button>
+          <span class="legenda" style="margin-left:auto">
+            <span><i style="background:var(--seri1)"></i>MA20</span>
+            <span><i style="background:var(--seri2)"></i>MA50</span>
+            <span><i class="kotak-l" style="border:1.5px solid var(--naik)"></i>Naik</span>
+            <span><i class="kotak-l" style="background:var(--turun)"></i>Turun</span>
+          </span>
+        </div>
+        <div class="info-chart angka" id="infoChart"></div>
+        <div class="kanvas-wadah" id="wadahChart"><canvas id="kanvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-KEYSTATS"></div>
+    <div class="panel" id="panel-FINANSIAL"></div>
+    <div class="panel" id="panel-BANDING"></div>
+    <div class="panel" id="panel-AKSI"></div>
+    <div class="panel" id="panel-PROFIL"></div>
+  </section>
+</main>
+
+<nav class="bawah">
+  <button data-hal="screener" aria-current="true">SCREENER</button>
+  <button data-hal="cari" aria-current="false">CARI</button>
+</nav>
+
+<script>
+(async function(){
+"use strict";
+/* ---------------- muat data (seperti TITEN: data/manifest.json -> berkas lain) ---------------- */
+async function ambilJSON(jalur){
+  const r = await fetch(jalur, {cache: "no-cache"});
+  if (!r.ok) throw new Error(jalur + " " + r.status);
+  return r.json();
+}
+let MAN, RJ;
+try {
+  MAN = await ambilJSON("data/manifest.json");
+  RJ = await ambilJSON("data/ringkasan.json?v=" + MAN.versi);
+} catch (e) {
+  document.getElementById("statusData").innerHTML = "<b>Data belum bisa dimuat.</b> Periksa koneksi, lalu buka ulang. (" + e.message + ")";
+  return;
+}
+const R = RJ.baris.map(b => Object.fromEntries(RJ.kolom.map((k, i) => [k, b[i]])));
+const PER_TICKER = Object.fromEntries(R.map(r => [r.ticker, r]));
+const EMITEN = {};
+async function muatEmiten(t){
+  if (!EMITEN[t]) EMITEN[t] = await ambilJSON(`data/emiten/${encodeURIComponent(t)}.json?v=${MAN.versi}`);
+  return EMITEN[t];
+}
+
+/* ---------------- format angka (gaya Indonesia) ---------------- */
+const nf = {};
+function angka(x, d = 2){
+  if (x === null || x === undefined || !isFinite(x)) return "–";
+  const k = "f" + d;
+  nf[k] = nf[k] || new Intl.NumberFormat("id-ID", {minimumFractionDigits: d, maximumFractionDigits: d});
+  return nf[k].format(x);
+}
+function ringkas(x, d = 2){           // 4.820.000.000.000 -> 4,82 T
+  if (x === null || x === undefined || !isFinite(x)) return "–";
+  const a = Math.abs(x);
+  if (a >= 1e12) return angka(x / 1e12, d) + " T";
+  if (a >= 1e9)  return angka(x / 1e9, a >= 1e11 ? 0 : 1) + " M";
+  if (a >= 1e6)  return angka(x / 1e6, a >= 1e8 ? 0 : 1) + " Jt";
+  if (a >= 1e3)  return angka(x / 1e3, 0) + " Rb";
+  return angka(x, 0);
+}
+const usd = (x, d) => (x === null || x === undefined || !isFinite(x)) ? "–" : "$" + ringkas(x, d);
+function persen(x, d = 2, tanda = true){
+  if (x === null || x === undefined || !isFinite(x)) return "–";
+  return (tanda && x > 0 ? "+" : x < 0 ? "−" : "") + angka(Math.abs(x), d) + "%";
+}
+const kelasArah = x => (x === null || x === undefined) ? "redup" : x > 0 ? "naik" : x < 0 ? "turun" : "redup";
+const tglId = s => { const [y, m, d] = s.split("-"); return `${+d} ${["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"][+m - 1]} ${y}`; };
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const dibuat = new Date(MAN.dibuat);
+document.getElementById("ketData").innerHTML = `Data per ${tglId(MAN.batas)}<br>${R.length} emiten`;
+document.getElementById("statusData").innerHTML = `Harga penutupan <b>${tglId(MAN.batas)}</b> · diperbarui otomatis ${dibuat.toLocaleString("id-ID", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"})} WIB` +
+  (navigator.onLine === false ? " · <b>offline</b>" : "");
+
+/* ---------------- tema ---------------- */
+const akar = document.documentElement;
+try { const t = localStorage.getItem("titenus-tema"); if (t) akar.dataset.tema = t; } catch (e) {}
+document.getElementById("tombolTema").onclick = () => {
+  const sekarang = akar.dataset.tema || (matchMedia("(prefers-color-scheme: dark)").matches ? "gelap" : "terang");
+  akar.dataset.tema = sekarang === "gelap" ? "terang" : "gelap";
+  try { localStorage.setItem("titenus-tema", akar.dataset.tema); } catch (e) {}
+  gambarChart(); if (panelAktif === "FINANSIAL") isiFinansial();
+};
+const warna = n => getComputedStyle(akar).getPropertyValue(n).trim();
+
+/* ---------------- navigasi ---------------- */
+document.querySelectorAll("nav.bawah button").forEach(b => b.onclick = () => bukaHalaman(b.dataset.hal));
+function bukaHalaman(h){
+  document.querySelectorAll(".halaman").forEach(s => s.classList.toggle("aktif", s.id === "hal-" + h));
+  document.querySelectorAll("nav.bawah button").forEach(b => b.setAttribute("aria-current", b.dataset.hal === h));
+  if (h === "cari" && EMITEN[tickerAktif]) requestAnimationFrame(() => bukaPanel(panelAktif));
+}
+
+/* ---------------- tabel umum: header beku + urut ---------------- */
+function buatTabel(el, kolom, baris, opsi = {}){
+  let urut = opsi.urut || null, arah = opsi.arah || -1;
+  function render(){
+    let data = baris.slice();
+    if (urut){
+      const k = kolom.find(c => c.k === urut) || {};      // boleh urut menurut kolom yang tidak ditampilkan
+      const ambil = k.urut || (r => r[urut]);
+      data.sort((a, b) => {
+        const x = ambil(a), y = ambil(b);
+        if (x === null || x === undefined) return 1;
+        if (y === null || y === undefined) return -1;
+        return (typeof x === "string" ? x.localeCompare(y) : x - y) * arah;
+      });
+    }
+    const kepala = kolom.map(c => `<th class="${c.kiri ? "kiri" : ""}" data-k="${c.k}" title="${esc(c.judul || c.label)}">${c.label}${urut === c.k ? `<span class="panah">${arah > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
+    const isi = data.map(r => `<tr data-id="${esc(r._id ?? r.ticker)}" class="${opsi.sorot && opsi.sorot(r) ? "sorot" : ""}">` +
+      kolom.map(c => `<td class="${c.kiri ? "kiri" : ""} angka">${c.f(r)}</td>`).join("") + "</tr>").join("");
+    el.innerHTML = `<thead><tr>${kepala}</tr></thead><tbody>${isi || `<tr><td colspan="${kolom.length}" class="kosong kiri">Tidak ada yang cocok.</td></tr>`}</tbody>`;
+  }
+  el.onclick = e => {
+    const th = e.target.closest("th");
+    if (th){
+      const k = th.dataset.k;
+      if (urut === k) arah = -arah; else { urut = k; arah = kolom.find(c => c.k === k).kiri ? 1 : -1; }
+      render(); return;
+    }
+    const tr = e.target.closest("tbody tr[data-id]");
+    if (tr && opsi.klik) opsi.klik(tr.dataset.id);
+  };
+  render();
+  return { ganti(b){ baris = b; render(); } };
+}
+
+/* ================= SCREENER ================= */
+const kolomScreener = [
+  {k:"ticker", label:"Ticker", kiri:true, f:r => `<span class="tkr">${r.ticker}</span>${r.dow ? '<span class="lencana">DOW</span>' : ""}<span class="nama-kecil">${esc(r.nama)}</span>`},
+  {k:"close", label:"Close", f:r => angka(r.close)},
+  {k:"chg_1h", label:"%1H", judul:"Perubahan 1 hari", f:r => `<span class="${kelasArah(r.chg_1h)}">${persen(r.chg_1h)}</span>`},
+  {k:"gap_open", label:"Gap", judul:"Gap open vs close kemarin", f:r => `<span class="${kelasArah(r.gap_open)}">${persen(r.gap_open)}</span>`},
+  {k:"volume", label:"Volume", f:r => ringkas(r.volume)},
+  {k:"vol_x_ma5", label:"Vol/MA5", judul:"Volume hari ini dibanding rata-rata 5 hari sebelumnya", f:r => r.vol_x_ma5 == null ? "–" : `<b>${angka(r.vol_x_ma5)}×</b>`},
+  {k:"nilai_transaksi", label:"Nilai", judul:"Nilai transaksi (USD)", f:r => usd(r.nilai_transaksi)},
+  {k:"chg_1bl", label:"%1Bln", f:r => `<span class="${kelasArah(r.chg_1bl)}">${persen(r.chg_1bl, 1)}</span>`},
+  {k:"chg_ytd", label:"%YTD", f:r => `<span class="${kelasArah(r.chg_ytd)}">${persen(r.chg_ytd, 1)}</span>`},
+  {k:"dari_tinggi_52m", label:"Dari High52", judul:"Jarak dari harga tertinggi 52 minggu", f:r => persen(r.dari_tinggi_52m, 1)},
+  {k:"kap_pasar", label:"Kap. Pasar", f:r => usd(r.kap_pasar)},
+  {k:"per", label:"PER", judul:"Kap. pasar ÷ laba bersih 4 kuartal terakhir", f:r => r.per == null ? '<span class="redup">rugi/–</span>' : angka(r.per, 1)},
+  {k:"pbv", label:"PBV", f:r => angka(r.pbv, 1)},
+  {k:"roe", label:"ROE", f:r => persen(r.roe, 1, false)},
+  {k:"tumbuh_laba", label:"Laba YoY", judul:"Laba bersih 4 kuartal terakhir vs 4 kuartal sebelumnya", f:r => `<span class="${kelasArah(r.tumbuh_laba)}">${persen(r.tumbuh_laba, 0)}</span>`},
+];
+const PRESET = [
+  {id:"semua", label:"Semua", f:() => true, urut:"kap_pasar"},
+  {id:"vol", label:"Volume ≥ 2× MA5", f:r => r.vol_x_ma5 >= 2, urut:"vol_x_ma5"},
+  {id:"high", label:"Dekat High 52 mgg (≤3%)", f:r => r.dari_tinggi_52m >= -3, urut:"dari_tinggi_52m"},
+  {id:"gapup", label:"Gap up ≥ 2%", f:r => r.gap_open >= 2, urut:"gap_open"},
+  {id:"gapdown", label:"Gap down lalu naik", judul:"Gap open ≤ −1% tapi tutup di atas open", f:r => r.gap_open <= -1 && r.close > r.open, urut:"gap_open"},
+  {id:"tren", label:"Tren naik (C>MA50>MA200)", f:r => r.ma200 && r.close > r.ma50 && r.ma50 > r.ma200, urut:"chg_3bl"},
+  {id:"tumbuh", label:"Laba ≥ +20% & PER < 25", f:r => r.tumbuh_laba >= 20 && r.per > 0 && r.per < 25, urut:"tumbuh_laba"},
+  {id:"kualitas", label:"ROE ≥ 20% & Liab/Ekuitas < 1", f:r => r.roe >= 20 && r.liab_ekuitas != null && r.liab_ekuitas < 1, urut:"roe"},
+];
+const INDEKS = [["semua","Semua indeks"],["sp500","S&P 500"],["ndx","Nasdaq-100"],["dow","Dow 30"]];
+let indeks = "semua", preset = "semua";
+const sektor = [...new Set(R.map(r => r.sektor).filter(Boolean))].sort();
+const elSektor = document.getElementById("pilihSektor");
+sektor.forEach(s => elSektor.insertAdjacentHTML("beforeend", `<option>${esc(s)}</option>`));
+function buatChip(el, daftar, aktif, klik){
+  el.innerHTML = daftar.map(([id, lb, jd]) => `<button class="chip" data-id="${id}" aria-pressed="${id === aktif}" ${jd ? `title="${esc(jd)}"` : ""}>${lb}</button>`).join("");
+  el.onclick = e => { const b = e.target.closest("button"); if (!b) return;
+    el.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); klik(b.dataset.id); };
+}
+const tabelS = buatTabel(document.getElementById("tabelScreener"), kolomScreener, R, {urut:"kap_pasar", klik: t => bukaEmiten(t)});
+function saring(ubahUrut){
+  const q = document.getElementById("cariScreener").value.trim().toUpperCase();
+  const sk = elSektor.value, p = PRESET.find(x => x.id === preset);
+  const hasil = R.filter(r => (indeks === "semua" || r[indeks]) && (!sk || r.sektor === sk) && p.f(r) &&
+    (!q || r.ticker.includes(q) || (r.nama || "").toUpperCase().includes(q)));
+  document.getElementById("jumlahScreener").textContent = `${hasil.length} emiten`;
+  if (ubahUrut){ // preset menentukan urutan awal
+    document.getElementById("tabelScreener").innerHTML = "";
+    Object.assign(tabelS, buatTabel(document.getElementById("tabelScreener"), kolomScreener, hasil, {urut:p.urut, arah: p.id === "gapdown" ? 1 : -1, klik: t => bukaEmiten(t)}));
+  } else tabelS.ganti(hasil);
+}
+buatChip(document.getElementById("chipIndeks"), INDEKS, indeks, id => { indeks = id; saring(); });
+buatChip(document.getElementById("chipPreset"), PRESET.map(p => [p.id, p.label, p.judul]), preset, id => { preset = id; saring(true); });
+document.getElementById("cariScreener").oninput = () => saring();
+elSektor.onchange = () => saring();
+saring();
+
+/* ================= CARI ================= */
+const TAB = ["CHART","KEYSTATS","FINANSIAL","BANDING","AKSI","PROFIL"];
+let tickerAktif = "NVDA", panelAktif = "CHART";
+document.getElementById("daftarTicker").innerHTML = R.map(r => `<option value="${r.ticker}">${esc(r.nama)}</option>`).join("");
+const elTab = document.getElementById("tabCari");
+elTab.innerHTML = TAB.map(t => `<button role="tab" data-t="${t}" aria-selected="${t === panelAktif}">${t}</button>`).join("");
+elTab.onclick = e => { const b = e.target.closest("button"); if (b) bukaPanel(b.dataset.t); };
+function bukaPanel(t){
+  panelAktif = t;
+  elTab.querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.t === t));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("aktif", p.id === "panel-" + t));
+  ({CHART: gambarChart, KEYSTATS: isiKeystats, FINANSIAL: isiFinansial, BANDING: isiBanding, AKSI: isiAksi, PROFIL: isiProfil})[t]();
+}
+const elInput = document.getElementById("inputCari");
+const buka = () => { const t = elInput.value.trim().toUpperCase(); if (PER_TICKER[t]) bukaEmiten(t); };
+document.getElementById("tombolBuka").onclick = buka;
+elInput.onkeydown = e => { if (e.key === "Enter") buka(); };
+elInput.onchange = buka;
+
+async function bukaEmiten(t, diam){
+  tickerAktif = t; elInput.value = t;
+  if (!diam) bukaHalaman("cari");
+  if (!EMITEN[t]){
+    document.getElementById("kepalaEmiten").innerHTML = `<div class="memuat">Memuat ${t}…</div>`;
+    try { await muatEmiten(t); } catch (e) { document.getElementById("kepalaEmiten").innerHTML = `<div class="memuat">Gagal memuat ${t} (${esc(e.message)}).</div>`; return; }
+    if (tickerAktif !== t) return;
+  }
+  const r = PER_TICKER[t];
+  const idx = [r.sp500 && "S&P 500", r.ndx && "Nasdaq-100", r.dow && "Dow 30"].filter(Boolean).map(x => `<span class="lencana">${x}</span>`).join("");
+  document.getElementById("kepalaEmiten").innerHTML = `
+    <div><div class="kode">${t}</div><div class="nm">${esc(r.nama)} ${idx}</div><div class="redup" style="font-size:12px">${esc(r.sektor || "Sektor belum diketahui")}</div></div>
+    <div class="harga angka">$${angka(r.close)} <span class="ubah ${kelasArah(r.chg_1h)}" style="font-size:15px">${persen(r.chg_1h)}</span>
+      <div class="redup" style="font-size:12px;font-weight:400">Kap. pasar ${usd(r.kap_pasar)} · Vol ${ringkas(r.volume)} (${angka(r.vol_x_ma5)}× MA5)</div></div>`;
+  aturRentang(true);
+  if (!diam) bukaPanel(panelAktif);
+}
+
+/* ---------------- CHART (candle + volume + MA, kursor) ---------------- */
+const elDari = document.getElementById("tglDari"), elSampai = document.getElementById("tglSampai");
+let rentangManual = false;
+function seriHarga(t){
+  const e = EMITEN[t], a = e && e.harga; if (!a || !a.t.length) return null;
+  if (!e._seri){
+    const c = a.c;
+    const ma = n => { const k = []; let s = 0; for (let i = 0; i < c.length; i++){ s += c[i]; if (i >= n) s -= c[i - n]; k.push(i >= n - 1 ? s / n : null); } return k; };
+    e._seri = {t: a.t, o: a.o, h: a.h, l: a.l, c, v: a.v, m20: ma(20), m50: ma(50)};
+  }
+  return e._seri;
+}
+function aturRentang(reset){
+  const s = seriHarga(tickerAktif); if (!s) return;
+  elDari.min = elSampai.min = s.t[0]; elDari.max = elSampai.max = s.t[s.t.length - 1];
+  if (reset || !rentangManual){
+    rentangManual = false;
+    elDari.value = s.t[Math.max(0, s.t.length - 120)]; elSampai.value = s.t[s.t.length - 1];
+  }
+}
+elDari.onchange = elSampai.onchange = () => { rentangManual = true; gambarChart(); };
+document.getElementById("tombolTerbaru").onclick = () => { aturRentang(true); gambarChart(); };
+const kanvas = document.getElementById("kanvas"), wadah = document.getElementById("wadahChart");
+let kursor = null, tataChart = null;
+function gambarChart(){
+  if (panelAktif !== "CHART" || !document.getElementById("hal-cari").classList.contains("aktif")) return;
+  const S = seriHarga(tickerAktif);
+  const info = document.getElementById("infoChart");
+  const ctx = kanvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1, W = wadah.clientWidth, H = wadah.clientHeight;
+  kanvas.width = W * dpr; kanvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  if (!S){ info.textContent = "Belum ada data harga."; tataChart = null; return; }
+  let i0 = S.t.findIndex(x => x >= elDari.value), i1 = S.t.length - 1;
+  for (let i = S.t.length - 1; i >= 0; i--) if (S.t[i] <= elSampai.value){ i1 = i; break; }
+  if (i0 < 0) i0 = 0; if (i1 < i0) [i0, i1] = [i1, i0];
+  const n = i1 - i0 + 1;
+  const kanan = 62, bawah = 22, atas = 6, kiri = 4;
+  const lebar = W - kanan - kiri, tinggiHarga = (H - bawah - atas) * 0.74, atasVol = atas + tinggiHarga + 8, tinggiVol = H - bawah - atasVol;
+  let lo = Infinity, hi = -Infinity, vmax = 0;
+  for (let i = i0; i <= i1; i++){
+    lo = Math.min(lo, S.l[i] ?? S.c[i]); hi = Math.max(hi, S.h[i] ?? S.c[i]); vmax = Math.max(vmax, S.v[i]);
+    for (const m of [S.m20[i], S.m50[i]]) if (m){ lo = Math.min(lo, m); hi = Math.max(hi, m); }
+  }
+  const pad = (hi - lo) * 0.06 || 1; lo -= pad; hi += pad;
+  const langkah = lebar / n, badan = Math.max(1, Math.min(12, langkah * 0.62));
+  const X = i => kiri + (i - i0 + 0.5) * langkah;
+  const Y = p => atas + (hi - p) / (hi - lo) * tinggiHarga;
+  const YV = v => atasVol + tinggiVol - (v / vmax) * tinggiVol;
+  const cKisi = warna("--kisi"), cTeks = warna("--teks-3"), cNaik = warna("--naik"), cTurun = warna("--turun"), cBg = warna("--surface-1");
+  // kisi + label harga
+  ctx.font = "11px system-ui, sans-serif"; ctx.textBaseline = "middle";
+  const tick = (() => { const kasar = (hi - lo) / 5, p = Math.pow(10, Math.floor(Math.log10(kasar))); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= kasar); })();
+  for (let p = Math.ceil(lo / tick) * tick; p <= hi; p += tick){
+    const y = Y(p); ctx.strokeStyle = cKisi; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(kiri, Math.round(y) + .5); ctx.lineTo(kiri + lebar, Math.round(y) + .5); ctx.stroke();
+    ctx.fillStyle = cTeks; ctx.textAlign = "left"; ctx.fillText(angka(p, p < 10 ? 2 : p < 1000 ? 1 : 0), kiri + lebar + 6, y);
+  }
+  // label tanggal (awal tiap bulan)
+  ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+  let bulanLalu = "", xLalu = -1e9;
+  for (let i = i0; i <= i1; i++){
+    const b = S.t[i].slice(0, 7);
+    if (b !== bulanLalu){ bulanLalu = b; const x = X(i);
+      if (x - xLalu > 54 && x > 28){ ctx.fillStyle = cTeks; ctx.fillText(tglId(S.t[i]).split(" ").slice(1).join(" "), x, H - 6); xLalu = x;
+        ctx.strokeStyle = cKisi; ctx.beginPath(); ctx.moveTo(Math.round(x) + .5, atas); ctx.lineTo(Math.round(x) + .5, atas + tinggiHarga); ctx.stroke(); } }
+  }
+  // volume
+  for (let i = i0; i <= i1; i++){
+    const naik = S.c[i] >= S.o[i]; ctx.fillStyle = naik ? cNaik : cTurun; ctx.globalAlpha = .45;
+    const y = YV(S.v[i]); ctx.fillRect(X(i) - badan / 2, y, badan, atasVol + tinggiVol - y);
+  }
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = cTeks; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillText("Vol " + ringkas(vmax), kiri + lebar + 6, atasVol + 6);
+  // candle: naik = badan kosong, turun = badan penuh
+  for (let i = i0; i <= i1; i++){
+    const o = S.o[i] ?? S.c[i], c = S.c[i], h = S.h[i] ?? c, l = S.l[i] ?? c, naik = c >= o, x = Math.round(X(i)) + .5;
+    ctx.strokeStyle = naik ? cNaik : cTurun; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, Y(h)); ctx.lineTo(x, Y(Math.max(o, c))); ctx.moveTo(x, Y(Math.min(o, c))); ctx.lineTo(x, Y(l)); ctx.stroke();
+    const yb = Y(Math.max(o, c)), tb = Math.max(1, Math.abs(Y(o) - Y(c)));
+    if (naik){ ctx.fillStyle = cBg; ctx.fillRect(x - badan / 2, yb, badan, tb); ctx.lineWidth = 1.5; ctx.strokeRect(x - badan / 2, yb, badan, tb); }
+    else { ctx.fillStyle = cTurun; ctx.fillRect(x - badan / 2, yb, badan, tb); }
+  }
+  // MA
+  [["m20", warna("--seri1")], ["m50", warna("--seri2")]].forEach(([k, w]) => {
+    ctx.strokeStyle = w; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.beginPath(); let mulai = false;
+    for (let i = i0; i <= i1; i++){ const m = S[k][i]; if (m == null){ mulai = false; continue; }
+      if (!mulai){ ctx.moveTo(X(i), Y(m)); mulai = true; } else ctx.lineTo(X(i), Y(m)); }
+    ctx.stroke();
+  });
+  tataChart = {S, i0, i1, X, Y, langkah, kiri, kanan, lebar, atas, tinggiHarga, H, W, lo, hi, bawah};
+  // kursor
+  const k = (kursor !== null && kursor >= i0 && kursor <= i1) ? kursor : i1;
+  const ubah = S.c[k] / (S.c[k - 1] ?? S.c[k]) * 100 - 100;
+  info.innerHTML = `<b>${tglId(S.t[k])}</b> &nbsp;O ${angka(S.o[k])} · H ${angka(S.h[k])} · L ${angka(S.l[k])} · C <b>${angka(S.c[k])}</b> <span class="${kelasArah(ubah)}">${persen(ubah)}</span> · Vol ${ringkas(S.v[k])} · <span style="color:var(--seri1)">MA20 ${angka(S.m20[k])}</span> · <span style="color:var(--seri2)">MA50 ${angka(S.m50[k])}</span>`;
+  if (kursor !== null && kursor >= i0 && kursor <= i1){
+    const x = Math.round(X(k)) + .5, y = kursorY;
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = cTeks; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, atas); ctx.lineTo(x, H - bawah); ctx.stroke();
+    if (y !== null && y >= atas && y <= atas + tinggiHarga){ ctx.beginPath(); ctx.moveTo(kiri, y); ctx.lineTo(kiri + lebar, y); ctx.stroke(); }
+    ctx.setLineDash([]);
+    const label = (txt, lx, ly, w) => { ctx.fillStyle = warna("--teks"); ctx.fillRect(lx, ly - 9, w, 18); ctx.fillStyle = cBg; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(txt, lx + w / 2, ly); };
+    if (y !== null && y >= atas && y <= atas + tinggiHarga){ const p = hi - (y - atas) / tinggiHarga * (hi - lo); label(angka(p), kiri + lebar + 2, y, kanan - 4); }
+    const tl = tglId(S.t[k]), w = ctx.measureText(tl).width + 12; label(tl, Math.min(Math.max(x - w / 2, 0), W - w), H - 10, w);
+  }
+}
+let kursorY = null;
+function gerak(e){
+  if (!tataChart) return;
+  const b = kanvas.getBoundingClientRect(), x = e.clientX - b.left; kursorY = e.clientY - b.top;
+  const i = Math.round((x - tataChart.kiri) / tataChart.langkah - 0.5) + tataChart.i0;
+  kursor = Math.max(tataChart.i0, Math.min(tataChart.i1, i)); gambarChart();
+}
+kanvas.addEventListener("pointermove", gerak);
+kanvas.addEventListener("pointerdown", gerak);
+kanvas.addEventListener("pointerleave", () => { kursor = null; kursorY = null; gambarChart(); });
+window.addEventListener("resize", () => { gambarChart(); if (panelAktif === "FINANSIAL") isiFinansial(); });
+
+/* ---------------- KEYSTATS ---------------- */
+function stat(k, v, s = ""){ return `<div class="stat"><div class="k">${k}</div><div class="v angka">${v}</div>${s ? `<div class="s">${s}</div>` : ""}</div>`; }
+function isiKeystats(){
+  const r = PER_TICKER[tickerAktif];
+  const lk = r.lk_terakhir ? `LK terakhir s.d. ${tglId(r.lk_terakhir)}` : "Belum ada laporan keuangan";
+  document.getElementById("panel-KEYSTATS").innerHTML = `
+  <div class="kartu"><div class="label-kecil" style="margin-top:0">Valuasi · ${lk}</div><div class="grid-stat">
+    ${stat("Kapitalisasi pasar", usd(r.kap_pasar), `${ringkas(r.saham)} lembar · sumber: ${r.sumber_saham || "–"}`)}
+    ${stat("PER (TTM)", r.per == null ? "–" : angka(r.per, 1), r.per == null && r.laba_bersih_ttm < 0 ? "rugi 4 kuartal terakhir" : "kap ÷ laba bersih 4 kuartal")}
+    ${stat("PBV", angka(r.pbv, 2), "kap ÷ ekuitas")}
+    ${stat("Price / Sales", angka(r.psr, 2), "kap ÷ pendapatan 4 kuartal")}
+    ${stat("FCF yield", persen(r.fcf_yield, 1, false), "(arus kas operasi − capex) ÷ kap")}
+  </div></div>
+  <div class="kartu"><div class="label-kecil" style="margin-top:0">Profitabilitas & pertumbuhan (4 kuartal terakhir)</div><div class="grid-stat">
+    ${stat("Pendapatan TTM", usd(r.pendapatan_ttm))}
+    ${stat("Laba bersih TTM", usd(r.laba_bersih_ttm))}
+    ${stat("Gross margin", persen(r.gpm, 1, false))}
+    ${stat("Operating margin", persen(r.opm, 1, false))}
+    ${stat("Net margin", persen(r.npm, 1, false))}
+    ${stat("ROE", persen(r.roe, 1, false))}
+    ${stat("Pendapatan YoY", `<span class="${kelasArah(r.tumbuh_pendapatan)}">${persen(r.tumbuh_pendapatan, 1)}</span>`)}
+    ${stat("Laba bersih YoY", `<span class="${kelasArah(r.tumbuh_laba)}">${persen(r.tumbuh_laba, 1)}</span>`)}
+    ${stat("Liabilitas / Ekuitas", r.liab_ekuitas == null ? "–" : angka(r.liab_ekuitas, 2) + "×")}
+  </div></div>
+  <div class="kartu"><div class="label-kecil" style="margin-top:0">Harga & volume</div><div class="grid-stat">
+    ${stat("High / Low 52 mgg", `${angka(r.tinggi_52m)} / ${angka(r.rendah_52m)}`, `${persen(r.dari_tinggi_52m, 1)} dari high`)}
+    ${stat("MA20 · MA50", `${angka(r.ma20)} · ${angka(r.ma50)}`)}
+    ${stat("MA200", angka(r.ma200), r.ma200 ? (r.close > r.ma200 ? "harga di atas MA200" : "harga di bawah MA200") : "riwayat < 200 hari")}
+    ${stat("Vol / MA5 · Vol / MA20", `${angka(r.vol_x_ma5)}× · ${angka(r.vol_x_ma20)}×`)}
+    ${stat("%1Mgg · %1Bln · %3Bln", `<span class="${kelasArah(r.chg_1mg)}">${persen(r.chg_1mg, 1)}</span> · <span class="${kelasArah(r.chg_1bl)}">${persen(r.chg_1bl, 1)}</span> · <span class="${kelasArah(r.chg_3bl)}">${persen(r.chg_3bl, 1)}</span>`)}
+    ${stat("%YTD · %1Thn", `<span class="${kelasArah(r.chg_ytd)}">${persen(r.chg_ytd, 1)}</span> · <span class="${kelasArah(r.chg_1th)}">${persen(r.chg_1th, 1)}</span>`)}
+  </div></div>`;
+}
+
+/* ---------------- FINANSIAL ---------------- */
+const POS = [["pendapatan","Pendapatan"],["laba_kotor","Laba kotor"],["laba_usaha","Laba usaha"],["laba_sebelum_pajak","Laba sebelum pajak"],
+  ["laba_bersih","Laba bersih"],["eps_dilusi","EPS dilusi ($)"],["arus_kas_operasi","Arus kas operasi"],["belanja_modal","Belanja modal"],
+  ["_fcf","Free cash flow"],["total_aset","Total aset"],["total_liabilitas","Total liabilitas"],["ekuitas","Ekuitas"],["kas","Kas"],["utang_jangka_panjang","Utang jangka panjang"]];
+let modeFin = "Q";
+function isiFinansial(){
+  const el = document.getElementById("panel-FINANSIAL"), L = (EMITEN[tickerAktif] || {}).lk;
+  if (!L){ el.innerHTML = `<div class="kartu kosong">${tickerAktif} belum punya laporan keuangan di SEC (emiten baru melantai / belum terdaftar).</div>`; return; }
+  const d = L[modeFin], n = d.label.length;
+  const nilai = (pos, i) => pos === "_fcf" ? (d.pos.arus_kas_operasi[i] == null ? null : d.pos.arus_kas_operasi[i] - (d.pos.belanja_modal[i] || 0)) : d.pos[pos][i];
+  el.innerHTML = `<div class="kartu">
+      <div class="baris-kontrol"><div class="rel" id="chipFin" style="margin:0"></div>
+        <span class="legenda" style="margin-left:auto"><span><i class="kotak-l" style="background:var(--seri1)"></i>Pendapatan</span><span><i class="kotak-l" style="background:var(--seri2)"></i>Laba bersih</span></span></div>
+      <div class="svgwadah" id="wadahBar"></div></div>
+    <div class="bungkus-tabel" style="max-height:none"><table class="data" id="tabelFin"></table></div>
+    <p class="redup" style="font-size:12px">Juta USD kecuali EPS. Angka bergaris bawah titik = dihitung (mis. Q4 = tahunan − 9 bulan; laba kotor = pendapatan − beban pokok). Klik judul kolom untuk mengurutkan.</p>`;
+  buatChip(document.getElementById("chipFin"), [["Q","Kuartal"],["FY","Tahunan"]], modeFin, m => { modeFin = m; isiFinansial(); });
+  // grafik batang pendapatan vs laba bersih
+  const wb = document.getElementById("wadahBar"), W = wb.clientWidth || 600, H = 210, ki = 54, ka = 8, at = 10, bw = 26;
+  const pend = d.pos.pendapatan, lb = d.pos.laba_bersih;
+  const vals = [...pend, ...lb].filter(v => v != null), mx = Math.max(0, ...vals), mn = Math.min(0, ...vals);
+  const Y = v => at + (mx - v) / ((mx - mn) || 1) * (H - at - bw), lebar = (W - ki - ka) / n, bb = Math.max(3, Math.min(22, lebar * .32));
+  let svg = `<svg width="${W}" height="${H}" role="img" aria-label="Pendapatan dan laba bersih per periode">`;
+  const tick = (() => { const kasar = (mx - mn) / 4, p = Math.pow(10, Math.floor(Math.log10(kasar || 1))); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= kasar) || 1; })();
+  for (let v = Math.ceil(mn / tick) * tick; v <= mx; v += tick)
+    svg += `<line x1="${ki}" x2="${W - ka}" y1="${Y(v)}" y2="${Y(v)}" stroke="${warna(v === 0 ? "--garis-kuat" : "--kisi")}"/><text x="${ki - 6}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="${warna("--teks-3")}">${ringkas(v * 1e6, 0)}</text>`;
+  const batang = (v, x, w, c) => { if (v == null) return ""; const y0 = Y(0), y = Y(v), t = Math.max(1, Math.abs(y - y0)), r = Math.min(4, w / 2, t);
+    return v >= 0 ? `<path d="M${x},${y0} V${y + r} Q${x},${y} ${x + r},${y} H${x + w - r} Q${x + w},${y} ${x + w},${y + r} V${y0} Z" fill="${c}"/>`
+                  : `<path d="M${x},${y0} V${y0 + t - r} Q${x},${y0 + t} ${x + r},${y0 + t} H${x + w - r} Q${x + w},${y0 + t} ${x + w},${y0 + t - r} V${y0} Z" fill="${c}"/>`; };
+  for (let i = 0; i < n; i++){
+    const cx = ki + lebar * (i + .5);
+    svg += batang(pend[i], cx - bb - 1, bb, warna("--seri1")) + batang(lb[i], cx + 1, bb, warna("--seri2"));
+    svg += `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="10.5" fill="${warna("--teks-3")}">${d.label[i].replace(" 20", " '")}</text>`;
+    svg += `<rect x="${cx - lebar / 2}" y="0" width="${lebar}" height="${H}" fill="transparent" data-i="${i}"/>`;
+  }
+  wb.innerHTML = svg + `</svg><div class="tip" id="tipFin"></div>`;
+  const tip = document.getElementById("tipFin");
+  wb.querySelector("svg").onpointermove = e => { const i = e.target.dataset && e.target.dataset.i; if (i === undefined){ tip.style.display = "none"; return; }
+    tip.innerHTML = `<b>${d.label[i]}</b> · s.d. ${tglId(d.akhir[i])}<br><span style="color:var(--seri1)">■</span> Pendapatan ${usd(pend[i] * 1e6)}<br><span style="color:var(--seri2)">■</span> Laba bersih ${usd(lb[i] == null ? null : lb[i] * 1e6)}`;
+    tip.style.display = "block"; const b = wb.getBoundingClientRect(); let x = e.clientX - b.left + 12; if (x + 200 > W) x -= 220; tip.style.left = x + "px"; tip.style.top = "8px"; };
+  wb.querySelector("svg").onpointerleave = () => tip.style.display = "none";
+  // tabel: baris = pos, kolom = periode (terbaru di kiri)
+  const urutPeriode = [...Array(n).keys()].reverse();
+  const kolom = [{k:"label", label:"Pos", kiri:true, f:r => r.label, urut:r => r.urutan}].concat(urutPeriode.map(i => ({
+    k:"p" + i, label:d.label[i], judul:"s.d. " + d.akhir[i], f:r => {
+      const v = r.v[i]; if (v == null) return '<span class="redup">–</span>';
+      const tr = (d.turunan[i] || []).includes(r.pos) || r.pos === "_fcf";
+      const s = r.pos === "eps_dilusi" ? angka(v, 2) : angka(v, 0);
+      return `<span class="${v < 0 ? "turun" : ""}" ${tr ? 'style="text-decoration:underline dotted;text-underline-offset:3px" title="dihitung"' : ""}>${s}</span>`; },
+    urut:r => r.v[i]})));
+  const baris = POS.map(([pos, label], urutan) => { const v = []; for (let i = 0; i < n; i++) v[i] = nilai(pos, i); return {_id: pos, pos, label, urutan, v}; });
+  buatTabel(document.getElementById("tabelFin"), kolom, baris, {urut:"label", arah:1});
+}
+
+/* ---------------- BANDING ---------------- */
+let pembanding = null;
+function isiBanding(){
+  const r = PER_TICKER[tickerAktif];
+  if (!pembanding || !pembanding.includes(tickerAktif))
+    pembanding = [tickerAktif, ...R.filter(x => x.sektor && x.sektor === r.sektor && x.ticker !== tickerAktif && x.kap_pasar).slice(0, 4).map(x => x.ticker)];
+  const el = document.getElementById("panel-BANDING");
+  el.innerHTML = `<div class="kartu"><div class="baris-kontrol">
+      <input class="kotak" id="tambahBanding" list="daftarTicker" placeholder="Tambah ticker">
+      <button class="chip" id="tombolTambah">+ Tambah</button></div>
+      <div class="rel" id="chipBanding" style="margin:0"></div></div>
+    <div class="bungkus-tabel" style="max-height:none"><table class="data" id="tabelBanding"></table></div>
+    <p class="redup" style="font-size:12px">Awalnya berisi 4 emiten terbesar di sektor yang sama. Klik judul kolom untuk mengurutkan; klik baris untuk membuka emiten.</p>`;
+  document.getElementById("chipBanding").innerHTML = pembanding.map(t => `<button class="chip" data-t="${t}">${t}${t === tickerAktif ? "" : '<span class="chip-hapus">×</span>'}</button>`).join("");
+  document.getElementById("chipBanding").onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.t !== tickerAktif){ pembanding = pembanding.filter(t => t !== b.dataset.t); isiBanding(); } };
+  const tambah = () => { const t = document.getElementById("tambahBanding").value.trim().toUpperCase(); if (PER_TICKER[t] && !pembanding.includes(t)){ pembanding.push(t); isiBanding(); } };
+  document.getElementById("tombolTambah").onclick = tambah;
+  document.getElementById("tambahBanding").onkeydown = e => { if (e.key === "Enter") tambah(); };
+  const kolom = [
+    {k:"ticker", label:"Ticker", kiri:true, f:x => `<span class="tkr">${x.ticker}</span><span class="nama-kecil">${esc(x.nama)}</span>`},
+    {k:"kap_pasar", label:"Kap. Pasar", f:x => usd(x.kap_pasar)},
+    {k:"per", label:"PER", f:x => angka(x.per, 1)}, {k:"pbv", label:"PBV", f:x => angka(x.pbv, 1)}, {k:"psr", label:"P/S", f:x => angka(x.psr, 1)},
+    {k:"gpm", label:"GPM", f:x => persen(x.gpm, 1, false)}, {k:"npm", label:"NPM", f:x => persen(x.npm, 1, false)}, {k:"roe", label:"ROE", f:x => persen(x.roe, 1, false)},
+    {k:"tumbuh_pendapatan", label:"Pend. YoY", f:x => `<span class="${kelasArah(x.tumbuh_pendapatan)}">${persen(x.tumbuh_pendapatan, 1)}</span>`},
+    {k:"tumbuh_laba", label:"Laba YoY", f:x => `<span class="${kelasArah(x.tumbuh_laba)}">${persen(x.tumbuh_laba, 1)}</span>`},
+    {k:"liab_ekuitas", label:"Liab/Ek", f:x => angka(x.liab_ekuitas, 2)}, {k:"fcf_yield", label:"FCF yld", f:x => persen(x.fcf_yield, 1, false)},
+    {k:"chg_ytd", label:"%YTD", f:x => `<span class="${kelasArah(x.chg_ytd)}">${persen(x.chg_ytd, 1)}</span>`},
+  ];
+  buatTabel(document.getElementById("tabelBanding"), kolom, pembanding.map(t => PER_TICKER[t]), {urut:"kap_pasar", klik: t => bukaEmiten(t), sorot: x => x.ticker === tickerAktif});
+}
+
+/* ---------------- AKSI & PROFIL ---------------- */
+function isiAksi(){
+  document.getElementById("panel-AKSI").innerHTML = `<div class="kartu kosong">
+    <b>Belum ada data aksi korporasi.</b><br>Dividen dan stock split bisa diambil gratis dari yfinance (satu permintaan per emiten).<br>
+    Harga di chart sudah disesuaikan dengan stock split oleh Yahoo, jadi grafik tidak "gepeng".</div>`;
+}
+function isiProfil(){
+  const r = PER_TICKER[tickerAktif], E = EMITEN[tickerAktif] || {};
+  document.getElementById("panel-PROFIL").innerHTML = `<div class="kartu"><dl class="profil">
+    <dt>Nama</dt><dd>${esc(r.nama)}</dd><dt>Ticker</dt><dd>${r.ticker}</dd><dt>Sektor (GICS)</dt><dd>${esc(r.sektor || "–")}</dd>
+    <dt>Indeks</dt><dd>${[r.sp500 && "S&P 500", r.ndx && "Nasdaq-100", r.dow && "Dow 30"].filter(Boolean).join(" · ")}</dd>
+    <dt>CIK (SEC)</dt><dd>${E.cik ? `<a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${E.cik}" target="_blank" rel="noopener" style="color:var(--merek-tua)">${E.cik}</a>` : "belum terdaftar"}</dd>
+    <dt>Akhir tahun buku</dt><dd>${E.akhir_fy ? (([d, m]) => `${+d} ${["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"][+m - 1]}`)(E.akhir_fy.split("-")) : "–"}</dd>
+    <dt>Saham beredar</dt><dd>${ringkas(r.saham)} lembar (sumber: ${r.sumber_saham || "–"})</dd>
+    <dt>Laporan terakhir</dt><dd>${r.lk_terakhir ? tglId(r.lk_terakhir) : "–"}</dd></dl>
+    <p class="redup" style="font-size:12px;margin-bottom:0">Alamat, uraian bisnis, direksi, dan tanggal IPO belum diambil — bisa ditambah dari data SEC (submissions) atau yfinance.</p></div>`;
+}
+
+let awal = "NVDA";
+try { awal = localStorage.getItem("titenus-ticker") || awal; } catch (e) {}
+if (!PER_TICKER[awal]) awal = R[0].ticker;
+bukaEmiten(awal, true);
+const simpanTicker = () => { try { localStorage.setItem("titenus-ticker", tickerAktif); } catch (e) {} };
+window.addEventListener("pagehide", simpanTicker);
+
+/* ---------------- offline: service worker ---------------- */
+if ("serviceWorker" in navigator){
+  // Pada kunjungan pertama data dimuat sebelum service worker aktif, jadi ambil ulang sekali
+  // supaya tersimpan dan aplikasi langsung bisa dibuka offline.
+  const isiSimpanan = () => ["data/manifest.json", "data/ringkasan.json?v=" + MAN.versi,
+    `data/emiten/${encodeURIComponent(tickerAktif)}.json?v=${MAN.versi}`].forEach(u => fetch(u).catch(() => {}));
+  navigator.serviceWorker.register("sw.js").then(() => {
+    if (navigator.serviceWorker.controller) return;
+    navigator.serviceWorker.addEventListener("controllerchange", isiSimpanan, {once: true});
+  }).catch(() => {});
+}
+})();
+</script>
+</body>
+</html>
