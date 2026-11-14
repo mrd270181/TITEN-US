@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 import duckdb
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import daftar, sec, harga, ringkasan, ekspor   # noqa: E402
+import daftar, sec, harga, ringkasan, ekspor, kalender   # noqa: E402
 
 AKAR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TABEL_STATE = ["emiten", "lk", "fakta"]
@@ -161,6 +161,16 @@ def main():
         print(f"PERINGATAN: kurs gagal diambil ({e}) - pakai kurs terakhir {k} ({tg})")
     simpan_state(con, os.path.join(a.keluar, "state"))
     harian(con, a.keluar, {**info, "mode": mode, "kurs_usd_idr": k, "kurs_tanggal": tg})
+
+    # kalender earnings + makro (gagal tidak menggagalkan pembaruan)
+    try:
+        tickers = [r[0] for r in con.execute("SELECT ticker FROM emiten").fetchall()]
+        kalender.tulis(a.keluar, tickers, os.path.join(a.lama, "data", "kalender.json"))
+    except Exception as e:
+        print(f"PERINGATAN: kalender gagal ({e})")
+        lama_k = os.path.join(a.lama, "data", "kalender.json")
+        if os.path.exists(lama_k):
+            shutil.copy2(lama_k, os.path.join(a.keluar, "data", "kalender.json"))
 
     # salin aplikasi
     for f in os.listdir(os.path.join(AKAR, "app")):
