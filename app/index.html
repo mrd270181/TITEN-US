@@ -27,9 +27,22 @@ header.atas .logo span{color:#ffd9c7}
 header.atas .ket{color:rgba(255,255,255,.82);font-size:12px;margin-left:auto;text-align:right;line-height:1.3}
 .ikon-tombol{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
 main{max-width:1180px;margin:0 auto;padding:12px 16px}
-nav.bawah{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--surface-1);border-top:1px solid var(--garis);padding-bottom:env(safe-area-inset-bottom)}
-nav.bawah button{flex:1;border:0;background:none;padding:10px 0 12px;font-weight:700;letter-spacing:.06em;color:var(--teks-3);cursor:pointer;font-size:13px}
-nav.bawah button[aria-current="true"]{color:var(--merek);box-shadow:inset 0 3px 0 var(--merek)}
+nav.bawah{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:#2e1a5c;border-top:3px solid #f26a2e;padding-bottom:env(safe-area-inset-bottom)}
+nav.bawah button{flex:1;min-width:0;border:0;background:none;padding:8px 0 9px;font-weight:600;letter-spacing:-.01em;color:#cbbdf0;cursor:pointer;font-size:9.5px;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
+nav.bawah button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav.bawah button[data-hal="rekomendasi"]{flex:1.35}
+nav.bawah button[aria-current="true"]{color:#fff}
+nav.bawah button[aria-current="true"] svg{stroke:#f26a2e;stroke-width:2.3}
+/* laptop: menu pindah ke kiri, berjajar ke bawah (sama seperti TITEN) */
+@media (min-width:900px){
+  body{padding-bottom:0;padding-left:88px}
+  nav.bawah{top:0;bottom:0;left:0;right:auto;width:88px;flex-direction:column;justify-content:flex-start;border-top:0;padding:12px 0 0;background:linear-gradient(180deg,#4b2a8a,#2e1a5c)}
+  nav.bawah::before{content:"T";display:grid;place-items:center;width:42px;height:42px;margin:0 auto 12px;border-radius:12px;background:#f26a2e;color:#fff;font-weight:900;font-size:18px;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+  nav.bawah button{flex:0 0 auto;padding:11px 2px;border-left:3px solid transparent;font-size:10px}
+  nav.bawah button:hover{background:rgba(255,255,255,.08);color:#fff}
+  nav.bawah button[aria-current="true"]{background:rgba(255,255,255,.12);border-left-color:#f26a2e}
+  nav.bawah button[data-hal="rekomendasi"]{flex:0 0 auto}
+}
 .halaman{display:none}.halaman.aktif{display:block}
 .catatan{background:var(--merek-lembut);border:1px solid var(--garis);border-radius:10px;padding:10px 12px;color:var(--teks-2);font-size:13px;margin-bottom:12px}
 .catatan b{color:var(--teks)}
@@ -102,6 +115,28 @@ details.panduan dt{font-weight:700;color:var(--teks)}details.panduan dd{margin:0
 .ringkas-an .sel .k{font-size:11px;color:var(--teks-3);text-transform:uppercase;letter-spacing:.05em}
 .detail-kepala{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:6px}
 .detail-kepala .kode{font-size:18px;font-weight:800;color:var(--merek-tua)}
+.ket-acara{display:block;white-space:normal;color:var(--teks-3);font-size:12px;max-width:520px;margin-top:2px}
+.lbl{display:inline-block;font-weight:800;border-radius:6px;padding:1px 8px}
+.lbl.Bagus{color:var(--naik);background:rgba(12,163,12,.12)}.lbl.Sedang{color:#a87400;background:rgba(230,170,0,.16)}.lbl.Jelek{color:var(--turun);background:rgba(208,59,59,.12)}.lbl.kosong{color:var(--teks-3);background:var(--surface-2)}
+.grid-rek{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:12px}
+.kartu-rek{background:var(--surface-1);border:1px solid var(--garis);border-radius:12px;padding:10px 12px}
+.kartu-rek .jd{font-size:11px;color:var(--teks-3);text-transform:uppercase;letter-spacing:.06em}
+.kartu-rek .nl{font-size:20px;margin:4px 0 2px}
+.kartu-rek .kt{font-size:12px;color:var(--teks-2)}
+.bahaya{border-left:3px solid var(--turun);padding:6px 10px;margin:8px 0;background:rgba(208,59,59,.06);border-radius:6px;font-size:13px}
+.berita{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--garis);font-size:13px}
+.berita:last-child{border-bottom:0}
+.berita a{color:var(--teks);text-decoration:none;font-weight:600}.berita a:hover{text-decoration:underline}
+.nada{flex:none;font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px;height:fit-content;min-width:52px;text-align:center}
+.nada.positif{color:var(--naik);background:rgba(12,163,12,.12)}.nada.negatif{color:var(--turun);background:rgba(208,59,59,.12)}.nada.netral{color:var(--teks-3);background:var(--surface-2)}
+details.artikel{background:var(--surface-1);border:1px solid var(--garis);border-radius:12px;margin-bottom:10px}
+details.artikel summary{cursor:pointer;padding:12px 14px;font-weight:800;font-size:15px;color:var(--merek-tua);list-style:none}
+details.artikel summary::before{content:"▸ ";color:var(--teks-3)}details.artikel[open] summary::before{content:"▾ "}
+.isi-artikel{padding:0 16px 12px;font-size:14px;line-height:1.6;color:var(--teks-2);max-width:760px}
+.isi-artikel h4{color:var(--teks);margin:14px 0 4px;font-size:14px}
+.isi-artikel ul{margin:4px 0;padding-left:20px}.isi-artikel li{margin:3px 0}.isi-artikel b{color:var(--teks)}
+.badge-er{display:inline-block;margin-top:6px;font-size:12px;background:var(--merek-lembut);color:var(--merek-tua);border-radius:6px;padding:3px 8px;font-weight:600}
+tr.lewat td{opacity:.55}
 .svgwadah{position:relative}
 .tip{position:absolute;pointer-events:none;background:var(--surface-1);border:1px solid var(--garis-kuat);border-radius:8px;padding:6px 9px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.18);display:none;white-space:nowrap;z-index:5}
 .chip-hapus{margin-left:6px;color:var(--teks-3)}
@@ -149,6 +184,8 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       <dt>PBV</dt><dd>Kap. pasar ÷ ekuitas (modal bersih). Kosong kalau ekuitas negatif.</dd>
       <dt>ROE</dt><dd>Laba bersih 4 kuartal ÷ ekuitas: seberapa efisien modal menghasilkan laba.</dd>
       <dt>Laba YoY</dt><dd>Laba bersih 4 kuartal terakhir dibanding 4 kuartal sebelumnya.</dd>
+      <dt>LK</dt><dd>Kesimpulan laporan keuangan dengan aturan skor TITEN: Bagus 75–100, Sedang 60–74, Jelek di bawah 60. Rinciannya di CARI → REKOMENDASI.</dd>
+      <dt>Target Analis</dt><dd>Selisih target harga rata-rata analis terhadap close. +20% = analis rata-rata memperkirakan harga 20% lebih tinggi.</dd>
       <dt>Warna</dt><dd><span class="naik">hijau</span> = naik, <span class="turun">merah</span> = turun. Klik judul kolom untuk mengurutkan, klik baris untuk membuka di CARI.</dd>
     </dl></details>
     <div class="label-kecil">Saringan cepat</div>
@@ -172,7 +209,7 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
     <div class="kartu" id="anRingkas"><div class="memuat">Memuat harga semua emiten…</div></div>
     <div class="kartu" id="anDetail" hidden></div>
     <details class="panduan"><summary>Cara membaca kolom</summary><dl>
-      <dt>Awal · Akhir</dt><dd>Close (USD per lembar) pada hari bursa pertama dan terakhir di rentang yang dipilih.</dd>
+      <dt>Awal · Akhir</dt><dd>Awal = close hari bursa <b>sebelum</b> hari pertama rentang (sama seperti TITEN), jadi gerakan hari pertama ikut terhitung. Akhir = close hari terakhir rentang. USD per lembar.</dd>
       <dt>%Ubah</dt><dd>Perubahan harga dari Awal ke Akhir.</dd>
       <dt>Tertinggi · Terendah</dt><dd>Close tertinggi dan terendah di dalam rentang.</dd>
       <dt>Dari Tinggi</dt><dd>Jarak Akhir dari close tertinggi di rentang. −15% = sudah turun 15% dari puncaknya di periode itu.</dd>
@@ -183,6 +220,148 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
     </dl></details>
     <div class="bungkus-tabel"><table class="data" id="anTabel"></table></div>
   </section>
+
+  <section class="halaman" id="hal-kalender">
+    <div class="rel" id="kalTab"></div>
+    <div id="kal-earnings">
+      <div class="baris-kontrol">
+        <input class="kotak" id="kalCari" placeholder="Cari ticker / nama">
+        <span class="jumlah" id="kalJumlah"></span>
+      </div>
+      <div class="rel" id="kalRentang"></div>
+      <div class="rel" id="kalIndeks"></div>
+      <details class="panduan"><summary>Cara membaca kalender earnings</summary><dl>
+        <dt>Tanggal</dt><dd>Hari laporan menurut waktu New York. Laporan “setelah bursa tutup” baru keluar dini hari WIB keesokan harinya.</dd>
+        <dt>Waktu</dt><dd>Sebelum bursa buka = laporan keluar ±19.00 WIB, sebelum sesi malam itu. Setelah bursa tutup = ±04.00 WIB, pengaruhnya baru terlihat di sesi malam berikutnya.</dd>
+        <dt>EPS Perk.</dt><dd>Rata-rata perkiraan analis untuk laba per saham kuartal itu (USD).</dd>
+        <dt>EPS Aktual · Kejutan</dt><dd>Laba per saham yang diumumkan dan selisihnya terhadap perkiraan. <span class="naik">+</span> = lebih baik dari perkiraan.</dd>
+        <dt>Reaksi</dt><dd>Perubahan harga pada sesi pertama setelah laporan keluar. Kejutan positif tidak selalu berarti harga naik — panduan (guidance) ke depan sering lebih menentukan.</dd>
+        <dt>Tips</dt><dd>Harga bisa bergerak 5–20% dalam semalam saat laporan keluar, tanpa batas ARB. Kalau tidak siap dengan risiko itu, hindari membeli tepat sebelum tanggal laporan.</dd>
+      </dl></details>
+      <div class="bungkus-tabel"><table class="data" id="kalTabel"></table></div>
+    </div>
+    <div id="kal-makro" hidden>
+      <details class="panduan"><summary>Kenapa data makro penting</summary><dl>
+        <dt>FOMC</dt><dd>Keputusan suku bunga The Fed — menggerakkan hampir semua saham sekaligus.</dd>
+        <dt>CPI</dt><dd>Inflasi AS. Lebih tinggi dari perkiraan biasanya buruk untuk saham karena bunga sulit turun.</dd>
+        <dt>NFP</dt><dd>Data tenaga kerja AS, dirilis Jumat pertama tiap bulan.</dd>
+        <dt>Jam</dt><dd>Semua jam dalam WIB, sudah menyesuaikan jam musim panas/dingin AS. Rilis 20.30 WIB terjadi satu jam sebelum bursa buka.</dd>
+      </dl></details>
+      <div class="bungkus-tabel"><table class="data" id="makroTabel"></table></div>
+    </div>
+    <p class="redup" style="font-size:12px" id="kalSumber"></p>
+  </section>
+
+  <section class="halaman" id="hal-rekomendasi">
+    <div class="baris-kontrol">
+      <input class="kotak" id="rekInput" list="daftarTicker" placeholder="Ketik kode emiten, mis. NVDA">
+      <button class="chip" id="rekBuka">Lihat</button>
+    </div>
+    <div class="kepala-emiten" id="rekKepala"></div>
+    <div id="rekIsi"></div>
+    <div class="label-kecil" style="margin-top:18px">Semua emiten — ketuk baris untuk melihat kartunya</div>
+    <div class="baris-kontrol">
+      <input class="kotak" id="rekCari" placeholder="Saring ticker / nama">
+      <span class="jumlah" id="rekJumlah"></span>
+    </div>
+    <div class="rel" id="rekIndeks"></div>
+    <div class="bungkus-tabel"><table class="data" id="rekTabel"></table></div>
+  </section>
+
+  <section class="halaman" id="hal-pustaka">
+    <p class="redup" style="font-size:13px;margin-top:0">Bacaan singkat untuk memahami saham AS. Ketuk judul untuk membuka atau menutup.</p>
+    <details class="artikel" open><summary>Apa yang menggerakkan harga saham AS?</summary><div class="isi-artikel">
+      <p>Harga saham AS digerakkan oleh empat hal: laporan keuangan, kondisi makro, tema sektor, serta berita dan sentimen. Sentimen dan berita sangat berpengaruh, terutama untuk pergerakan jangka pendek. Berikut penggeraknya menurut jangka waktu.</p>
+      <h4>1. Laporan keuangan (earnings): penggerak terbesar per saham</h4>
+      <ul>
+        <li>Empat kali setahun, setiap emiten mengumumkan laba. Yang menggerakkan harga bukan labanya naik atau turun, tapi <b>apakah lebih baik atau lebih buruk dari perkiraan analis</b>.</li>
+        <li><b>Guidance</b>, yaitu proyeksi perusahaan untuk kuartal berikutnya, sering lebih penting daripada hasil kuartal itu sendiri. Laba bagus tapi guidance lemah bisa membuat harga turun 10–20% dalam semalam. Tanpa ARB, tidak ada batasnya.</li>
+      </ul>
+      <h4>2. Makro: menggerakkan seluruh pasar sekaligus</h4>
+      <ul>
+        <li><b>Suku bunga The Fed</b> (FOMC, sekitar 8 kali setahun). Bunga naik biasanya menekan saham, terutama teknologi yang valuasinya tinggi.</li>
+        <li><b>Data inflasi (CPI) dan tenaga kerja (NFP).</b> Keduanya memengaruhi tebakan pasar soal langkah The Fed berikutnya.</li>
+        <li><b>Imbal hasil obligasi AS 10 tahun.</b> Kalau naik tajam, saham biasanya tertekan.</li>
+      </ul>
+      <h4>3. Tema besar: menggerakkan satu sektor bersama-sama</h4>
+      <ul>
+        <li>Contoh sekarang adalah AI. Kekhawatiran soal belanja AI membuat NVDA, AVGO, dan saham chip turun bersamaan. Contoh pertengahan November 2026: NVDA −25% dalam sebulan sementara banyak saham lain naik.</li>
+      </ul>
+      <h4>4. Berita dan sentimen: penggerak jangka pendek</h4>
+      <ul>
+        <li><b>Berita spesifik:</b> naik/turun rekomendasi analis, akuisisi, produk baru, gugatan hukum, pergantian CEO.</li>
+        <li><b>Kebijakan dan politik:</b> tarif impor, regulasi, pemilu. Contohnya pemilu paruh waktu AS 3 November 2026.</li>
+        <li><b>Geopolitik:</b> perang, harga minyak, hubungan AS–Tiongkok.</li>
+        <li><b>Ukuran sentimen yang biasa dipantau:</b>
+          <ul>
+            <li><b>VIX</b>, “indeks rasa takut”. Di atas 30 berarti pasar panik.</li>
+            <li>Arus dana ke ETF seperti SPY dan QQQ.</li>
+            <li>Untuk saham kecil, sentimen media sosial (Reddit, X).</li>
+          </ul></li>
+      </ul>
+      <h4>Pola umumnya</h4>
+      <ul>
+        <li><b>Jangka pendek</b> (hari sampai minggu): berita dan sentimen dominan.</li>
+        <li><b>Jangka menengah</b> (bulan): makro dan tema sektor.</li>
+        <li><b>Jangka panjang</b> (tahun): pertumbuhan laba. Harga saham akhirnya mengikuti labanya.</li>
+      </ul>
+      <h4>Kaitannya dengan TITEN US</h4>
+      <ul>
+        <li>Lonjakan <b>Vol/MA5</b> atau <b>gap</b> besar hampir selalu ada beritanya: earnings, rekomendasi analis, atau akuisisi. Itu cara cepat menemukan saham yang sedang “ada cerita”.</li>
+        <li>Di menu <b>ANALISA</b>, kalau satu sektor bergerak serempak, itu tanda tema atau makro. Kalau hanya satu saham yang bergerak, itu berita spesifik emiten tersebut.</li>
+      </ul>
+    </div></details>
+
+    <details class="artikel"><summary>Saham AS vs saham IDX: yang perlu diketahui</summary><div class="isi-artikel">
+      <h4>Bursa & indeks</h4>
+      <ul>
+        <li>Dua bursa utama: <b>NYSE</b> dan <b>Nasdaq</b>. Indeks acuan: <b>S&amp;P 500</b> (500 perusahaan besar), <b>Nasdaq-100</b> (didominasi teknologi), <b>Dow Jones</b> (30 saham blue chip).</li>
+      </ul>
+      <h4>Jam perdagangan (WIB)</h4>
+      <ul>
+        <li>November–Maret (musim dingin AS): <b>21.30–04.00 WIB</b>. Maret–November (musim panas): <b>20.30–03.00 WIB</b>.</li>
+        <li>Ada juga pre-market dan after-hours, tapi transaksinya tipis dan selisih harga beli-jual lebar.</li>
+      </ul>
+      <h4>Perbedaan penting dengan IDX</h4>
+      <ul>
+        <li><b>Tidak ada lot.</b> Bisa beli 1 lembar, bahkan pecahan lembar di banyak aplikasi.</li>
+        <li><b>Tidak ada ARA/ARB.</b> Harga bisa naik 100% atau turun 50% sehari, misalnya setelah laporan keuangan. Yang ada hanya penghentian sementara kalau harga bergerak terlalu cepat.</li>
+        <li><b>Tidak ada broker summary.</b> Penggantinya: volume, kepemilikan institusi (13F, per kuartal), transaksi orang dalam (Form 4), short interest, dan arus opsi.</li>
+        <li><b>Bisa short sell</b> (bertaruh harga turun) di broker yang menyediakannya.</li>
+        <li><b>Settlement T+1</b>, lebih cepat dari IDX.</li>
+        <li>Semua dalam <b>dolar AS</b>, jadi kurs rupiah ikut memengaruhi untung-rugi Anda.</li>
+        <li>Dividen dipotong pajak di AS (umumnya 15% untuk WNI dengan formulir W-8BEN), biasanya sudah diurus aplikasinya.</li>
+      </ul>
+      <h4>Saran untuk mulai</h4>
+      <ul>
+        <li>Mulai dari saham besar yang likuid atau ETF seperti QQQ/SPY — pergerakannya lebih “rapi” untuk analisa teknikal.</li>
+        <li>Pakai modal kecil dulu, atau akun demo/paper trading kalau tersedia.</li>
+        <li>Selalu cek jadwal earnings (menu <b>KALENDER</b>) sebelum masuk posisi — tanpa ARB, kerugian semalam bisa sangat besar.</li>
+      </ul>
+    </div></details>
+
+    <details class="artikel"><summary>Cara memakai TITEN US</summary><div class="isi-artikel">
+      <ul>
+        <li><b>📊 SCREENER</b> — semua 518 emiten (S&amp;P 500, Nasdaq-100, Dow) dengan saringan cepat. Panduan tiap kolom ada di tombol ⓘ.</li>
+        <li><b>📈 ANALISA</b> — pilih rentang Dari–Sampai, lihat perubahan harga semua emiten. Dihitung dari close <b>sebelum</b> hari pertama rentang, sama seperti TITEN.</li>
+        <li><b>⭐ REKOMENDASI</b> — ketik kode emiten: Kesimpulan LK, valuasi, sentimen analis, berita 7 hari, dan jadwal earnings, dengan label <span class="lbl Bagus">Bagus</span> <span class="lbl Sedang">Sedang</span> <span class="lbl Jelek">Jelek</span>.</li>
+        <li><b>📅 KALENDER</b> — jadwal laporan keuangan emiten dan data makro AS (FOMC, CPI, NFP) dalam jam WIB.</li>
+        <li><b>🔍 CARI</b> — chart candle, keystats, laporan keuangan per kuartal/tahun, perbandingan, profil.</li>
+      </ul>
+      <h4>Kesimpulan LK (aturan sama dengan TITEN)</h4>
+      <ul>
+        <li>Skor 0–100 dari 7 aspek: profitabilitas 20, pertumbuhan 20, kualitas laba 20, utang &amp; likuiditas 15, konsistensi 10, arah margin 10, arus kas bebas 5. Bank & lembaga keuangan: profitabilitas 40, pertumbuhan 20, konsistensi 20, arah margin 20.</li>
+        <li>Bagus 75–100, Sedang 60–74, Jelek di bawah 60. Tanda bahaya berat (rugi, ekuitas negatif) membatasi skor maksimal 59; tanda ringan (utang besar, arus kas operasi negatif) −10 per tanda.</li>
+        <li>Penyesuaian AS: ekuitas negatif karena pembelian kembali saham (buyback) pada emiten yang untung dan arus kasnya positif bukan tanda bahaya; profitabilitasnya dinilai dengan ROA.</li>
+      </ul>
+      <h4>Pembaruan data</h4>
+      <ul>
+        <li>Otomatis setiap Selasa–Sabtu pagi WIB setelah bursa AS tutup (GitHub kadang menunda sampai ±09.00 WIB; ada jadwal cadangan kalau gagal). Laporan keuangan & daftar emiten diperbarui setiap Minggu.</li>
+        <li>Sumber: SEC EDGAR (laporan keuangan), Yahoo Finance (harga, kurs, analis, berita, jadwal earnings), Google Berita (berita Indonesia), The Fed & BLS (jadwal makro).</li>
+        <li>Semua label dihitung dari aturan tetap. <b>Bukan rekomendasi investasi.</b></li>
+      </ul>
+    </div></details>
+</section>
 
   <section class="halaman" id="hal-cari">
     <div class="baris-kontrol">
@@ -220,9 +399,12 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
 </main>
 
 <nav class="bawah">
-  <button data-hal="screener" aria-current="true">SCREENER</button>
-  <button data-hal="analisa" aria-current="false">ANALISA</button>
-  <button data-hal="cari" aria-current="false">CARI</button>
+  <button data-hal="screener" aria-current="true"><svg viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4"/></svg>SCREENER</button>
+  <button data-hal="analisa" aria-current="false"><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 4 5-8 4 5"/><path d="M3 21h18"/></svg>ANALISA</button>
+  <button data-hal="rekomendasi" aria-current="false"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>REKOMENDASI</button>
+  <button data-hal="kalender" aria-current="false"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h2M14 14h2"/></svg>KALENDER</button>
+  <button data-hal="cari" aria-current="false"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>CARI</button>
+  <button data-hal="pustaka" aria-current="false"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M8 7h8M8 11h6"/></svg>PUSTAKA</button>
 </nav>
 
 <script>
@@ -243,6 +425,14 @@ try {
   return;
 }
 const R = RJ.baris.map(b => Object.fromEntries(RJ.kolom.map((k, i) => [k, b[i]])));
+let KAL = null;
+try { KAL = await ambilJSON("data/kalender.json?v=" + MAN.versi); } catch (e) {}
+const HARI_INI = new Date().toLocaleDateString("sv-SE", {timeZone: "America/New_York"});   // YYYY-MM-DD New York
+const tambahHari = (s, n) => { const d = new Date(s + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+const ER_PER_TICKER = {};
+(KAL ? KAL.earnings : []).forEach(e => (ER_PER_TICKER[e.ticker] = ER_PER_TICKER[e.ticker] || []).push(e));
+const erBerikut = t => (ER_PER_TICKER[t] || []).find(e => e.tanggal >= HARI_INI);
+const erTerakhir = t => (ER_PER_TICKER[t] || []).filter(e => e.tanggal < HARI_INI).pop();
 const PER_TICKER = Object.fromEntries(R.map(r => [r.ticker, r]));
 const EMITEN = {};
 async function muatEmiten(t){
@@ -321,6 +511,9 @@ function bukaHalaman(h){
   document.querySelectorAll("nav.bawah button").forEach(b => b.setAttribute("aria-current", b.dataset.hal === h));
   if (h === "cari" && EMITEN[tickerAktif]) requestAnimationFrame(() => bukaPanel(panelAktif));
   if (h === "analisa") bukaAnalisa();
+  if (h === "kalender") bukaKalender();
+  if (h === "rekomendasi") bukaRek();
+  window.scrollTo(0, 0);
 }
 
 /* ---------------- tabel umum: header beku + urut ---------------- */
@@ -339,7 +532,7 @@ function buatTabel(el, kolom, baris, opsi = {}){
       });
     }
     const kepala = kolom.map(c => `<th class="${c.kiri ? "kiri" : ""}" data-k="${c.k}" title="${esc(c.judul || c.label)}">${c.label}${urut === c.k ? `<span class="panah">${arah > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
-    const isi = data.map(r => `<tr data-id="${esc(r._id ?? r.ticker)}" class="${opsi.sorot && opsi.sorot(r) ? "sorot" : ""}">` +
+    const isi = data.map(r => `<tr data-id="${esc(r._id ?? r.ticker)}" class="${opsi.sorot && opsi.sorot(r) ? "sorot" : ""} ${opsi.kelas ? opsi.kelas(r) : ""}">` +
       kolom.map(c => `<td class="${c.kiri ? "kiri" : ""} angka">${c.f(r)}</td>`).join("") + "</tr>").join("");
     el.innerHTML = `<thead><tr>${kepala}</tr></thead><tbody>${isi || `<tr><td colspan="${kolom.length}" class="kosong kiri">Tidak ada yang cocok.</td></tr>`}</tbody>`;
   }
@@ -374,6 +567,8 @@ const kolomScreener = [
   {k:"pbv", label:"PBV", f:r => angka(r.pbv, 1)},
   {k:"roe", label:"ROE", f:r => persen(r.roe, 1, false)},
   {k:"tumbuh_laba", label:"Laba YoY", judul:"Laba bersih 4 kuartal terakhir vs 4 kuartal sebelumnya", f:r => `<span class="${kelasArah(r.tumbuh_laba)}">${persen(r.tumbuh_laba, 0)}</span>`},
+  {k:"skor_lk", label:"LK", judul:"Kesimpulan laporan keuangan: Bagus 75–100, Sedang 60–74, Jelek < 60 (aturan TITEN)", f:r => r.label_lk ? `<span class="lbl ${r.label_lk}">${r.label_lk} ${Math.round(r.skor_lk)}</span>` : "–"},
+  {k:"upside_analis", label:"Target Analis", judul:"Target harga rata-rata analis dibanding close", f:r => r.upside_analis == null ? "–" : `<span class="${kelasArah(r.upside_analis)}">${persen(r.upside_analis, 0)}</span>`},
 ];
 const PRESET = [
   {id:"semua", label:"Semua", f:() => true, urut:"kap_pasar"},
@@ -384,6 +579,7 @@ const PRESET = [
   {id:"tren", label:"Tren naik (C>MA50>MA200)", f:r => r.ma200 && r.close > r.ma50 && r.ma50 > r.ma200, urut:"chg_3bl"},
   {id:"tumbuh", label:"Laba ≥ +20% & PER < 25", f:r => r.tumbuh_laba >= 20 && r.per > 0 && r.per < 25, urut:"tumbuh_laba"},
   {id:"kualitas", label:"ROE ≥ 20% & Liab/Ekuitas < 1", f:r => r.roe >= 20 && r.liab_ekuitas != null && r.liab_ekuitas < 1, urut:"roe"},
+  {id:"earnings", label:"Lapor earnings ≤ 7 hari", judul:"Emiten yang akan mengumumkan laporan keuangan dalam 7 hari ke depan", f:r => { const e = erBerikut(r.ticker); return !!e && e.tanggal <= tambahHari(HARI_INI, 7); }, urut:"kap_pasar"},
 ];
 const INDEKS = [["semua","Semua indeks"],["sp500","S&P 500"],["ndx","Nasdaq-100"],["dow","Dow 30"]];
 let indeks = "semua", preset = "semua";
@@ -432,6 +628,17 @@ document.getElementById("tombolBuka").onclick = buka;
 elInput.onkeydown = e => { if (e.key === "Enter") buka(); };
 elInput.onchange = buka;
 
+function kepalaHTML(t){
+  const r = PER_TICKER[t];
+  const idx = [r.sp500 && "S&P 500", r.ndx && "Nasdaq-100", r.dow && "Dow 30"].filter(Boolean).map(x => `<span class="lencana">${x}</span>`).join("");
+  const eb = erBerikut(t), et = erTerakhir(t);
+  const lencanaEr = eb ? `📅 Laporan earnings berikutnya: <b>${hariTgl(eb.tanggal)}</b> · ${eb.waktu_label}${eb.eps_perkiraan != null ? ` · EPS perkiraan $${angka(eb.eps_perkiraan)}` : ""}`
+    : et && et.eps_aktual != null ? `📅 Lapor ${hariTgl(et.tanggal)}: EPS $${angka(et.eps_aktual)} vs perkiraan $${angka(et.eps_perkiraan)}${et.kejutan_persen != null ? ` (<span class="${kelasArah(et.kejutan_persen)}">${persen(et.kejutan_persen, 1)}</span>)` : ""}` : "";
+  return `<div><div class="kode">${t}</div><div class="nm">${esc(r.nama)} ${idx}</div><div class="redup" style="font-size:12px">${esc(r.sektor || "Sektor belum diketahui")}</div></div>
+    <div class="harga angka">$${angka(r.close)} <span class="ubah ${kelasArah(r.chg_1h)}" style="font-size:15px">${persen(r.chg_1h)}</span>
+      <div class="redup" style="font-size:12px;font-weight:400">Kap. pasar ${usd(r.kap_pasar)} · Vol ${ringkas(r.volume)} (${angka(r.vol_x_ma5)}× MA5)</div></div>` +
+    (lencanaEr ? `<div style="flex-basis:100%"><span class="badge-er">${lencanaEr}</span></div>` : "");
+}
 async function bukaEmiten(t, diam){
   tickerAktif = t; elInput.value = t;
   if (!diam) bukaHalaman("cari");
@@ -440,12 +647,9 @@ async function bukaEmiten(t, diam){
     try { await muatEmiten(t); } catch (e) { document.getElementById("kepalaEmiten").innerHTML = `<div class="memuat">Gagal memuat ${t} (${esc(e.message)}).</div>`; return; }
     if (tickerAktif !== t) return;
   }
-  const r = PER_TICKER[t];
-  const idx = [r.sp500 && "S&P 500", r.ndx && "Nasdaq-100", r.dow && "Dow 30"].filter(Boolean).map(x => `<span class="lencana">${x}</span>`).join("");
-  document.getElementById("kepalaEmiten").innerHTML = `
-    <div><div class="kode">${t}</div><div class="nm">${esc(r.nama)} ${idx}</div><div class="redup" style="font-size:12px">${esc(r.sektor || "Sektor belum diketahui")}</div></div>
-    <div class="harga angka">$${angka(r.close)} <span class="ubah ${kelasArah(r.chg_1h)}" style="font-size:15px">${persen(r.chg_1h)}</span>
-      <div class="redup" style="font-size:12px;font-weight:400">Kap. pasar ${usd(r.kap_pasar)} · Vol ${ringkas(r.volume)} (${angka(r.vol_x_ma5)}× MA5)</div></div>`;
+  document.getElementById("kepalaEmiten").innerHTML = kepalaHTML(t) +
+    `<div style="flex-basis:100%"><button class="chip" id="keRek">⭐ Lihat REKOMENDASI ${t}</button></div>`;
+  document.getElementById("keRek").onclick = () => { bukaHalaman("rekomendasi"); tampilRek(t); };
   aturRentang(true);
   if (!diam) bukaPanel(panelAktif);
 }
@@ -707,6 +911,101 @@ function isiProfil(){
 }
 
 
+/* ================= REKOMENDASI (seperti TITEN): LK, valuasi, analis, berita, earnings ================= */
+const lbl = (l, teks) => `<span class="lbl ${l || "kosong"}">${esc(teks || l || "–")}</span>`;
+function waktuLalu(iso){
+  const m = (Date.now() - new Date(iso).getTime()) / 60000;
+  return m < 60 ? `${Math.max(1, Math.round(m))} menit lalu` : m < 1440 ? `${Math.round(m / 60)} jam lalu` : `${Math.round(m / 1440)} hari lalu`;
+}
+let rekSiap = false, rekTicker = null, rekIndeks = "semua";
+function bukaRek(){
+  if (!rekSiap){
+    rekSiap = true;
+    const inp = document.getElementById("rekInput");
+    const buka = () => { const t = inp.value.trim().toUpperCase(); if (PER_TICKER[t]) tampilRek(t); };
+    document.getElementById("rekBuka").onclick = buka;
+    inp.onkeydown = e => { if (e.key === "Enter") buka(); };
+    inp.onchange = buka;
+    buatChip(document.getElementById("rekIndeks"), INDEKS, rekIndeks, m => { rekIndeks = m; saringRek(); });
+    document.getElementById("rekCari").oninput = () => saringRek();
+    saringRek();
+  }
+  if (!rekTicker) tampilRek(tickerAktif);
+}
+const NILAI_LBL = {Bagus: 3, Sedang: 2, Jelek: 1};
+let tabelRek = null;
+function saringRek(){
+  const q = document.getElementById("rekCari").value.trim().toUpperCase();
+  const hasil = R.filter(r => (rekIndeks === "semua" || r[rekIndeks]) && (!q || r.ticker.includes(q) || (r.nama || "").toUpperCase().includes(q)));
+  document.getElementById("rekJumlah").textContent = `${hasil.length} emiten`;
+  const teksAnalis = {Bagus: "Positif", Sedang: "Netral", Jelek: "Negatif"};
+  if (!tabelRek) tabelRek = buatTabel(document.getElementById("rekTabel"), [
+    {k:"ticker", label:"Ticker", kiri:true, f:r => `<span class="tkr">${r.ticker}</span>${r.dow ? '<span class="lencana">DOW</span>' : ""}<span class="nama-kecil">${esc(r.nama)}</span>`},
+    {k:"skor_lk", label:"LK", f:r => r.label_lk ? lbl(r.label_lk, `${r.label_lk} ${Math.round(r.skor_lk)}`) : "–"},
+    {k:"label_val", label:"Valuasi", f:r => r.label_val ? lbl(r.label_val, r.teks_val) : "–", urut:r => NILAI_LBL[r.label_val] ?? null},
+    {k:"label_analis", label:"Analis", f:r => r.label_analis ? lbl(r.label_analis, teksAnalis[r.label_analis]) : "–", urut:r => NILAI_LBL[r.label_analis] ?? null},
+    {k:"upside_analis", label:"Target", judul:"Target harga rata-rata analis dibanding close", f:r => r.upside_analis == null ? "–" : `<span class="${kelasArah(r.upside_analis)}">${persen(r.upside_analis, 0)}</span>`},
+    {k:"label_berita", label:"Berita 7 hr", f:r => r.label_berita ? lbl(r.label_berita, r.teks_berita) : '<span class="redup">tidak ada</span>', urut:r => NILAI_LBL[r.label_berita] ?? null},
+    {k:"chg_1bl", label:"%1Bln", f:r => `<span class="${kelasArah(r.chg_1bl)}">${persen(r.chg_1bl, 1)}</span>`},
+    {k:"kap_pasar", label:"Kap. Pasar", f:r => usd(r.kap_pasar)},
+  ], hasil, {urut: "skor_lk", arah: -1, klik: t => { tampilRek(t); window.scrollTo({top: 0, behavior: "smooth"}); }, sorot: r => r.ticker === rekTicker});
+  else tabelRek.ganti(hasil);
+}
+async function tampilRek(t){
+  rekTicker = t; document.getElementById("rekInput").value = t;
+  const kepala = document.getElementById("rekKepala"), el = document.getElementById("rekIsi");
+  kepala.innerHTML = `<div class="memuat">Memuat ${t}…</div>`; el.innerHTML = "";
+  try { await muatEmiten(t); } catch (e) { kepala.innerHTML = `<div class="memuat">Gagal memuat ${t} (${esc(e.message)}).</div>`; return; }
+  if (rekTicker !== t) return;
+  kepala.innerHTML = kepalaHTML(t) + `<div style="flex-basis:100%"><button class="chip" id="rekKeCari">🔍 Buka chart & laporan keuangan di CARI</button></div>`;
+  document.getElementById("rekKeCari").onclick = () => bukaEmiten(t);
+  if (tabelRek) saringRek();
+  isiRekomendasi(t);
+}
+function isiRekomendasi(t){
+  const el = document.getElementById("rekIsi"), E = EMITEN[t] || {}, K = E.rek, r = PER_TICKER[t];
+  if (!K){ el.innerHTML = `<div class="kartu kosong">Kartu rekomendasi untuk ${t} belum tersedia — muncul setelah pembaruan otomatis berikutnya.</div>`; return; }
+  const L = K.lk, V = K.valuasi, A = K.analis, B = K.berita, eb = erBerikut(t);
+  const kartu = (jd, nl, kt) => `<div class="kartu-rek"><div class="jd">${jd}</div><div class="nl">${nl}</div><div class="kt">${kt}</div></div>`;
+  let h = `<div class="grid-rek">` +
+    kartu("Kesimpulan LK", L ? `${lbl(L.label)} <b class="angka">${L.skor}</b><span class="redup" style="font-size:12px">/100</span>` : lbl(null, "Tidak ada LK"),
+      L ? `${L.bahaya.length ? "⚠ " + L.bahaya.map(b => b.judul.toLowerCase()).join(", ") : "tanpa tanda bahaya"} · LK s.d. ${L.periode ? tglId(L.periode) : "–"}` : "emiten baru / belum ada laporan tahunan di SEC") +
+    kartu("Valuasi", lbl(V.label, V.teks), esc(V.ket)) +
+    kartu("Sentimen analis", A ? lbl(A.label, A.kunci) : lbl(null, "Tidak ada"),
+      A ? `${A.jumlah} analis · target rata-rata $${angka(A.target)}${A.upside != null ? ` (<span class="${kelasArah(A.upside)}">${persen(A.upside, 1)}</span>)` : ""}` : "tidak ada analis yang meliput") +
+    kartu("Berita 7 hari", lbl(B.label, B.teks), B.jumlah ? `<span class="naik">${B.pos} positif</span> · <span class="turun">${B.neg} negatif</span> dari ${B.jumlah} judul` : "tidak ada berita yang menyebut emiten ini") +
+    kartu("Earnings berikutnya", eb ? `<b>${hariTgl(eb.tanggal)}</b>` : lbl(null, "–"), eb ? `${eb.waktu_label}${eb.eps_perkiraan != null ? ` · EPS perkiraan $${angka(eb.eps_perkiraan)}` : ""}` : "belum ada jadwal dalam 5 minggu ke depan") +
+  `</div>`;
+  // rincian LK
+  if (L){
+    h += `<div class="kartu"><div class="label-kecil" style="margin-top:0">Kesimpulan laporan keuangan · skor ${L.skor}${L.skor !== L.skor_asli ? ` (skor asli ${L.skor_asli}, ${L.bahaya.some(b => b.berat) ? "dibatasi 59 karena tanda bahaya berat" : "−10 per tanda bahaya ringan"})` : ""}${L.keu ? " · dinilai sebagai lembaga keuangan" : ""}</div>
+      <div class="bungkus-tabel" style="max-height:none"><table class="data" id="tabelLKS"></table></div>` +
+      L.bahaya.map(b => `<div class="bahaya">⚠ <b>${esc(b.judul)}</b>${b.berat ? " (berat)" : " (ringan)"} — ${esc(b.bukti)}<br><span class="redup">${esc(b.arti)}</span></div>`).join("") +
+      L.catatan.map(c => `<p class="redup" style="font-size:12px;margin:8px 0 0">ℹ ${esc(c)}</p>`).join("") + `</div>`;
+  }
+  // analis
+  if (A) h += `<div class="kartu"><div class="label-kecil" style="margin-top:0">Sentimen analis</div><div style="font-size:13px">
+      Rekomendasi rata-rata <b>${A.kunci}</b> dari <b>${A.jumlah}</b> analis (skor ${angka(A.rata2)}; skala 1 = beli kuat sampai 5 = jual).<br>
+      Target harga: rata-rata <b>$${angka(A.target)}</b> · terendah $${angka(A.target_rendah)} · tertinggi $${angka(A.target_tinggi)} — close terakhir $${angka(r.close)}.</div></div>`;
+  // berita
+  const grup = (judul, item) => item.length ? `<div class="label-kecil">${judul}</div>` + item.map(b =>
+    `<div class="berita"><span class="nada ${b.nada}">${b.nada}</span><div><a href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.judul)}</a>
+      <div class="redup" style="font-size:12px">${esc(b.sumber)} · ${waktuLalu(b.waktu)}</div></div></div>`).join("") : "";
+  const bId = B.item.filter(b => b.bahasa === "id"), bEn = B.item.filter(b => b.bahasa !== "id");
+  h += `<div class="kartu"><div class="label-kecil" style="margin-top:0">Berita 7 hari terakhir</div>` +
+    (B.item.length ? grup("Berita Indonesia (Google Berita)", bId) + grup("Berita internasional (Yahoo Finance, bahasa Inggris)", bEn)
+                   : `<div class="kosong">Tidak ada berita yang menyebut ${t} dalam 7 hari terakhir.</div>`) +
+    `<p class="redup" style="font-size:12px;margin-bottom:0">Label positif/negatif dari kata kunci di judul (Indonesia: daftar kata yang sama dengan TITEN) — panduan cepat, bukan penilaian pasti. Ketuk judul untuk membuka berita lengkap di situs aslinya.</p></div>`;
+  h += `<p class="redup" style="font-size:12px">Semua label dihitung dari aturan tetap dan data publik (SEC, Yahoo Finance, Google Berita). <b>Bukan rekomendasi investasi.</b></p>`;
+  el.innerHTML = h;
+  if (L) buatTabel(document.getElementById("tabelLKS"), [
+    {k:"n", label:"Aspek", kiri:true, f:c => `<b>${c.n}</b>`, urut:c => c.urutan},
+    {k:"p", label:"Poin", f:c => c.p == null ? '<span class="redup">tidak dinilai</span>' : `<b>${c.p}</b><span class="redup">/${c.m}</span>`, urut:c => c.p == null ? null : c.p / c.m},
+    {k:"t", label:"Angka", kiri:true, f:c => `<span style="white-space:normal;display:block;min-width:220px">${esc(c.t)}</span>`},
+    {k:"acu", label:"Patokan", kiri:true, f:c => `<span class="redup" style="white-space:normal;display:block;min-width:200px">${esc(c.acu || "–")}</span>`},
+  ], L.rinci.map((c, i) => ({...c, _id: "a" + i, urutan: i})), {urut: "n", arah: 1});
+}
+
 /* ================= ANALISA TICKER (perubahan harga pada rentang tanggal) ================= */
 let HS = null, anSiap = false, anIndeks = "semua", anTicker = null, anBaris = [], anRentang = null;
 const elAnDari = document.getElementById("anDari"), elAnSampai = document.getElementById("anSampai");
@@ -728,24 +1027,27 @@ async function bukaAnalisa(){
   }
   hitungAnalisa();
 }
-function anDefault(){ elAnSampai.value = HS.t[HS.t.length - 1]; elAnDari.value = HS.t[Math.max(0, HS.t.length - 22)]; }
+function anDefault(){ elAnSampai.value = HS.t[HS.t.length - 1]; elAnDari.value = HS.t[Math.max(1, HS.t.length - 21)]; }
 function statistik(t, i0, i1){
   const d = HS.d[t]; if (!d) return null;
   const [c, v] = d;
   let a = -1, z = -1;
   for (let i = i0; i <= i1; i++) if (c[i] != null){ if (a < 0) a = i; z = i; }
   if (a < 0) return null;
+  // dasar perubahan = close hari bursa SEBELUM hari pertama rentang (sama seperti TITEN), jadi gerakan hari pertama ikut terhitung
+  let b = a - 1; while (b >= 0 && c[b] == null) b--;
+  if (b < 0) b = a;
   let mx = -Infinity, mn = Infinity, iMx = a, iMn = a, naik = 0, turun = 0, sv = 0, nv = 0, nilai = 0;
   for (let i = a; i <= z; i++){
     const x = c[i]; if (x == null) continue;
     if (x > mx){ mx = x; iMx = i; } if (x < mn){ mn = x; iMn = i; }
-    if (i > a){ let j = i - 1; while (j >= a && c[j] == null) j--; if (j >= a){ if (x > c[j]) naik++; else if (x < c[j]) turun++; } }
+    let j = i - 1; while (j >= b && c[j] == null) j--; if (j >= b && j !== i){ if (x > c[j]) naik++; else if (x < c[j]) turun++; }
     if (v[i] != null){ sv += v[i]; nv++; nilai += x * v[i] * 1000; }
   }
   const n = i1 - i0 + 1; let sb = 0, nb = 0;
   for (let i = Math.max(0, i0 - n); i < i0; i++) if (v[i] != null){ sb += v[i]; nb++; }
   const volRata = nv ? sv / nv * 1000 : null, volSblm = nb ? sb / nb * 1000 : null;
-  return { awal: c[a], akhir: c[z], tglAwal: HS.t[a], tglAkhir: HS.t[z], ubah: 100 * (c[z] / c[a] - 1),
+  return { awal: c[b], akhir: c[z], tglAwal: HS.t[b], tglAkhir: HS.t[z], ubah: 100 * (c[z] / c[b] - 1),
     tinggi: mx, rendah: mn, tglTinggi: HS.t[iMx], tglRendah: HS.t[iMn], dariTinggi: 100 * (c[z] / mx - 1),
     lebar: 100 * (mx / mn - 1), naik, turun, volRata, volRasio: volRata && volSblm ? volRata / volSblm : null, nilai };
 }
@@ -774,7 +1076,7 @@ function hitungAnalisa(){
 const kolomAnalisa = [
   {k:"ticker", label:"Ticker", kiri:true, f:r => `<span class="tkr">${r.ticker}</span>${r.dow ? '<span class="lencana">DOW</span>' : ""}<span class="nama-kecil">${esc(r.nama)}</span>`},
   {k:"ubah", label:"%Ubah", f:r => `<b class="${kelasArah(r.ubah)}">${persen(r.ubah)}</b>`},
-  {k:"awal", label:"Awal", judul:"Close hari pertama rentang", f:r => angka(r.awal)},
+  {k:"awal", label:"Awal", judul:"Close hari bursa sebelum hari pertama rentang", f:r => angka(r.awal)},
   {k:"akhir", label:"Akhir", judul:"Close hari terakhir rentang", f:r => angka(r.akhir)},
   {k:"tinggi", label:"Tertinggi", f:r => `${angka(r.tinggi)}<span class="nama-kecil" style="margin-left:auto">${tglId(r.tglTinggi)}</span>`},
   {k:"rendah", label:"Terendah", f:r => `${angka(r.rendah)}<span class="nama-kecil" style="margin-left:auto">${tglId(r.tglRendah)}</span>`},
@@ -837,6 +1139,73 @@ function tampilDetail(t, gulir){
   };
   saringAnalisa();
   if (gulir) el.scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+/* ================= KALENDER (earnings + makro, bahasa Indonesia, jam WIB) ================= */
+const HARI = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+function hariTgl(s){ const d = new Date(s + "T12:00:00Z"); return `${HARI[d.getUTCDay()]}, ${tglId(s).replace(/ \d{4}$/, "")}`; }
+let kalSiap = false, kalMode = "earnings", kalRentang = "depan7", kalIndeks = "semua", tabelKal = null, tabelMakro = null;
+function reaksi(e){
+  if (!HS || e.eps_aktual == null && e.tanggal >= HARI_INI) return null;
+  const d = HS.d[e.ticker]; if (!d) return null;
+  const c = d[0], i = HS.t.indexOf(e.tanggal);
+  if (i < 0) return null;
+  const [a, b] = e.waktu === "pasca" ? [i, i + 1] : e.waktu === "pra" ? [i - 1, i] : [null, null];
+  if (a == null || a < 0 || b >= HS.t.length || c[a] == null || c[b] == null) return null;
+  return 100 * (c[b] / c[a] - 1);
+}
+async function bukaKalender(){
+  const el = document.getElementById("kalSumber");
+  if (!KAL){ document.getElementById("kalTabel").innerHTML = `<tbody><tr><td class="kosong kiri">Kalender belum tersedia — akan muncul setelah pembaruan otomatis berikutnya.</td></tr></tbody>`; return; }
+  if (!kalSiap){
+    kalSiap = true;
+    buatChip(document.getElementById("kalTab"), [["earnings", "Earnings emiten"], ["makro", "Data makro AS"]], kalMode, m => { kalMode = m; tampilKal(); });
+    buatChip(document.getElementById("kalRentang"), [["depan7", "7 hari ke depan"], ["depan35", "5 minggu ke depan"], ["lalu", "Sudah lapor (2 minggu)"], ["semua", "Semua"]], kalRentang, m => { kalRentang = m; saringKal(); });
+    buatChip(document.getElementById("kalIndeks"), INDEKS, kalIndeks, m => { kalIndeks = m; saringKal(); });
+    document.getElementById("kalCari").oninput = () => saringKal();
+    el.textContent = `Sumber earnings: ${KAL.sumber || "–"} (diperbarui ${new Date(KAL.dibuat).toLocaleString("id-ID", {day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"})} WIB). Jadwal makro: The Fed & Biro Statistik Tenaga Kerja AS (BLS). Jadwal earnings bisa berubah — emiten kadang menggeser tanggal.`;
+  }
+  tampilKal();
+  if (!HS){ try { HS = await ambilJSON("data/harga-semua.json?v=" + MAN.versi); saringKal(); } catch (e) {} }   // untuk kolom Reaksi
+}
+function tampilKal(){
+  document.getElementById("kal-earnings").hidden = kalMode !== "earnings";
+  document.getElementById("kal-makro").hidden = kalMode !== "makro";
+  if (kalMode === "earnings") saringKal(); else isiMakro();
+}
+const kolomKal = [
+  {k:"ticker", label:"Ticker", kiri:true, f:e => `<span class="tkr">${e.ticker}</span>${e.dow ? '<span class="lencana">DOW</span>' : ""}<span class="nama-kecil">${esc(e.nama)}</span>`},
+  {k:"tanggal", label:"Tanggal", kiri:true, judul:"Tanggal laporan (waktu New York)", f:e => `<b>${hariTgl(e.tanggal)}</b>`},
+  {k:"waktu", label:"Waktu (WIB)", kiri:true, f:e => `<span style="white-space:normal">${e.waktu_label}</span>`},
+  {k:"eps_perkiraan", label:"EPS Perk.", judul:"Perkiraan analis, USD per saham", f:e => e.eps_perkiraan == null ? "–" : "$" + angka(e.eps_perkiraan)},
+  {k:"eps_aktual", label:"EPS Aktual", f:e => e.eps_aktual == null ? '<span class="redup">belum</span>' : "<b>$" + angka(e.eps_aktual) + "</b>"},
+  {k:"kejutan_persen", label:"Kejutan", judul:"Selisih EPS aktual terhadap perkiraan", f:e => e.kejutan_persen == null ? "–" : `<b class="${kelasArah(e.kejutan_persen)}">${persen(e.kejutan_persen, 1)}</b>`},
+  {k:"reaksi", label:"Reaksi", judul:"Perubahan harga sesi pertama setelah laporan keluar", f:e => e.reaksi == null ? "–" : `<b class="${kelasArah(e.reaksi)}">${persen(e.reaksi)}</b>`},
+  {k:"kap_pasar", label:"Kap. Pasar", f:e => usd(e.kap_pasar)},
+  {k:"chg_1bl", label:"%1Bln", f:e => `<span class="${kelasArah(e.chg_1bl)}">${persen(e.chg_1bl, 1)}</span>`},
+];
+function saringKal(){
+  const q = document.getElementById("kalCari").value.trim().toUpperCase();
+  const batas = {depan7: [HARI_INI, tambahHari(HARI_INI, 7)], depan35: [HARI_INI, tambahHari(HARI_INI, 35)], lalu: [tambahHari(HARI_INI, -14), tambahHari(HARI_INI, -1)], semua: ["0000", "9999"]}[kalRentang];
+  const hasil = KAL.earnings.filter(e => e.tanggal >= batas[0] && e.tanggal <= batas[1]).map(e => {
+    const r = PER_TICKER[e.ticker] || {};
+    return {...e, _id: e.ticker, nama: r.nama, dow: r.dow, sp500: r.sp500, ndx: r.ndx, kap_pasar: r.kap_pasar, chg_1bl: r.chg_1bl, reaksi: reaksi(e)};
+  }).filter(e => (kalIndeks === "semua" || e[kalIndeks]) && (!q || e.ticker.includes(q) || (e.nama || "").toUpperCase().includes(q)));
+  document.getElementById("kalJumlah").textContent = `${hasil.length} laporan`;
+  const urut = kalRentang === "lalu" ? {urut: "tanggal", arah: -1} : {urut: "tanggal", arah: 1};
+  document.getElementById("kalTabel").innerHTML = "";
+  tabelKal = buatTabel(document.getElementById("kalTabel"), kolomKal, hasil, {...urut, klik: t => bukaEmiten(t), sorot: e => e.tanggal === HARI_INI});
+}
+function isiMakro(){
+  const baris = KAL.makro.map((m, i) => ({...m, _id: "m" + i, lewat: m.tanggal_wib < new Date().toLocaleDateString("sv-SE", {timeZone: "Asia/Jakarta"})}));
+  const kolom = [
+    {k:"tanggal_wib", label:"Waktu (WIB)", kiri:true, f:m => `<b>${hariTgl(m.tanggal_wib)}</b><span class="nama-kecil">${m.jam_wib} WIB${m.lewat ? " · sudah lewat" : ""}</span>`, urut:m => m.tanggal_wib + m.jam_wib},
+    {k:"judul", label:"Acara", kiri:true, f:m => `<span style="white-space:normal;display:block;min-width:230px"><span class="lencana" style="margin-left:0">${m.jenis}</span> <b>${esc(m.judul)}</b><span class="ket-acara">${esc(m.keterangan)}</span></span>`},
+  ];
+  document.getElementById("makroTabel").innerHTML = "";
+  tabelMakro = buatTabel(document.getElementById("makroTabel"), kolom, baris, {urut: "tanggal_wib", arah: 1,
+    sorot: m => !m.lewat && m.tanggal_wib <= tambahHari(new Date().toLocaleDateString("sv-SE", {timeZone: "Asia/Jakarta"}), 7),
+    kelas: m => m.lewat ? "lewat" : ""});
 }
 
 let awal = "NVDA";
