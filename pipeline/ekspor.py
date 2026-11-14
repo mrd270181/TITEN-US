@@ -83,6 +83,18 @@ def tulis(con, keluar, batas, info_jalan):
         tulis_json(os.path.join(data_dir, "emiten", f"{t}.json"),
                    {"harga": harga.get(t), "lk": lk.get(t), "cik": cik.get(t), "akhir_fy": akhir_fy.get(t)})
 
+    # harga gabungan semua emiten untuk menu ANALISA: kalender bersama, [close[], volume/1000[]] per ticker
+    tanggal = sorted({d for a in harga.values() for d in a["t"]})
+    posisi = {d: i for i, d in enumerate(tanggal)}
+    semua = {}
+    for t, a in harga.items():
+        c, v = [None] * len(tanggal), [None] * len(tanggal)
+        for i, d in enumerate(a["t"]):
+            c[posisi[d]] = a["c"][i]
+            v[posisi[d]] = round((a["v"][i] or 0) / 1000)
+        semua[t] = [c, v]
+    sidik["harga-semua.json"] = tulis_json(os.path.join(data_dir, "harga-semua.json"), {"t": tanggal, "d": semua})
+
     versi = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
     tulis_json(os.path.join(data_dir, "manifest.json"), {
         "versi": versi, "dibuat": datetime.now(timezone.utc).isoformat(timespec="seconds"),

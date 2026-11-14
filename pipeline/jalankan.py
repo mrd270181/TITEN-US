@@ -153,8 +153,14 @@ def main():
         info = mingguan(con, a.keluar, os.path.join(a.lama, "state"))
     else:   # bawa catatan mingguan terakhir
         info = {k: m_lama.get(k, []) for k in ("tanpa_sec", "lk_kosong")}
+    try:
+        k, tg = harga.kurs_usd_idr()
+        print(f"kurs USD/IDR {k:,.2f} ({tg})")
+    except Exception as e:
+        k, tg = m_lama.get("kurs_usd_idr"), m_lama.get("kurs_tanggal")
+        print(f"PERINGATAN: kurs gagal diambil ({e}) - pakai kurs terakhir {k} ({tg})")
     simpan_state(con, os.path.join(a.keluar, "state"))
-    harian(con, a.keluar, {**info, "mode": mode})
+    harian(con, a.keluar, {**info, "mode": mode, "kurs_usd_idr": k, "kurs_tanggal": tg})
 
     # salin aplikasi
     for f in os.listdir(os.path.join(AKAR, "app")):

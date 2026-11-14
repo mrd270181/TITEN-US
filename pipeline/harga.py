@@ -82,3 +82,17 @@ def tarik(con, tickers):
         print(f"   harga kelompok {n}: {kelompok[0]}..{kelompok[-1]} {len(data):,} baris")
         time.sleep(JEDA)
     return kosong
+
+
+def kurs_usd_idr():
+    """Kurs penutupan USD/IDR terakhir dari Yahoo (IDR=X) -> (kurs, 'YYYY-MM-DD')."""
+    akhir = (date.today() + timedelta(days=1)).isoformat()
+    mulai = (date.today() - timedelta(days=14)).isoformat()
+    d = unduh(["IDR=X"], mulai, akhir, paralel=False)
+    if d.empty:
+        raise RuntimeError("IDR=X kosong")
+    b = d.sort_values("tanggal").iloc[-1]
+    k = float(b["close"])
+    if not 1000 < k < 100000:
+        raise RuntimeError(f"kurs tidak masuk akal: {k}")
+    return round(k, 2), b["tanggal"].isoformat()

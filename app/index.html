@@ -90,6 +90,18 @@ table.data tbody tr:hover td{background:var(--surface-2)}
 .stat .v{font-size:16px;font-weight:700}
 .stat .s{font-size:11px;color:var(--teks-3)}
 .kosong{color:var(--teks-3);padding:18px;text-align:center}
+details.panduan{background:var(--surface-1);border:1px solid var(--garis);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:13px;color:var(--teks-2)}
+details.panduan summary{cursor:pointer;font-weight:700;color:var(--merek-tua);list-style:none}
+details.panduan summary::before{content:"ⓘ  "}
+details.panduan[open] summary{margin-bottom:6px}
+details.panduan dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:0}
+details.panduan dt{font-weight:700;color:var(--teks)}details.panduan dd{margin:0}
+.ringkas-an{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline;font-size:13px;color:var(--teks-2)}
+.ringkas-an .besar{font-size:18px;font-weight:800;color:var(--teks)}
+.ringkas-an .sel{display:flex;flex-direction:column}
+.ringkas-an .sel .k{font-size:11px;color:var(--teks-3);text-transform:uppercase;letter-spacing:.05em}
+.detail-kepala{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:6px}
+.detail-kepala .kode{font-size:18px;font-weight:800;color:var(--merek-tua)}
 .svgwadah{position:relative}
 .tip{position:absolute;pointer-events:none;background:var(--surface-1);border:1px solid var(--garis-kuat);border-radius:8px;padding:6px 9px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.18);display:none;white-space:nowrap;z-index:5}
 .chip-hapus{margin-left:6px;color:var(--teks-3)}
@@ -109,6 +121,7 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
 <header class="atas">
   <div class="logo">TITEN <span>US</span></div>
   <button class="ikon-tombol" id="tombolTema" title="Ganti tema terang/gelap">◐ Tema</button>
+  <button class="ikon-tombol" id="tombolMata" title="Tampilkan nilai dalam USD atau Rupiah">$ → Rp</button>
   <div class="ket" id="ketData"></div>
 </header>
 
@@ -123,12 +136,54 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       <span class="jumlah" id="jumlahScreener"></span>
     </div>
     <div class="rel" id="chipIndeks"></div>
+    <details class="panduan"><summary>Cara membaca kolom</summary><dl>
+      <dt>Close</dt><dd>Harga penutupan per lembar dalam USD (saham AS dibeli dalam dolar), sudah disesuaikan dengan stock split.</dd>
+      <dt>%1H</dt><dd>Perubahan close hari ini dibanding kemarin.</dd>
+      <dt>Gap</dt><dd>Harga pembukaan dibanding close kemarin. Positif = buka di atas (gap up).</dd>
+      <dt>Volume · Vol/MA5</dt><dd>Lembar saham diperdagangkan; Vol/MA5 = volume hari ini ÷ rata-rata 5 hari sebelumnya. 2× = dua kali lebih ramai dari biasanya.</dd>
+      <dt>Nilai</dt><dd>Nilai transaksi hari itu (close × volume) dalam USD: Jt = juta, M = miliar, T = triliun. Tombol $ → Rp di atas untuk melihat dalam Rupiah (kurs hari ini).</dd>
+      <dt>%1Bln · %YTD</dt><dd>Perubahan harga ±21 hari bursa terakhir · sejak akhir tahun lalu.</dd>
+      <dt>Dari High52</dt><dd>Jarak close dari harga tertinggi 52 minggu. −2% = hanya 2% di bawah puncaknya.</dd>
+      <dt>Kap. Pasar</dt><dd>Nilai seluruh saham perusahaan = close × jumlah saham beredar.</dd>
+      <dt>PER</dt><dd>Kap. pasar ÷ laba bersih 4 kuartal terakhir. Makin kecil = makin “murah” terhadap labanya. “rugi/–” = sedang rugi.</dd>
+      <dt>PBV</dt><dd>Kap. pasar ÷ ekuitas (modal bersih). Kosong kalau ekuitas negatif.</dd>
+      <dt>ROE</dt><dd>Laba bersih 4 kuartal ÷ ekuitas: seberapa efisien modal menghasilkan laba.</dd>
+      <dt>Laba YoY</dt><dd>Laba bersih 4 kuartal terakhir dibanding 4 kuartal sebelumnya.</dd>
+      <dt>Warna</dt><dd><span class="naik">hijau</span> = naik, <span class="turun">merah</span> = turun. Klik judul kolom untuk mengurutkan, klik baris untuk membuka di CARI.</dd>
+    </dl></details>
     <div class="label-kecil">Saringan cepat</div>
     <div class="rel" id="chipPreset"></div>
     <div class="bungkus-tabel"><table class="data" id="tabelScreener"></table></div>
   </section>
 
   <!-- ================= CARI ================= -->
+  <section class="halaman" id="hal-analisa">
+    <div class="baris-kontrol">
+      <label class="redup">Dari <input type="date" class="kotak" id="anDari"></label>
+      <label class="redup">Sampai <input type="date" class="kotak" id="anSampai"></label>
+      <button class="chip" id="anTerbaru" title="Kembali ke ±1 bulan terakhir">Terbaru</button>
+    </div>
+    <div class="baris-kontrol">
+      <input class="kotak" id="anCari" placeholder="Cari ticker / nama">
+      <select class="kotak" id="anSektor"><option value="">Semua sektor</option></select>
+      <span class="jumlah" id="anJumlah"></span>
+    </div>
+    <div class="rel" id="anIndeks"></div>
+    <div class="kartu" id="anRingkas"><div class="memuat">Memuat harga semua emiten…</div></div>
+    <div class="kartu" id="anDetail" hidden></div>
+    <details class="panduan"><summary>Cara membaca kolom</summary><dl>
+      <dt>Awal · Akhir</dt><dd>Close (USD per lembar) pada hari bursa pertama dan terakhir di rentang yang dipilih.</dd>
+      <dt>%Ubah</dt><dd>Perubahan harga dari Awal ke Akhir.</dd>
+      <dt>Tertinggi · Terendah</dt><dd>Close tertinggi dan terendah di dalam rentang.</dd>
+      <dt>Dari Tinggi</dt><dd>Jarak Akhir dari close tertinggi di rentang. −15% = sudah turun 15% dari puncaknya di periode itu.</dd>
+      <dt>Lebar</dt><dd>Tertinggi ÷ Terendah − 1: seberapa lebar harga bergerak (volatilitas) di rentang itu.</dd>
+      <dt>Naik/Turun</dt><dd>Jumlah hari close naik / turun dibanding hari sebelumnya.</dd>
+      <dt>Vol rata2 · Vol vs Sblm</dt><dd>Rata-rata volume harian di rentang, dibanding rata-rata volume dengan jumlah hari yang sama tepat sebelum rentang. 1,5× = 50% lebih ramai.</dd>
+      <dt>Nilai</dt><dd>Total nilai transaksi selama rentang (USD, atau Rupiah lewat tombol $ → Rp).</dd>
+    </dl></details>
+    <div class="bungkus-tabel"><table class="data" id="anTabel"></table></div>
+  </section>
+
   <section class="halaman" id="hal-cari">
     <div class="baris-kontrol">
       <input class="kotak" id="inputCari" list="daftarTicker" placeholder="Ketik ticker, mis. NVDA">
@@ -166,6 +221,7 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
 
 <nav class="bawah">
   <button data-hal="screener" aria-current="true">SCREENER</button>
+  <button data-hal="analisa" aria-current="false">ANALISA</button>
   <button data-hal="cari" aria-current="false">CARI</button>
 </nav>
 
@@ -205,13 +261,20 @@ function angka(x, d = 2){
 function ringkas(x, d = 2){           // 4.820.000.000.000 -> 4,82 T
   if (x === null || x === undefined || !isFinite(x)) return "–";
   const a = Math.abs(x);
-  if (a >= 1e12) return angka(x / 1e12, d) + " T";
+  if (a >= 1e12) return angka(x / 1e12, a >= 1e14 ? 0 : a >= 1e13 ? 1 : d) + " T";
   if (a >= 1e9)  return angka(x / 1e9, a >= 1e11 ? 0 : 1) + " M";
   if (a >= 1e6)  return angka(x / 1e6, a >= 1e8 ? 0 : 1) + " Jt";
   if (a >= 1e3)  return angka(x / 1e3, 0) + " Rb";
   return angka(x, 0);
 }
-const usd = (x, d) => (x === null || x === undefined || !isFinite(x)) ? "–" : "$" + ringkas(x, d);
+/* mata uang tampilan: USD (bawaan) atau Rupiah. Satuan seperti TITEN: Jt / M / T. Harga per lembar tetap USD. */
+const KURS = (MAN.kurs_usd_idr > 1000 && MAN.kurs_usd_idr < 100000) ? MAN.kurs_usd_idr : null;
+let MATA = "USD";
+try { MATA = localStorage.getItem("titenus-mata") || "USD"; } catch (e) {}
+if (!KURS) MATA = "USD";
+const kaliKurs = () => MATA === "IDR" ? KURS : 1;
+const labelUang = (x, d) => (x === null || x === undefined || !isFinite(x)) ? "–" : (MATA === "IDR" ? "Rp " : "$") + ringkas(x, d);
+const usd = (x, d) => (x === null || x === undefined || !isFinite(x)) ? "–" : labelUang(x * kaliKurs(), d);   // x selalu dalam USD
 function persen(x, d = 2, tanda = true){
   if (x === null || x === undefined || !isFinite(x)) return "–";
   return (tanda && x > 0 ? "+" : x < 0 ? "−" : "") + angka(Math.abs(x), d) + "%";
@@ -222,8 +285,12 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;
 
 const dibuat = new Date(MAN.dibuat);
 document.getElementById("ketData").innerHTML = `Data per ${tglId(MAN.batas)}<br>${R.length} emiten`;
-document.getElementById("statusData").innerHTML = `Harga penutupan <b>${tglId(MAN.batas)}</b> · diperbarui otomatis ${dibuat.toLocaleString("id-ID", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"})} WIB` +
-  (navigator.onLine === false ? " · <b>offline</b>" : "");
+function tulisStatus(){
+  document.getElementById("statusData").innerHTML = `Harga penutupan <b>${tglId(MAN.batas)}</b> · diperbarui otomatis ${dibuat.toLocaleString("id-ID", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"})} WIB` +
+    (KURS ? ` · kurs <b>Rp ${angka(KURS, 0)}</b>/USD${MAN.kurs_tanggal ? " (" + tglId(MAN.kurs_tanggal) + ")" : ""}` : "") +
+    (MATA === "IDR" ? " · nilai dalam <b>Rupiah</b>, harga per lembar tetap USD" : " · semua nilai dalam <b>USD</b>") + (navigator.onLine === false ? " · <b>offline</b>" : "");
+}
+tulisStatus();
 
 /* ---------------- tema ---------------- */
 const akar = document.documentElement;
@@ -235,6 +302,17 @@ document.getElementById("tombolTema").onclick = () => {
   gambarChart(); if (panelAktif === "FINANSIAL") isiFinansial();
 };
 const warna = n => getComputedStyle(akar).getPropertyValue(n).trim();
+const elMata = document.getElementById("tombolMata");
+elMata.textContent = MATA === "IDR" ? "Rp → $" : "$ → Rp";
+if (!KURS) elMata.hidden = true;
+elMata.onclick = () => {
+  MATA = MATA === "IDR" ? "USD" : "IDR";
+  try { localStorage.setItem("titenus-mata", MATA); } catch (e) {}
+  elMata.textContent = MATA === "IDR" ? "Rp → $" : "$ → Rp";
+  tulisStatus(); saring();
+  if (anSiap){ saringAnalisa(); if (anTicker) tampilDetail(anTicker); }
+  if (EMITEN[tickerAktif]){ bukaEmiten(tickerAktif, true); if (document.getElementById("hal-cari").classList.contains("aktif")) bukaPanel(panelAktif); }
+};
 
 /* ---------------- navigasi ---------------- */
 document.querySelectorAll("nav.bawah button").forEach(b => b.onclick = () => bukaHalaman(b.dataset.hal));
@@ -242,6 +320,7 @@ function bukaHalaman(h){
   document.querySelectorAll(".halaman").forEach(s => s.classList.toggle("aktif", s.id === "hal-" + h));
   document.querySelectorAll("nav.bawah button").forEach(b => b.setAttribute("aria-current", b.dataset.hal === h));
   if (h === "cari" && EMITEN[tickerAktif]) requestAnimationFrame(() => bukaPanel(panelAktif));
+  if (h === "analisa") bukaAnalisa();
 }
 
 /* ---------------- tabel umum: header beku + urut ---------------- */
@@ -286,7 +365,7 @@ const kolomScreener = [
   {k:"gap_open", label:"Gap", judul:"Gap open vs close kemarin", f:r => `<span class="${kelasArah(r.gap_open)}">${persen(r.gap_open)}</span>`},
   {k:"volume", label:"Volume", f:r => ringkas(r.volume)},
   {k:"vol_x_ma5", label:"Vol/MA5", judul:"Volume hari ini dibanding rata-rata 5 hari sebelumnya", f:r => r.vol_x_ma5 == null ? "–" : `<b>${angka(r.vol_x_ma5)}×</b>`},
-  {k:"nilai_transaksi", label:"Nilai", judul:"Nilai transaksi (USD)", f:r => usd(r.nilai_transaksi)},
+  {k:"nilai_transaksi", label:"Nilai", judul:"Nilai transaksi (close × volume)", f:r => usd(r.nilai_transaksi)},
   {k:"chg_1bl", label:"%1Bln", f:r => `<span class="${kelasArah(r.chg_1bl)}">${persen(r.chg_1bl, 1)}</span>`},
   {k:"chg_ytd", label:"%YTD", f:r => `<span class="${kelasArah(r.chg_ytd)}">${persen(r.chg_ytd, 1)}</span>`},
   {k:"dari_tinggi_52m", label:"Dari High52", judul:"Jarak dari harga tertinggi 52 minggu", f:r => persen(r.dari_tinggi_52m, 1)},
@@ -524,7 +603,7 @@ function isiKeystats(){
 
 /* ---------------- FINANSIAL ---------------- */
 const POS = [["pendapatan","Pendapatan"],["laba_kotor","Laba kotor"],["laba_usaha","Laba usaha"],["laba_sebelum_pajak","Laba sebelum pajak"],
-  ["laba_bersih","Laba bersih"],["eps_dilusi","EPS dilusi ($)"],["arus_kas_operasi","Arus kas operasi"],["belanja_modal","Belanja modal"],
+  ["laba_bersih","Laba bersih"],["eps_dilusi","EPS dilusi"],["arus_kas_operasi","Arus kas operasi"],["belanja_modal","Belanja modal"],
   ["_fcf","Free cash flow"],["total_aset","Total aset"],["total_liabilitas","Total liabilitas"],["ekuitas","Ekuitas"],["kas","Kas"],["utang_jangka_panjang","Utang jangka panjang"]];
 let modeFin = "Q";
 function isiFinansial(){
@@ -537,11 +616,12 @@ function isiFinansial(){
         <span class="legenda" style="margin-left:auto"><span><i class="kotak-l" style="background:var(--seri1)"></i>Pendapatan</span><span><i class="kotak-l" style="background:var(--seri2)"></i>Laba bersih</span></span></div>
       <div class="svgwadah" id="wadahBar"></div></div>
     <div class="bungkus-tabel" style="max-height:none"><table class="data" id="tabelFin"></table></div>
-    <p class="redup" style="font-size:12px">Juta USD kecuali EPS. Angka bergaris bawah titik = dihitung (mis. Q4 = tahunan − 9 bulan; laba kotor = pendapatan − beban pokok). Klik judul kolom untuk mengurutkan.</p>`;
+    <p class="redup" style="font-size:12px">${MATA === "IDR" ? `Miliar Rupiah (kurs hari ini Rp ${angka(KURS, 0)}/USD), EPS dalam Rupiah` : "Juta USD, EPS dalam USD"}. Angka bergaris bawah titik = dihitung (mis. Q4 = tahunan − 9 bulan; laba kotor = pendapatan − beban pokok). Klik judul kolom untuk mengurutkan.</p>`;
   buatChip(document.getElementById("chipFin"), [["Q","Kuartal"],["FY","Tahunan"]], modeFin, m => { modeFin = m; isiFinansial(); });
   // grafik batang pendapatan vs laba bersih
   const wb = document.getElementById("wadahBar"), W = wb.clientWidth || 600, H = 210, ki = 54, ka = 8, at = 10, bw = 26;
-  const pend = d.pos.pendapatan, lb = d.pos.laba_bersih;
+  const fx = kaliKurs(), kali = a => a.map(x => x == null ? null : x * fx);   // juta USD -> juta mata uang tampilan
+  const pend = kali(d.pos.pendapatan), lb = kali(d.pos.laba_bersih);
   const vals = [...pend, ...lb].filter(v => v != null), mx = Math.max(0, ...vals), mn = Math.min(0, ...vals);
   const Y = v => at + (mx - v) / ((mx - mn) || 1) * (H - at - bw), lebar = (W - ki - ka) / n, bb = Math.max(3, Math.min(22, lebar * .32));
   let svg = `<svg width="${W}" height="${H}" role="img" aria-label="Pendapatan dan laba bersih per periode">`;
@@ -560,7 +640,7 @@ function isiFinansial(){
   wb.innerHTML = svg + `</svg><div class="tip" id="tipFin"></div>`;
   const tip = document.getElementById("tipFin");
   wb.querySelector("svg").onpointermove = e => { const i = e.target.dataset && e.target.dataset.i; if (i === undefined){ tip.style.display = "none"; return; }
-    tip.innerHTML = `<b>${d.label[i]}</b> · s.d. ${tglId(d.akhir[i])}<br><span style="color:var(--seri1)">■</span> Pendapatan ${usd(pend[i] * 1e6)}<br><span style="color:var(--seri2)">■</span> Laba bersih ${usd(lb[i] == null ? null : lb[i] * 1e6)}`;
+    tip.innerHTML = `<b>${d.label[i]}</b> · s.d. ${tglId(d.akhir[i])}<br><span style="color:var(--seri1)">■</span> Pendapatan ${labelUang(pend[i] * 1e6)}<br><span style="color:var(--seri2)">■</span> Laba bersih ${labelUang(lb[i] == null ? null : lb[i] * 1e6)}`;
     tip.style.display = "block"; const b = wb.getBoundingClientRect(); let x = e.clientX - b.left + 12; if (x + 200 > W) x -= 220; tip.style.left = x + "px"; tip.style.top = "8px"; };
   wb.querySelector("svg").onpointerleave = () => tip.style.display = "none";
   // tabel: baris = pos, kolom = periode (terbaru di kiri)
@@ -569,7 +649,8 @@ function isiFinansial(){
     k:"p" + i, label:d.label[i], judul:"s.d. " + d.akhir[i], f:r => {
       const v = r.v[i]; if (v == null) return '<span class="redup">–</span>';
       const tr = (d.turunan[i] || []).includes(r.pos) || r.pos === "_fcf";
-      const s = r.pos === "eps_dilusi" ? angka(v, 2) : angka(v, 0);
+      const s = MATA === "IDR" ? (r.pos === "eps_dilusi" ? angka(v * KURS, 0) : angka(v * KURS / 1000, 0))
+                               : (r.pos === "eps_dilusi" ? angka(v, 2) : angka(v, 0));
       return `<span class="${v < 0 ? "turun" : ""}" ${tr ? 'style="text-decoration:underline dotted;text-underline-offset:3px" title="dihitung"' : ""}>${s}</span>`; },
     urut:r => r.v[i]})));
   const baris = POS.map(([pos, label], urutan) => { const v = []; for (let i = 0; i < n; i++) v[i] = nilai(pos, i); return {_id: pos, pos, label, urutan, v}; });
@@ -623,6 +704,139 @@ function isiProfil(){
     <dt>Saham beredar</dt><dd>${ringkas(r.saham)} lembar (sumber: ${r.sumber_saham || "–"})</dd>
     <dt>Laporan terakhir</dt><dd>${r.lk_terakhir ? tglId(r.lk_terakhir) : "–"}</dd></dl>
     <p class="redup" style="font-size:12px;margin-bottom:0">Alamat, uraian bisnis, direksi, dan tanggal IPO belum diambil — bisa ditambah dari data SEC (submissions) atau yfinance.</p></div>`;
+}
+
+
+/* ================= ANALISA TICKER (perubahan harga pada rentang tanggal) ================= */
+let HS = null, anSiap = false, anIndeks = "semua", anTicker = null, anBaris = [], anRentang = null;
+const elAnDari = document.getElementById("anDari"), elAnSampai = document.getElementById("anSampai");
+async function bukaAnalisa(){
+  if (!HS){
+    try { HS = await ambilJSON("data/harga-semua.json?v=" + MAN.versi); }
+    catch (e) { document.getElementById("anRingkas").innerHTML = `<div class="memuat">Gagal memuat harga (${esc(e.message)}).</div>`; return; }
+  }
+  if (!anSiap){
+    anSiap = true;
+    elAnDari.min = elAnSampai.min = HS.t[0]; elAnDari.max = elAnSampai.max = HS.t[HS.t.length - 1];
+    anDefault();
+    sektor.forEach(x => document.getElementById("anSektor").insertAdjacentHTML("beforeend", `<option>${esc(x)}</option>`));
+    buatChip(document.getElementById("anIndeks"), INDEKS, anIndeks, id => { anIndeks = id; hitungAnalisa(); });
+    elAnDari.onchange = elAnSampai.onchange = () => hitungAnalisa();
+    document.getElementById("anTerbaru").onclick = () => { anDefault(); hitungAnalisa(); };
+    document.getElementById("anCari").oninput = () => saringAnalisa();
+    document.getElementById("anSektor").onchange = () => saringAnalisa();
+  }
+  hitungAnalisa();
+}
+function anDefault(){ elAnSampai.value = HS.t[HS.t.length - 1]; elAnDari.value = HS.t[Math.max(0, HS.t.length - 22)]; }
+function statistik(t, i0, i1){
+  const d = HS.d[t]; if (!d) return null;
+  const [c, v] = d;
+  let a = -1, z = -1;
+  for (let i = i0; i <= i1; i++) if (c[i] != null){ if (a < 0) a = i; z = i; }
+  if (a < 0) return null;
+  let mx = -Infinity, mn = Infinity, iMx = a, iMn = a, naik = 0, turun = 0, sv = 0, nv = 0, nilai = 0;
+  for (let i = a; i <= z; i++){
+    const x = c[i]; if (x == null) continue;
+    if (x > mx){ mx = x; iMx = i; } if (x < mn){ mn = x; iMn = i; }
+    if (i > a){ let j = i - 1; while (j >= a && c[j] == null) j--; if (j >= a){ if (x > c[j]) naik++; else if (x < c[j]) turun++; } }
+    if (v[i] != null){ sv += v[i]; nv++; nilai += x * v[i] * 1000; }
+  }
+  const n = i1 - i0 + 1; let sb = 0, nb = 0;
+  for (let i = Math.max(0, i0 - n); i < i0; i++) if (v[i] != null){ sb += v[i]; nb++; }
+  const volRata = nv ? sv / nv * 1000 : null, volSblm = nb ? sb / nb * 1000 : null;
+  return { awal: c[a], akhir: c[z], tglAwal: HS.t[a], tglAkhir: HS.t[z], ubah: 100 * (c[z] / c[a] - 1),
+    tinggi: mx, rendah: mn, tglTinggi: HS.t[iMx], tglRendah: HS.t[iMn], dariTinggi: 100 * (c[z] / mx - 1),
+    lebar: 100 * (mx / mn - 1), naik, turun, volRata, volRasio: volRata && volSblm ? volRata / volSblm : null, nilai };
+}
+function hitungAnalisa(){
+  if (elAnDari.value > elAnSampai.value) [elAnDari.value, elAnSampai.value] = [elAnSampai.value, elAnDari.value];
+  let i0 = HS.t.findIndex(x => x >= elAnDari.value), i1 = -1;
+  for (let i = HS.t.length - 1; i >= 0; i--) if (HS.t[i] <= elAnSampai.value){ i1 = i; break; }
+  if (i0 < 0 || i1 < i0){ document.getElementById("anRingkas").innerHTML = `<div class="memuat">Tidak ada hari bursa di rentang itu.</div>`; return; }
+  anRentang = {i0, i1};
+  anBaris = R.map(r => { const s = statistik(r.ticker, i0, i1); return s && {...r, ...s}; }).filter(Boolean);
+  // ringkasan: seluruh emiten (tidak terpengaruh pencarian), rata-rata bobot sama per indeks
+  const ubah = anBaris.map(x => x.ubah).sort((a, b) => a - b), med = ubah[Math.floor(ubah.length / 2)];
+  const rata = k => { const a = anBaris.filter(x => k === "semua" || x[k]); return a.reduce((s, x) => s + x.ubah, 0) / (a.length || 1); };
+  const naik = ubah.filter(x => x > 0).length, turun = ubah.filter(x => x < 0).length;
+  const sel = (k, v, kelas = "") => `<div class="sel"><span class="k">${k}</span><span class="besar angka ${kelas}">${v}</span></div>`;
+  document.getElementById("anRingkas").innerHTML = `<div class="ringkas-an">
+    ${sel("Rentang", `${tglId(HS.t[i0])} – ${tglId(HS.t[i1])}`)}
+    ${sel("Hari bursa", i1 - i0 + 1)}
+    ${sel("Naik · Turun", `<span class="naik">${naik}</span> · <span class="turun">${turun}</span>`)}
+    ${sel("Median", persen(med), kelasArah(med))}
+    ${[["sp500","S&P 500"],["ndx","Nasdaq-100"],["dow","Dow 30"]].map(([k, l]) => { const v = rata(k); return sel(l + " (rata²)", persen(v), kelasArah(v)); }).join("")}
+  </div><div class="redup" style="font-size:11px;margin-top:6px">Rata² = rata-rata perubahan semua anggota indeks dengan bobot sama, bukan angka indeks resmi.</div>`;
+  saringAnalisa();
+  if (anTicker) tampilDetail(anTicker);
+}
+const kolomAnalisa = [
+  {k:"ticker", label:"Ticker", kiri:true, f:r => `<span class="tkr">${r.ticker}</span>${r.dow ? '<span class="lencana">DOW</span>' : ""}<span class="nama-kecil">${esc(r.nama)}</span>`},
+  {k:"ubah", label:"%Ubah", f:r => `<b class="${kelasArah(r.ubah)}">${persen(r.ubah)}</b>`},
+  {k:"awal", label:"Awal", judul:"Close hari pertama rentang", f:r => angka(r.awal)},
+  {k:"akhir", label:"Akhir", judul:"Close hari terakhir rentang", f:r => angka(r.akhir)},
+  {k:"tinggi", label:"Tertinggi", f:r => `${angka(r.tinggi)}<span class="nama-kecil" style="margin-left:auto">${tglId(r.tglTinggi)}</span>`},
+  {k:"rendah", label:"Terendah", f:r => `${angka(r.rendah)}<span class="nama-kecil" style="margin-left:auto">${tglId(r.tglRendah)}</span>`},
+  {k:"dariTinggi", label:"Dari Tinggi", f:r => persen(r.dariTinggi, 1)},
+  {k:"lebar", label:"Lebar", judul:"Tertinggi ÷ Terendah − 1", f:r => persen(r.lebar, 1, false)},
+  {k:"naik", label:"Naik/Turun", judul:"Jumlah hari naik / turun", f:r => `<span class="naik">${r.naik}</span>/<span class="turun">${r.turun}</span>`},
+  {k:"volRata", label:"Vol rata2", f:r => ringkas(r.volRata)},
+  {k:"volRasio", label:"Vol vs Sblm", judul:"Rata-rata volume rentang ÷ rata-rata volume periode sama sebelumnya", f:r => r.volRasio == null ? "–" : `<b>${angka(r.volRasio)}×</b>`},
+  {k:"nilai", label:"Nilai", judul:"Total nilai transaksi selama rentang", f:r => usd(r.nilai)},
+];
+let tabelAn = null, anUrut = "ubah", anArah = -1;
+function saringAnalisa(){
+  const q = document.getElementById("anCari").value.trim().toUpperCase(), sk = document.getElementById("anSektor").value;
+  const hasil = anBaris.filter(r => (anIndeks === "semua" || r[anIndeks]) && (!sk || r.sektor === sk) &&
+    (!q || r.ticker.includes(q) || (r.nama || "").toUpperCase().includes(q)));
+  document.getElementById("anJumlah").textContent = `${hasil.length} emiten`;
+  if (!tabelAn) tabelAn = buatTabel(document.getElementById("anTabel"), kolomAnalisa, hasil,
+    {urut: anUrut, arah: anArah, klik: t => tampilDetail(t, true), sorot: r => r.ticker === anTicker});
+  else tabelAn.ganti(hasil);
+}
+function tampilDetail(t, gulir){
+  anTicker = t; const el = document.getElementById("anDetail");
+  const r = anBaris.find(x => x.ticker === t); if (!r){ el.hidden = true; return; }
+  const {i0, i1} = anRentang, [c, v] = HS.d[t];
+  const idx = []; for (let i = i0; i <= i1; i++) if (c[i] != null) idx.push(i);
+  const W = Math.max(300, el.clientWidth || document.querySelector("main").clientWidth - 30), H = 230, ki = 8, ka = 58, at = 10, hH = 150, atV = at + hH + 12, hV = H - atV - 18;
+  const lo = Math.min(r.rendah, r.awal), hi = Math.max(r.tinggi, r.awal), pad = (hi - lo) * .08 || 1;
+  const X = k => ki + (idx.length < 2 ? (W - ki - ka) / 2 : k / (idx.length - 1) * (W - ki - ka));
+  const Y = p => at + (hi + pad - p) / (hi - lo + 2 * pad) * hH;
+  const vmax = Math.max(1, ...idx.map(i => v[i] || 0)), YV = x => atV + hV - x / vmax * hV;
+  const wArah = warna(r.ubah >= 0 ? "--naik" : "--turun"), cTeks = warna("--teks-3"), cKisi = warna("--kisi");
+  const garis = idx.map((i, k) => `${k ? "L" : "M"}${X(k).toFixed(1)},${Y(c[i]).toFixed(1)}`).join("");
+  const bw = Math.max(1, Math.min(10, (W - ki - ka) / Math.max(1, idx.length) * .6));
+  let svg = `<svg width="${W}" height="${H}" role="img" aria-label="Grafik close ${t} pada rentang terpilih">`;
+  const yLabel = [];
+  [r.awal, r.tinggi, r.rendah].forEach((p, j) => { const y = Y(p);
+    svg += `<line x1="${ki}" x2="${W - ka}" y1="${y}" y2="${y}" stroke="${j === 0 ? cTeks : cKisi}" ${j === 0 ? 'stroke-dasharray="4 4"' : ""}/>`;
+    if (yLabel.every(z => Math.abs(z - y) >= 13)){ yLabel.push(y); svg += `<text x="${W - ka + 6}" y="${y + 4}" font-size="11" fill="${cTeks}">${angka(p)}</text>`; } });
+  idx.forEach((i, k) => { const y = YV(v[i] || 0); svg += `<rect x="${X(k) - bw / 2}" y="${y}" width="${bw}" height="${atV + hV - y}" fill="${warna("--seri1")}" opacity=".45"/>`; });
+  svg += `<path d="${garis}" fill="none" stroke="${wArah}" stroke-width="2" stroke-linejoin="round"/>`;
+  svg += `<circle cx="${X(0)}" cy="${Y(r.awal)}" r="4" fill="${warna("--surface-1")}" stroke="${wArah}" stroke-width="2"/><circle cx="${X(idx.length - 1)}" cy="${Y(r.akhir)}" r="4" fill="${wArah}"/>`;
+  svg += `<text x="${ki}" y="${H - 4}" font-size="11" fill="${cTeks}">${tglId(r.tglAwal)}</text><text x="${W - ka}" y="${H - 4}" font-size="11" fill="${cTeks}" text-anchor="end">${tglId(r.tglAkhir)}</text>`;
+  svg += `<line id="anKursor" x1="0" x2="0" y1="${at}" y2="${atV + hV}" stroke="${cTeks}" stroke-dasharray="3 3" visibility="hidden"/>`;
+  svg += `<rect x="${ki}" y="0" width="${W - ki - ka}" height="${H}" fill="transparent" id="anArea"/></svg>`;
+  el.innerHTML = `<div class="detail-kepala"><span class="kode">${t}</span><span class="redup">${esc(r.nama)}</span>
+      <span class="angka">${angka(r.awal)} → <b>${angka(r.akhir)}</b> <b class="${kelasArah(r.ubah)}">${persen(r.ubah)}</b></span>
+      <span style="margin-left:auto;display:flex;gap:6px"><button class="chip" id="anKeCari">Buka di CARI</button><button class="chip" id="anTutup">Tutup ✕</button></span></div>
+    <div class="info-chart angka" id="anInfo">Garis putus-putus = harga awal. Geser kursor di grafik untuk melihat tiap hari. Batang biru = volume.</div>
+    <div class="svgwadah">${svg}</div>`;
+  el.hidden = false;
+  const area = document.getElementById("anArea"), kur = document.getElementById("anKursor"), info = document.getElementById("anInfo");
+  area.onpointermove = e => { const b = area.getBoundingClientRect(); const k = Math.max(0, Math.min(idx.length - 1, Math.round((e.clientX - b.left) / b.width * (idx.length - 1))));
+    const i = idx[k], u = 100 * (c[i] / r.awal - 1); kur.setAttribute("x1", X(k)); kur.setAttribute("x2", X(k)); kur.setAttribute("visibility", "visible");
+    info.innerHTML = `<b>${tglId(HS.t[i])}</b> · Close <b>${angka(c[i])}</b> · dari awal <span class="${kelasArah(u)}">${persen(u)}</span> · Vol ${ringkas((v[i] || 0) * 1000)}`; };
+  area.onpointerleave = () => kur.setAttribute("visibility", "hidden");
+  document.getElementById("anTutup").onclick = () => { anTicker = null; el.hidden = true; saringAnalisa(); };
+  document.getElementById("anKeCari").onclick = async () => {
+    await bukaEmiten(t);
+    elDari.value = HS.t[i0]; elSampai.value = HS.t[i1]; rentangManual = true; bukaPanel("CHART");
+  };
+  saringAnalisa();
+  if (gulir) el.scrollIntoView({behavior: "smooth", block: "start"});
 }
 
 let awal = "NVDA";
