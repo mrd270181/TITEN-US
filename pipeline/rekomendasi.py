@@ -37,12 +37,16 @@ NEGATIF_ID = ['turun', 'melemah', 'anjlok', 'ambruk', 'ambles', 'amblas', 'meros
 POSITIF_EN = ['beat', 'beats', 'tops', 'surge', 'surges', 'soar', 'soars', 'jump', 'jumps', 'rally', 'rallies',
               'record', 'upgrade', 'upgrades', 'upgraded', 'raises', 'raised', 'boost', 'boosts', 'strong',
               'outperform', 'bullish', 'gain', 'gains', 'rise', 'rises', 'climb', 'climbs', 'higher', 'growth',
-              'wins', 'approval', 'approved', 'partnership', 'expands', 'dividend', 'buyback', 'rebound', 'top pick']
+              'wins', 'approval', 'approved', 'partnership', 'expands', 'dividend', 'buyback', 'rebound', 'top pick',
+              'surged', 'soared', 'jumped', 'rallied', 'climbed', 'rose', 'topped', 'beat estimates', 'rebounds',
+              'rebounded', 'outperforms', 'outperformed', 'raises guidance', 'raises outlook', 'all-time high', 'skyrockets']
 NEGATIF_EN = ['miss', 'misses', 'plunge', 'plunges', 'sink', 'sinks', 'tumble', 'tumbles', 'drop', 'drops',
               'fall', 'falls', 'slump', 'slumps', 'slide', 'slides', 'downgrade', 'downgrades', 'downgraded',
               'lowers', 'weak', 'loss', 'losses', 'lawsuit', 'sued', 'probe', 'investigation', 'recall', 'layoffs',
               'bearish', 'warning', 'warns', 'decline', 'declines', 'fraud', 'antitrust', 'fined', 'halt', 'selloff',
-              'sell-off', 'underperform', 'cuts guidance', 'cuts outlook']
+              'sell-off', 'underperform', 'cuts guidance', 'cuts outlook', 'slumped', 'sank', 'plunged', 'fell',
+              'tumbled', 'dropped', 'slid', 'sinks', 'missed', 'resigns', 'ousted', 'scandal', 'crash', 'crashes',
+              'lowered', 'cut to sell', 'downbeat', 'disappoints', 'disappointing', 'worries', 'fears']
 REKOM_ID = {"strong_buy": "Beli kuat", "buy": "Beli", "hold": "Tahan", "underperform": "Kurang menarik",
             "sell": "Jual", "strong_sell": "Jual kuat", "none": "–"}
 UA_PERAMBAN = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -221,8 +225,18 @@ def valuasi(rows):
 
 
 # ------------------------------------------------------------------ Yahoo: sentimen analis + berita Inggris
-def yahoo_satu(t):
+def relevan(judul, t, nama):
+    """Judul harus menyebut nama perusahaan atau kode sahamnya (Yahoo sering menyertakan berita emiten lain)."""
+    j = judul.lower()
+    kata = [k for k in nama_pendek(nama).lower().split() if len(k) >= 3]
+    if kata and (kata[0] in j or " ".join(kata) in j):
+        return True
+    return len(t) >= 2 and re.search(r"(?<![A-Za-z])\$?" + re.escape(t) + r"(?![A-Za-z])", judul) is not None
+
+
+def yahoo_satu(arg):
     import yfinance as yf
+    t, nama = arg
     tk = yf.Ticker(t)
     analis, berita = None, []
     try:
@@ -230,7 +244,7 @@ def yahoo_satu(t):
         if i.get("numberOfAnalystOpinions"):
             m = i.get("recommendationMean")
             label = None if m is None else "Bagus" if m <= 2.0 else "Sedang" if m <= 3.0 else "Jelek"
-            analis = {"label": label, "rata2": m, "jumlah": i.get("numberOfAnalystOpinions"),
+            analis = {"label": label, "rata2": None if m is None else round(m, 2), "jumlah": i.get("numberOfAnalystOpinions"),
                       "kunci": REKOM_ID.get(i.get("recommendationKey") or "none", i.get("recommendationKey")),
                       "target": i.get("targetMeanPrice"), "target_tinggi": i.get("targetHighPrice"),
                       "target_rendah": i.get("targetLowPrice")}
@@ -248,7 +262,7 @@ def yahoo_satu(t):
                 w = datetime.fromtimestamp(c["providerPublishTime"], timezone.utc)
             else:
                 continue
-            if not judul or w < batas:
+            if not judul or w < batas or not relevan(judul, t, nama):
                 continue
             url = ((c.get("canonicalUrl") or {}).get("url") or (c.get("clickThroughUrl") or {}).get("url") or c.get("link"))
             sumber = (c.get("provider") or {}).get("displayName") or c.get("publisher") or "Yahoo Finance"
@@ -313,7 +327,7 @@ def hitung(con, folder_lama=None):
     # Yahoo (analis + berita Inggris), paralel ringan
     yahoo = {}
     with ThreadPoolExecutor(max_workers=6) as ex:
-        for t, a, b in ex.map(yahoo_satu, sorted(rows)):
+        for t, a, b in ex.map(yahoo_satu, [(t, rows[t]["nama"]) for t in sorted(rows)]):
             yahoo[t] = (a, b)
     ada_analis = sum(1 for a, _ in yahoo.values() if a)
     print(f"   Yahoo: analis {ada_analis} emiten, berita {sum(len(b) for _, b in yahoo.values())} judul")
