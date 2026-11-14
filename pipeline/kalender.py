@@ -140,19 +140,78 @@ def earnings(tickers, dari, sampai):
     return hasil, gagal
 
 
+def label_waktu(kunci, tgl):
+    if kunci == "pra":
+        return f"Sebelum bursa buka (±{ke_wib(tgl, jam(7, 0))[1]} WIB)"
+    if kunci == "pasca":
+        tw, jw = ke_wib(tgl, jam(16, 5))
+        return f"Setelah bursa tutup (±{jw} WIB{' besoknya' if tw != tgl else ''})"
+    return "Jam belum diumumkan"
+
+
+def earnings_yahoo(tickers, dari, sampai):
+    """Kalender earnings Yahoo (yfinance.Calendars): 100 jadwal per permintaan, urut kapitalisasi terbesar."""
+    import logging
+    import pandas as pd
+    import yfinance as yf
+    logging.getLogger("yfinance").setLevel(logging.CRITICAL)
+    kal = yf.Calendars(start=dari, end=sampai)
+    potong, off = [], 0
+    while off < 4000:
+        df = kal.get_earnings_calendar(market_cap=2e9, filter_most_active=False, start=dari, end=sampai,
+                                       limit=100, offset=off, force=True)
+        if df is None or df.empty:
+            break
+        potong.append(df.reset_index())
+        if len(df) < 100:
+            break
+        off += 100
+        time.sleep(1)
+    if not potong:
+        raise RuntimeError("kalender Yahoo kosong")
+    df = pd.concat(potong, ignore_index=True)
+    hasil = {}
+    for _, b in df.iterrows():
+        t = str(b.get("Symbol", "")).strip().upper().replace(".", "-")
+        if t not in tickers or pd.isna(b.get("Event Start Date")):
+            continue
+        waktu = pd.Timestamp(b["Event Start Date"])
+        waktu = (waktu.tz_localize("UTC") if waktu.tzinfo is None else waktu).tz_convert(NY)
+        tgl = waktu.date().isoformat()
+        kode = str(b.get("Timing") or "").upper()
+        kunci = ("pra" if kode == "BMO" else "pasca" if kode == "AMC" else
+                 "pra" if (waktu.hour, waktu.minute) < (9, 30) and kode in ("TAS", "") and waktu.hour > 0 else
+                 "pasca" if waktu.hour >= 16 and kode in ("TAS", "") else "?")
+        nilai = lambda k: None if pd.isna(b.get(k)) else round(float(b.get(k)), 4)
+        baris = {"ticker": t, "tanggal": tgl, "waktu": kunci, "waktu_label": label_waktu(kunci, tgl),
+                 "kuartal": None, "eps_perkiraan": nilai("EPS Estimate"), "jumlah_analis": None,
+                 "eps_tahun_lalu": None, "eps_aktual": nilai("Reported EPS"), "kejutan_persen": nilai("Surprise(%)")}
+        lama = hasil.get((t, tgl))
+        if lama is None or (lama["eps_aktual"] is None and baris["eps_aktual"] is not None):
+            hasil[(t, tgl)] = baris
+    return list(hasil.values())
+
+
 def tulis(keluar, tickers, lama=None):
     hari_ini = date.today()
     dari, sampai = (hari_ini - timedelta(days=14)).isoformat(), (hari_ini + timedelta(days=35)).isoformat()
-    er, gagal = earnings(set(tickers), dari, sampai)
+    sumber = "Yahoo Finance"
+    try:
+        er, gagal = earnings_yahoo(set(tickers), dari, sampai), 0
+    except Exception as e:
+        print(f"   kalender Yahoo gagal ({e}) - coba Nasdaq")
+        sumber = "Nasdaq"
+        er, gagal = earnings(set(tickers), dari, sampai)
     hari_kerja = sum(1 for i in range(50) if (date.fromisoformat(dari) + timedelta(days=i)).weekday() < 5
                      and (date.fromisoformat(dari) + timedelta(days=i)).isoformat() <= sampai)
-    if gagal > hari_kerja / 2 and lama and os.path.exists(lama):
+    if (gagal > hari_kerja / 2 or not er) and lama and os.path.exists(lama):
+        sumber = "sebelumnya"
         print(f"   PERINGATAN: kalender earnings {gagal} hari gagal - pakai kalender earnings sebelumnya")
         er = json.load(open(lama, encoding="utf-8")).get("earnings", [])
-    obj = {"dibuat": datetime.now(WIB).isoformat(timespec="minutes"), "dari": dari, "sampai": sampai,
+    obj = {"dibuat": datetime.now(WIB).isoformat(timespec="minutes"), "dari": dari, "sampai": sampai, "sumber": sumber,
            "earnings": sorted(er, key=lambda x: (x["tanggal"], x["ticker"])),
            "makro": makro((hari_ini - timedelta(days=14)).isoformat(), (hari_ini + timedelta(days=120)).isoformat())}
     with open(os.path.join(keluar, "data", "kalender.json"), "w", encoding="utf-8") as fh:
         json.dump(obj, fh, ensure_ascii=False, separators=(",", ":"))
-    print(f"kalender: {len(obj['earnings'])} jadwal earnings, {len(obj['makro'])} acara makro")
+    print(f"kalender: {len(obj['earnings'])} jadwal earnings ({sumber}), {len(obj['makro'])} acara makro")
     return obj
