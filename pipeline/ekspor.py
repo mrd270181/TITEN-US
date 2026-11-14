@@ -7,7 +7,8 @@ KOL_RINGKAS = ["ticker", "nama", "sektor", "sp500", "ndx", "dow", "tanggal", "op
                "vol_ma5", "vol_ma20", "vol_x_ma5", "vol_x_ma20", "ma20", "ma50", "ma200", "tinggi_52m", "rendah_52m",
                "dari_tinggi_52m", "saham", "sumber_saham", "kap_pasar", "pendapatan_ttm", "laba_bersih_ttm",
                "lk_terakhir", "per", "psr", "pbv", "roe", "npm", "gpm", "opm", "liab_ekuitas",
-               "tumbuh_pendapatan", "tumbuh_laba", "fcf_ttm", "fcf_yield"]
+               "tumbuh_pendapatan", "tumbuh_laba", "fcf_ttm", "fcf_yield",
+               "skor_lk", "label_lk", "label_val", "teks_val", "label_analis", "upside_analis", "label_berita", "teks_berita"]
 POS = ["pendapatan", "laba_kotor", "laba_usaha", "laba_sebelum_pajak", "laba_bersih", "eps_dilusi",
        "arus_kas_operasi", "belanja_modal", "total_aset", "total_liabilitas", "ekuitas", "kas", "utang_jangka_panjang"]
 
@@ -34,7 +35,7 @@ def tulis_json(jalur, obj):
     return hashlib.sha1(teks.encode()).hexdigest()[:12]
 
 
-def tulis(con, keluar, batas, info_jalan):
+def tulis(con, keluar, batas, info_jalan, rek=None):
     data_dir = os.path.join(keluar, "data")
     os.makedirs(os.path.join(data_dir, "emiten"), exist_ok=True)
     baris = con.execute(f"SELECT {', '.join(KOL_RINGKAS)} FROM ringkasan ORDER BY kap_pasar DESC NULLS LAST").fetchall()
@@ -81,7 +82,8 @@ def tulis(con, keluar, batas, info_jalan):
                                    WHERE periode = 'FY' GROUP BY 1""").fetchall())
     for t in tickers:
         tulis_json(os.path.join(data_dir, "emiten", f"{t}.json"),
-                   {"harga": harga.get(t), "lk": lk.get(t), "cik": cik.get(t), "akhir_fy": akhir_fy.get(t)})
+                   {"harga": harga.get(t), "lk": lk.get(t), "cik": cik.get(t), "akhir_fy": akhir_fy.get(t),
+                    "rek": (rek or {}).get(t)})
 
     # harga gabungan semua emiten untuk menu ANALISA: kalender bersama, [close[], volume/1000[]] per ticker
     tanggal = sorted({d for a in harga.values() for d in a["t"]})

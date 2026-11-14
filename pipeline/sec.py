@@ -64,6 +64,8 @@ PETA = {
         "ifrs-full:PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities"]),
     "total_aset": ("posisi", False, ["us-gaap:Assets", "ifrs-full:Assets"]),
     "total_liabilitas": ("posisi", False, ["us-gaap:Liabilities", "ifrs-full:Liabilities"]),
+    "aset_lancar": ("posisi", False, ["us-gaap:AssetsCurrent", "ifrs-full:CurrentAssets"]),
+    "liabilitas_lancar": ("posisi", False, ["us-gaap:LiabilitiesCurrent", "ifrs-full:CurrentLiabilities"]),
     "_liabilitas_dan_ekuitas": ("posisi", False, [
         "us-gaap:LiabilitiesAndStockholdersEquity", "ifrs-full:EquityAndLiabilities"]),
     "_ekuitas_total": ("posisi", False, [

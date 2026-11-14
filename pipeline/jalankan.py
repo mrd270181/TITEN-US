@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 import duckdb
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import daftar, sec, harga, ringkasan, ekspor, kalender   # noqa: E402
+import daftar, sec, harga, ringkasan, ekspor, kalender, rekomendasi   # noqa: E402
 
 AKAR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TABEL_STATE = ["emiten", "lk", "fakta"]
@@ -94,7 +94,7 @@ def tentukan_batas(con):
     return akhir
 
 
-def harian(con, keluar, info):
+def harian(con, keluar, info, lama=None):
     tickers = [r[0] for r in con.execute("SELECT ticker FROM emiten ORDER BY 1").fetchall()]
     kosong = harga.tarik(con, tickers)
     if len(kosong) > 0.2 * len(tickers):
@@ -103,8 +103,24 @@ def harian(con, keluar, info):
         print(f"   tanpa harga: {', '.join(kosong)}")
     batas = tentukan_batas(con)
     ringkasan.hitung(con, batas)
+    # kartu rekomendasi (LK, valuasi, analis, berita) - gagal tidak menggagalkan pembaruan
+    for k, tipe in (("skor_lk", "DOUBLE"), ("label_lk", "VARCHAR"), ("label_val", "VARCHAR"), ("teks_val", "VARCHAR"),
+                    ("label_analis", "VARCHAR"), ("upside_analis", "DOUBLE"), ("label_berita", "VARCHAR"), ("teks_berita", "VARCHAR")):
+        con.execute(f"ALTER TABLE ringkasan ADD COLUMN IF NOT EXISTS {k} {tipe}")
+    rek = None
+    try:
+        rek, kolom = rekomendasi.hitung(con, lama)
+        for t, v in kolom.items():
+            con.execute("""UPDATE ringkasan SET skor_lk = ?, label_lk = ?, label_val = ?, teks_val = ?, label_analis = ?,
+                           upside_analis = ?, label_berita = ?, teks_berita = ? WHERE ticker = ?""",
+                        [v["skor_lk"], v["label_lk"], v["label_val"], v["teks_val"], v["label_analis"],
+                         v["upside_analis"], v["label_berita"], v["teks_berita"], t])
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"PERINGATAN: rekomendasi gagal ({e})")
     info = {**info, "tanpa_harga": kosong}
-    ekspor.tulis(con, keluar, batas, info)
+    ekspor.tulis(con, keluar, batas, info, rek)
 
 
 def sesi_final_terakhir():
@@ -160,7 +176,7 @@ def main():
         k, tg = m_lama.get("kurs_usd_idr"), m_lama.get("kurs_tanggal")
         print(f"PERINGATAN: kurs gagal diambil ({e}) - pakai kurs terakhir {k} ({tg})")
     simpan_state(con, os.path.join(a.keluar, "state"))
-    harian(con, a.keluar, {**info, "mode": mode, "kurs_usd_idr": k, "kurs_tanggal": tg})
+    harian(con, a.keluar, {**info, "mode": mode, "kurs_usd_idr": k, "kurs_tanggal": tg}, a.lama)
 
     # kalender earnings + makro (gagal tidak menggagalkan pembaruan)
     try:
