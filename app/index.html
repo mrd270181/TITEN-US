@@ -352,6 +352,98 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       </ul>
     </div></details>
 
+    <details class="artikel"><summary>Jam bursa &amp; hari libur pasar saham AS</summary><div class="isi-artikel">
+      <p>Bursa saham AS (NYSE dan Nasdaq) buka Senin–Jumat waktu New York. Karena New York 11–12 jam di belakang WIB, sesi “hari Senin” berlangsung Senin malam sampai Selasa dini hari WIB.</p>
+      <h4>Jam perdagangan dalam WIB</h4>
+      <div class="bungkus-tabel" style="max-height:none;min-height:0;margin:6px 0"><table class="data" id="tabelJamBursa"></table></div>
+      <ul>
+        <li><b>Musim dingin AS</b> (awal November – pertengahan Maret): sesi reguler <b>21.30–04.00 WIB</b>.</li>
+        <li><b>Musim panas AS</b> (pertengahan Maret – awal November): semua jam maju 1 jam, sesi reguler <b>20.30–03.00 WIB</b>.</li>
+        <li>Pergantiannya: 2026 musim panas 8 Mar–1 Nov · 2027 musim panas 14 Mar–7 Nov · 2028 musim panas 12 Mar–5 Nov. Indonesia tidak memakai jam musim panas, jadi selisihnya berubah dua kali setahun.</li>
+        <li><b>Pre-market</b> dan <b>after-hours</b> bisa dipakai di sebagian broker, tapi transaksinya sepi, selisih harga beli–jual lebar, dan harga bisa melompat. Harga resmi (close) yang dipakai TITEN US adalah penutupan sesi reguler.</li>
+        <li>Laporan earnings biasanya keluar di pre-market (±19.00 WIB) atau tepat setelah tutup (±04.00 WIB); data makro CPI &amp; NFP 20.30 WIB; keputusan FOMC ±02.00 WIB (semua jam musim dingin).</li>
+      </ul>
+      <h4>Hari libur &amp; tutup lebih awal</h4>
+      <div class="bungkus-tabel" style="max-height:none;min-height:0;margin:6px 0"><table class="data" id="tabelLibur"></table></div>
+      <ul>
+        <li><b>Libur</b>: bursa tutup seharian, jadi <b>tidak ada sesi malam itu</b> di WIB. Contoh: Kamis 26 Nov 2026 (Thanksgiving) → tidak ada sesi Kamis malam 26 Nov – Jumat dini hari 27 Nov WIB.</li>
+        <li><b>Tutup lebih awal</b>: bursa tutup 13.00 waktu New York, yaitu ±01.00 WIB (00.00 WIB saat musim panas). Transaksinya biasanya sepi.</li>
+        <li>Kalau libur jatuh hari Sabtu, bursa biasanya libur hari Jumat sebelumnya; kalau hari Minggu, liburnya Senin sesudahnya. Hari libur Indonesia tidak berpengaruh — bursa AS tetap buka saat Lebaran atau 17 Agustus.</li>
+        <li>Sumber: kalender resmi NYSE Group (diumumkan Desember 2025).</li>
+      </ul>
+    </div></details>
+
+    <details class="artikel"><summary>Cara memakai menu SCREENER</summary><div class="isi-artikel">
+      <p>SCREENER menampilkan <b>semua 518 emiten</b> (S&amp;P 500, Nasdaq-100, Dow 30) dengan harga penutupan terakhir. Gunanya mencari saham yang sedang menarik dengan cepat.</p>
+      <h4>Alat di atas tabel</h4>
+      <ul>
+        <li><b>Cari ticker / nama</b> dan <b>pilihan sektor</b> untuk menyempitkan daftar.</li>
+        <li><b>Indeks</b>: Semua, S&amp;P 500, Nasdaq-100, atau Dow 30.</li>
+        <li><b>Saringan cepat (preset)</b>, masing-masing langsung mengurutkan tabel menurut kolom yang relevan:
+          <ul>
+            <li><b>Volume ≥ 2× MA5</b> — volume hari ini minimal dua kali rata-rata 5 hari: hampir selalu ada berita atau “cerita”.</li>
+            <li><b>Dekat High 52 mgg (≤ 3%)</b> — saham yang sedang di dekat puncak setahunnya (momentum kuat).</li>
+            <li><b>Gap up ≥ 2%</b> — dibuka melompat naik minimal 2% dari close kemarin.</li>
+            <li><b>Gap down lalu naik</b> — dibuka turun ≥ 1% tapi ditutup di atas harga buka (pembeli mengambil alih).</li>
+            <li><b>Tren naik</b> — close di atas MA50 dan MA50 di atas MA200.</li>
+            <li><b>Laba ≥ +20% &amp; PER &lt; 25</b> — laba tumbuh cepat tapi valuasi belum mahal.</li>
+            <li><b>ROE ≥ 20% &amp; Liab/Ekuitas &lt; 1</b> — perusahaan sangat menguntungkan dengan utang rendah.</li>
+            <li><b>Lapor earnings ≤ 7 hari</b> — emiten yang akan mengumumkan laporan keuangan minggu ini.</li>
+          </ul></li>
+        <li>Tombol <b>$ → Rp</b> di atas mengubah semua nilai dolar ke Rupiah dengan kurs terakhir.</li>
+      </ul>
+      <h4>Membaca tabelnya</h4>
+      <ul>
+        <li>Arti tiap kolom ada di tombol <b>ⓘ Cara membaca kolom</b> di atas tabel, dan contoh lengkapnya di artikel <b>Satuan angka &amp; cara membaca baris screener</b>.</li>
+        <li>Klik judul kolom untuk mengurutkan (klik lagi untuk membalik). Klik baris untuk membuka emiten itu di <b>CARI</b>.</li>
+        <li>Lencana <b>DOW</b> di samping ticker = anggota Dow Jones. Kolom <b>LK</b> = label Kesimpulan LK; <b>Target Analis</b> = selisih target harga rata-rata analis terhadap close.</li>
+      </ul>
+      <h4>Contoh alur</h4>
+      <ul><li>Pilih <b>Volume ≥ 2× MA5</b> → lihat yang %1H-nya hijau besar → klik barisnya → cek chart di CARI → cek alasannya (berita, earnings) di <b>REKOMENDASI</b>.</li></ul>
+    </div></details>
+
+    <details class="artikel"><summary>Cara memakai menu ANALISA</summary><div class="isi-artikel">
+      <p>ANALISA menghitung perubahan harga <b>semua emiten</b> dalam rentang tanggal yang Anda pilih, misalnya “siapa yang paling naik sejak FOMC kemarin” atau “bagaimana saham chip selama Oktober”.</p>
+      <ul>
+        <li>Isi <b>Dari</b> dan <b>Sampai</b>. Tombol <b>Terbaru</b> kembali ke ±1 bulan terakhir.</li>
+        <li>Perubahan dihitung dari close hari bursa <b>sebelum</b> hari pertama rentang — sama seperti TITEN — jadi gerakan hari pertama ikut terhitung.</li>
+        <li>Saring dengan <b>Cari</b> dan <b>sektor</b>; urutkan dengan klik judul kolom. Arti tiap kolom ada di tombol <b>ⓘ</b> di atas tabel.</li>
+        <li><b>Membaca polanya</b>: kalau satu sektor bergerak serempak, itu tanda tema atau makro (mis. semua saham chip turun). Kalau hanya satu saham yang bergerak, biasanya ada berita khusus emiten itu.</li>
+        <li><b>Lebar</b> besar = harganya liar di rentang itu; <b>Dari Tinggi</b> sangat negatif = sudah jatuh jauh dari puncak periode itu; <b>Vol vs Sblm</b> &gt; 1,5× = jauh lebih ramai dari periode sebelumnya.</li>
+      </ul>
+    </div></details>
+
+    <details class="artikel"><summary>Cara memakai menu REKOMENDASI</summary><div class="isi-artikel">
+      <p>Ketik kode emiten (mis. NVDA) untuk melihat ringkasannya. Bagian bawah menampilkan tabel <b>semua emiten</b> dengan labelnya, bisa disaring dan diurutkan.</p>
+      <h4>Lima kotak ringkasan (klik untuk melihat rinciannya)</h4>
+      <ul>
+        <li><b>Kesimpulan LK</b> — kesehatan laporan keuangan, skor 0–100. Penjelasan lengkap di artikel <b>Cara membaca Kesimpulan LK</b>.</li>
+        <li><b>Valuasi</b> — P/E dibanding median sektornya: <span class="lbl Bagus">Murah</span> ≤ 0,8×, <span class="lbl Sedang">Wajar</span> 0,8–1,25×, <span class="lbl Jelek">Mahal</span> di atasnya. Murah belum tentu bagus; bisa jadi pasar memperkirakan laba turun.</li>
+        <li><b>Sentimen analis</b> — rekomendasi rata-rata analis (Beli kuat … Jual) dan target harga 12 bulan beserta selisihnya dari harga sekarang.</li>
+        <li><b>Berita 7 hari</b> — judul berita Indonesia &amp; Inggris yang menyebut emiten itu, dinilai positif/negatif dari kata-kata di judul. Baca judulnya sendiri; penilaian otomatis bisa keliru.</li>
+        <li><b>Earnings berikutnya</b> — jadwal laporan keuangan; klik untuk membuka KALENDER.</li>
+      </ul>
+      <h4>Pergerakan harian</h4>
+      <ul>
+        <li>Tabel per hari bursa: Tutup, %Hrg, Volume, Value, VMA5/VMA20 dan VMA5/VMA50, dengan rentang <b>Dari–Sampai</b> dan baris <b>Total</b> di bawah.</li>
+        <li>Volume/Value hijau = hari harga naik, merah = hari turun. VMA5/VMA20 di atas 1× = belakangan lebih ramai dari biasanya; di atas 2× bersamaan dengan harga naik = tanda akumulasi.</li>
+      </ul>
+      <p style="font-size:13px">Semua label dihitung dari aturan tetap dan data publik. <b>Bukan rekomendasi beli atau jual.</b></p>
+    </div></details>
+
+    <details class="artikel"><summary>Cara memakai menu CARI</summary><div class="isi-artikel">
+      <p>CARI membuka satu emiten secara lengkap. Ketik ticker atau klik baris di menu lain.</p>
+      <ul>
+        <li><b>CHART</b> — candle harian dengan MA20 (biru) dan MA50 (oranye); candle hijau berongga = naik, merah = turun. Atur rentang dengan Dari–Sampai; arahkan jari/kursor ke candle untuk melihat OHLC dan volumenya.</li>
+        <li><b>KEYSTATS</b> — ringkasan angka penting: valuasi (PER, PBV, P/S, FCF yield), profitabilitas dan pertumbuhan 4 kuartal terakhir, serta harga &amp; volume (MA, high/low 52 minggu).</li>
+        <li><b>FINANSIAL</b> — laporan keuangan dari SEC: per kuartal atau per tahun, grafik pendapatan &amp; laba bersih, lalu tabel pos-pos utama (pendapatan, laba, arus kas, aset, utang, ekuitas). Angka bergaris bawah titik = dihitung (mis. Q4 = setahun dikurangi Q1–Q3).</li>
+        <li><b>BANDING</b> — membandingkan emiten dengan pesaingnya. Awalnya berisi 4 emiten terbesar di sektor yang sama; tambah atau hapus sendiri.</li>
+        <li><b>AKSI</b> — aksi korporasi (dividen, stock split); belum tersedia. Harga di chart sudah disesuaikan dengan stock split.</li>
+        <li><b>PROFIL</b> — nama, sektor, indeks, akhir tahun buku, dan tautan ke dokumen resminya di SEC.</li>
+        <li>Tombol <b>Lihat REKOMENDASI</b> membuka ringkasan label emiten yang sama.</li>
+      </ul>
+    </div></details>
+
     <details class="artikel"><summary>Satuan angka &amp; cara membaca baris screener</summary><div class="isi-artikel">
       <h4>Satuan angka (sama dengan TITEN)</h4>
       <div class="bungkus-tabel" style="max-height:none;min-height:0;margin:6px 0;max-width:460px"><table class="data" id="tabelSatuan"></table></div>
@@ -604,7 +696,7 @@ function bukaHalaman(h){
   if (h === "analisa") bukaAnalisa();
   if (h === "kalender") bukaKalender();
   if (h === "rekomendasi") bukaRek();
-  if (h === "pustaka"){ isiAspekLK(); isiPustakaSatuan(); }
+  if (h === "pustaka"){ isiAspekLK(); isiPustakaSatuan(); isiPustakaJam(); }
   window.scrollTo(0, 0);
 }
 
@@ -1137,6 +1229,49 @@ function isiRekomendasi(t){
     {k:"t", label:"Angka", kiri:true, f:c => `<span style="white-space:normal;display:block;min-width:220px">${esc(c.t)}</span>`},
     {k:"acu", label:"Patokan", kiri:true, f:c => `<span class="redup" style="white-space:normal;display:block;min-width:200px">${esc(c.acu || "–")}</span>`},
   ], L.rinci.map((c, i) => ({...c, _id: "a" + i, urutan: i})), {urut: "n", arah: 1});
+}
+
+/* ---------- PUSTAKA: jam bursa & hari libur AS ---------- */
+const LIBUR_AS = [
+  ["2026-11-26", "Thanksgiving", "Tutup"], ["2026-11-27", "Sehari setelah Thanksgiving", "Tutup 13.00 NY"],
+  ["2026-12-24", "Malam Natal", "Tutup 13.00 NY"], ["2026-12-25", "Natal", "Tutup"],
+  ["2027-01-01", "Tahun Baru", "Tutup"], ["2027-01-18", "Martin Luther King Jr. Day", "Tutup"],
+  ["2027-02-15", "Presidents' Day", "Tutup"], ["2027-03-26", "Jumat Agung", "Tutup"],
+  ["2027-05-31", "Memorial Day", "Tutup"], ["2027-06-18", "Juneteenth (pengganti 19 Jun)", "Tutup"],
+  ["2027-07-05", "Hari Kemerdekaan AS (pengganti 4 Jul)", "Tutup"], ["2027-09-06", "Labor Day", "Tutup"],
+  ["2027-11-25", "Thanksgiving", "Tutup"], ["2027-11-26", "Sehari setelah Thanksgiving", "Tutup 13.00 NY"],
+  ["2027-12-24", "Natal (pengganti 25 Des)", "Tutup"],
+  ["2028-01-17", "Martin Luther King Jr. Day", "Tutup"], ["2028-02-21", "Presidents' Day", "Tutup"],
+  ["2028-04-14", "Jumat Agung", "Tutup"], ["2028-05-29", "Memorial Day", "Tutup"],
+  ["2028-06-19", "Juneteenth", "Tutup"], ["2028-07-03", "Sehari sebelum Hari Kemerdekaan", "Tutup 13.00 NY"],
+  ["2028-07-04", "Hari Kemerdekaan AS", "Tutup"], ["2028-09-04", "Labor Day", "Tutup"],
+  ["2028-11-23", "Thanksgiving", "Tutup"], ["2028-11-24", "Sehari setelah Thanksgiving", "Tutup 13.00 NY"],
+  ["2028-12-25", "Natal", "Tutup"],
+];
+const MUSIM_PANAS = [["2026-03-08", "2026-11-01"], ["2027-03-14", "2027-11-07"], ["2028-03-12", "2028-11-05"]];
+function isiPustakaJam(){
+  const el = document.getElementById("tabelJamBursa"); if (!el || el.dataset.isi) return; el.dataset.isi = 1;
+  buatTabel(el, [
+    {k: "sesi", label: "Sesi", kiri: true, f: r => `<b>${r.sesi}</b>`, urut: r => r.i},
+    {k: "ny", label: "New York", f: r => r.ny, urut: r => r.i},
+    {k: "dingin", label: "WIB musim dingin", f: r => r.dingin, urut: r => r.i},
+    {k: "panas", label: "WIB musim panas", f: r => r.panas, urut: r => r.i},
+  ], [["Pre-market", "04.00–09.30", "16.00–21.30", "15.00–20.30"], ["Reguler", "09.30–16.00", "21.30–04.00", "20.30–03.00"],
+      ["After-hours", "16.00–20.00", "04.00–08.00", "03.00–07.00"]].map((x, i) => ({_id: i, i, sesi: x[0], ny: x[1], dingin: x[2], panas: x[3]})),
+    {urut: "sesi", arah: 1});
+  const panas = t => MUSIM_PANAS.some(([a, b]) => t >= a && t < b);
+  const baris = LIBUR_AS.map(([t, nama, status]) => {
+    const besok = tambahHari(t, 1), cepat = status !== "Tutup";
+    return {_id: t, t, nama, status, lewat: t < HARI_INI,
+      wib: cepat ? `tutup ±${panas(t) ? "00.00" : "01.00"} WIB, ${hariTgl(besok)} dini hari`
+                 : `tidak ada sesi ${hariTgl(t)} malam`};
+  });
+  buatTabel(document.getElementById("tabelLibur"), [
+    {k: "t", label: "Tanggal (NY)", kiri: true, f: r => `<b>${hariTgl(r.t)} ${r.t.slice(0, 4)}</b>`},
+    {k: "nama", label: "Hari libur", kiri: true, f: r => esc(r.nama)},
+    {k: "status", label: "Bursa", kiri: true, f: r => `<span class="${r.status === "Tutup" ? "turun" : "redup"}">${r.status}</span>`},
+    {k: "wib", label: "Dampak di WIB", kiri: true, f: r => `<span style="white-space:normal;display:block;min-width:150px">${r.wib}</span>`, urut: r => r.t},
+  ], baris, {urut: "t", arah: 1, kelas: r => r.lewat ? "lewat" : "", sorot: r => !r.lewat && r.t <= tambahHari(HARI_INI, 30)});
 }
 
 /* ---------- PUSTAKA: tabel satuan & contoh baris screener ---------- */
