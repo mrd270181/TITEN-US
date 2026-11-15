@@ -244,6 +244,24 @@ def isi_gerak(er, lama_er):
     print(f"   gerak perkiraan opsi: {n_ok} dari {n_coba} emiten")
 
 
+RIWAYAT_HARI = 730      # riwayat earnings ~2 tahun, sama dengan riwayat harga (untuk kolom Reaksi)
+
+
+def riwayat_yahoo(tickers, dari, sampai):
+    """Jadwal & hasil earnings lama, diambil per bulan (sekali saja; jalan berikutnya memakai simpanan)."""
+    hasil, d = [], date.fromisoformat(dari)
+    akhir = date.fromisoformat(sampai)
+    while d <= akhir:
+        ujung = min(akhir, (d.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1))
+        try:
+            hasil += earnings_yahoo(tickers, d.isoformat(), ujung.isoformat())
+        except Exception as e:
+            print(f"   riwayat earnings {d:%Y-%m} gagal ({e})")
+        d = ujung + timedelta(days=1)
+        time.sleep(1)
+    return hasil
+
+
 def tulis(keluar, tickers, lama=None):
     hari_ini = date.today()
     dari, sampai = (hari_ini - timedelta(days=14)).isoformat(), (hari_ini + timedelta(days=35)).isoformat()
@@ -264,11 +282,27 @@ def tulis(keluar, tickers, lama=None):
         lama_er = json.load(open(lama, encoding="utf-8")).get("earnings", []) if lama and os.path.exists(lama) else []
     except Exception:
         lama_er = []
+    # riwayat: laporan yang lebih lama dari jendela 14 hari disimpan dari kalender sebelumnya;
+    # kalau belum ada riwayat ~2 tahun, ambil sekali dari Yahoo per bulan
+    batas_lama = (hari_ini - timedelta(days=RIWAYAT_HARI)).isoformat()
+    riwayat = [x for x in lama_er if batas_lama <= x["tanggal"] < dari]
+    if not any(x["tanggal"] <= (hari_ini - timedelta(days=RIWAYAT_HARI - 90)).isoformat() for x in riwayat):
+        print("   riwayat earnings belum lengkap - ambil 2 tahun dari Yahoo")
+        try:
+            baru = riwayat_yahoo(set(tickers), batas_lama, (date.fromisoformat(dari) - timedelta(days=1)).isoformat())
+            ada = {(x["ticker"], x["tanggal"]) for x in riwayat}
+            riwayat += [x for x in baru if (x["ticker"], x["tanggal"]) not in ada]
+            print(f"   riwayat earnings: {len(baru)} laporan diambil")
+        except Exception as e:
+            print(f"   riwayat earnings gagal ({e})")
+    kini = {(x["ticker"], x["tanggal"]) for x in er}
+    er = er + [x for x in riwayat if (x["ticker"], x["tanggal"]) not in kini]
     try:
         isi_gerak(er, lama_er)
     except Exception as e:
         print(f"   gerak perkiraan gagal ({e})")
-    obj = {"dibuat": datetime.now(WIB).isoformat(timespec="minutes"), "dari": dari, "sampai": sampai, "sumber": sumber,
+    obj = {"dibuat": datetime.now(WIB).isoformat(timespec="minutes"), "dari": min([dari] + [x["tanggal"] for x in er]),
+           "sampai": sampai, "sumber": sumber,
            "earnings": sorted(er, key=lambda x: (x["tanggal"], x["ticker"])),
            "makro": makro((hari_ini - timedelta(days=14)).isoformat(), (hari_ini + timedelta(days=120)).isoformat())}
     with open(os.path.join(keluar, "data", "kalender.json"), "w", encoding="utf-8") as fh:

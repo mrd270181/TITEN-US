@@ -234,12 +234,17 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
         <span class="jumlah" id="kalJumlah"></span>
       </div>
       <div class="rel" id="kalRentang"></div>
+      <div class="baris-kontrol">
+        <label class="redup">Dari <input type="date" class="kotak" id="kalDari"></label>
+        <label class="redup">Sampai <input type="date" class="kotak" id="kalSampai"></label>
+      </div>
       <div class="rel" id="kalIndeks"></div>
       <details class="panduan"><summary>Cara membaca kalender earnings</summary><dl>
         <dt>Tanggal</dt><dd>Hari laporan menurut waktu New York. Laporan “setelah bursa tutup” baru keluar dini hari WIB keesokan harinya.</dd>
         <dt>Waktu</dt><dd>Sebelum bursa buka = laporan keluar ±19.00 WIB, sebelum sesi malam itu. Setelah bursa tutup = ±04.00 WIB, pengaruhnya baru terlihat di sesi malam berikutnya.</dd>
         <dt>EPS Perk.</dt><dd>Rata-rata perkiraan analis untuk laba per saham kuartal itu (USD).</dd>
-        <dt>EPS Aktual · Kejutan EPS</dt><dd>Laba per saham yang diumumkan dan selisihnya terhadap perkiraan. <span class="naik">+</span> = lebih baik dari perkiraan.</dd>
+        <dt>Rentang tanggal</dt><dd>Tombol cepat di atas mengisi Dari–Sampai otomatis; isi sendiri untuk melihat laporan lama (riwayat ±2 tahun).</dd>
+        <dt>EPS Aktual · Kejutan EPS</dt><dd>Laba per saham yang diumumkan (<span class="naik">hijau</span> = untung, <span class="turun">merah</span> = rugi) dan selisihnya terhadap perkiraan (<span class="naik">hijau</span> = lebih baik dari perkiraan, <span class="turun">merah</span> = lebih buruk).</dd>
         <dt>Gerak Perk.</dt><dd>Perkiraan pasar opsi soal seberapa jauh harga bergerak saat laporan keluar — bisa naik atau turun (±). Dihitung dari harga opsi at-the-money yang jatuh tempo tepat setelah laporan. Diisi untuk emiten yang lapor dalam 7 hari ke depan.</dd>
         <dt>Reaksi</dt><dd>Perubahan harga pada sesi pertama setelah laporan keluar. Kejutan positif tidak selalu berarti harga naik — panduan (guidance) ke depan sering lebih menentukan.</dd>
         <dt>Kejutan Gerak</dt><dd>Besar reaksi dibanding gerak perkiraan. 1× = sesuai perkiraan; di bawah 1× = lebih tenang (laporan sudah “diperhitungkan”); 1,5× ke atas (berwarna) = pasar benar-benar kaget.</dd>
@@ -1114,7 +1119,7 @@ function isiRekomendasi(t){
     const pergi = () => {
       const tj = k.dataset.tuju;
       if (tj === "kalender"){ bukaHalaman("kalender"); setTimeout(() => {
-        if (!KAL) return; kalMode = "earnings"; kalRentang = "semua"; tampilKal();
+        if (!KAL) return; kalMode = "earnings"; kalRentang = "semua"; isiTglKal(); tampilKal();
         document.getElementById("kalCari").value = t; saringKal();
         document.querySelectorAll("#kalTab button").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === "earnings"));
         document.querySelectorAll("#kalRentang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === "semua")); }, 60); return; }
@@ -1389,7 +1394,15 @@ async function bukaKalender(){
   if (!kalSiap){
     kalSiap = true;
     buatChip(document.getElementById("kalTab"), [["earnings", "Earnings emiten"], ["makro", "Data makro AS"]], kalMode, m => { kalMode = m; tampilKal(); });
-    buatChip(document.getElementById("kalRentang"), [["depan7", "7 hari ke depan"], ["depan35", "5 minggu ke depan"], ["lalu", "Sudah lapor (2 minggu)"], ["semua", "Semua"]], kalRentang, m => { kalRentang = m; saringKal(); });
+    buatChip(document.getElementById("kalRentang"), [["depan7", "7 hari ke depan"], ["depan35", "5 minggu ke depan"], ["lalu", "Sudah lapor (2 minggu)"], ["semua", "Semua"]], kalRentang, m => { kalRentang = m; isiTglKal(); saringKal(); });
+    const dK = document.getElementById("kalDari"), sK = document.getElementById("kalSampai");
+    dK.min = sK.min = KAL.dari; dK.max = sK.max = KAL.sampai;
+    dK.onchange = sK.onchange = () => {
+      kalRentang = "tgl"; document.querySelectorAll("#kalRentang button").forEach(b => b.setAttribute("aria-pressed", "false"));
+      if (dK.value && sK.value && dK.value > sK.value) [dK.value, sK.value] = [sK.value, dK.value];
+      saringKal();
+    };
+    isiTglKal();
     buatChip(document.getElementById("kalIndeks"), INDEKS, kalIndeks, m => { kalIndeks = m; saringKal(); });
     document.getElementById("kalCari").oninput = () => saringKal();
     el.textContent = `Sumber earnings: ${KAL.sumber || "–"} (diperbarui ${new Date(KAL.dibuat).toLocaleString("id-ID", {day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"})} WIB). Jadwal makro: The Fed & Biro Statistik Tenaga Kerja AS (BLS). Jadwal earnings bisa berubah — emiten kadang menggeser tanggal.`;
@@ -1406,8 +1419,8 @@ const kolomKal = [
   {k:"ticker", label:"Ticker", kiri:true, f:e => `<span class="tkr">${e.ticker}</span>${e.dow ? '<span class="lencana">DOW</span>' : ""}<span class="nama-kecil">${esc(e.nama)}</span>`},
   {k:"tanggal", label:"Tanggal", kiri:true, judul:"Tanggal laporan (waktu New York)", f:e => `<b>${hariTgl(e.tanggal)}</b>`},
   {k:"waktu", label:"Waktu (WIB)", kiri:true, f:e => `<span style="white-space:normal">${e.waktu_label}</span>`},
-  {k:"eps_perkiraan", label:"EPS Perk.", judul:"Perkiraan analis, USD per saham", f:e => e.eps_perkiraan == null ? "–" : "$" + angka(e.eps_perkiraan)},
-  {k:"eps_aktual", label:"EPS Aktual", f:e => e.eps_aktual == null ? '<span class="redup">belum</span>' : "<b>$" + angka(e.eps_aktual) + "</b>"},
+  {k:"eps_perkiraan", label:"EPS Perk.", judul:"Perkiraan analis, USD per saham", f:e => e.eps_perkiraan == null ? "–" : (e.eps_perkiraan < 0 ? "−$" + angka(-e.eps_perkiraan) : "$" + angka(e.eps_perkiraan))},
+  {k:"eps_aktual", label:"EPS Aktual", f:e => e.eps_aktual == null ? `<span class="redup">${e.tanggal < HARI_INI ? "–" : "belum"}</span>` : `<b class="${kelasArah(e.eps_aktual)}">${e.eps_aktual < 0 ? "−$" + angka(-e.eps_aktual) : "$" + angka(e.eps_aktual)}</b>`},
   {k:"kejutan_persen", label:"Kejutan EPS", judul:"Selisih EPS aktual terhadap perkiraan", f:e => e.kejutan_persen == null ? "–" : `<b class="${kelasArah(e.kejutan_persen)}">${persen(e.kejutan_persen, 1)}</b>`},
   {k:"gerak_perkiraan", label:"Gerak Perk.", judul:"Perkiraan besar gerak harga saat laporan keluar, dari harga opsi (naik atau turun)", f:e => e.gerak_perkiraan == null ? "–" : "±" + angka(e.gerak_perkiraan, 1) + "%"},
   {k:"reaksi", label:"Reaksi", judul:"Perubahan harga sesi pertama setelah laporan keluar", f:e => e.reaksi == null ? "–" : `<b class="${kelasArah(e.reaksi)}">${persen(e.reaksi)}</b>`},
@@ -1415,15 +1428,23 @@ const kolomKal = [
   {k:"kap_pasar", label:"Kap. Pasar", f:e => usd(e.kap_pasar)},
   {k:"chg_1bl", label:"%1Bln", f:e => `<span class="${kelasArah(e.chg_1bl)}">${persen(e.chg_1bl, 1)}</span>`},
 ];
+function batasKal(){
+  return {depan7: [HARI_INI, tambahHari(HARI_INI, 7)], depan35: [HARI_INI, tambahHari(HARI_INI, 35)], lalu: [tambahHari(HARI_INI, -14), tambahHari(HARI_INI, -1)],
+          semua: [KAL.dari, KAL.sampai]}[kalRentang];
+}
+function isiTglKal(){
+  const b = batasKal(); if (!b) return;
+  document.getElementById("kalDari").value = b[0]; document.getElementById("kalSampai").value = b[1];
+}
 function saringKal(){
   const q = document.getElementById("kalCari").value.trim().toUpperCase();
-  const batas = {depan7: [HARI_INI, tambahHari(HARI_INI, 7)], depan35: [HARI_INI, tambahHari(HARI_INI, 35)], lalu: [tambahHari(HARI_INI, -14), tambahHari(HARI_INI, -1)], semua: ["0000", "9999"]}[kalRentang];
+  const batas = [document.getElementById("kalDari").value || "0000", document.getElementById("kalSampai").value || "9999"];
   const hasil = KAL.earnings.filter(e => e.tanggal >= batas[0] && e.tanggal <= batas[1]).map(e => {
     const r = PER_TICKER[e.ticker] || {};
     return {...e, _id: e.ticker, nama: r.nama, dow: r.dow, sp500: r.sp500, ndx: r.ndx, kap_pasar: r.kap_pasar, chg_1bl: r.chg_1bl, reaksi: reaksi(e), kejutan_gerak: kejutanGerak(e)};
   }).filter(e => (kalIndeks === "semua" || e[kalIndeks]) && (!q || e.ticker.includes(q) || (e.nama || "").toUpperCase().includes(q)));
   document.getElementById("kalJumlah").textContent = `${hasil.length} laporan`;
-  const urut = kalRentang === "lalu" ? {urut: "tanggal", arah: -1} : {urut: "tanggal", arah: 1};
+  const urut = batas[1] < HARI_INI ? {urut: "tanggal", arah: -1} : {urut: "tanggal", arah: 1};
   document.getElementById("kalTabel").innerHTML = "";
   tabelKal = buatTabel(document.getElementById("kalTabel"), kolomKal, hasil, {...urut, klik: t => bukaEmiten(t), sorot: e => e.tanggal === HARI_INI});
 }
