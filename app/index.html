@@ -1417,7 +1417,7 @@ function isiAspekLK(){
 /* ================= HARGA: NAIK & TURUN, %HARGA TINGGI & RENDAH ================= */
 let RH_PAKSA = null;                       // rentang tabel harian REKOMENDASI saat dibuka dari menu HARGA
 let OH = null, hrgSiap = false, hrgMode = "nt";
-let ntSiap = false, ntMode = "naik", ntMin = 2, ntMinNilai = 0, ntUrut = "ciri", ntUrutT = "deret", ntPilih = [], ntSort = null;
+let ntSiap = false, ntMode = "naik", ntMin = 2, ntMinNilai = 0, ntUrut = "deret", ntUrutT = "deret", ntPilih = [], ntSort = null;
 let phSiap = false, phMin = 0, phNaik = [], phTurun = [];
 const NT_HARI = 22, NT_GAP_OK = 0.5, NT_VOL_OK = 1.5;
 const NT_MIN_NILAI = [[0, "tanpa batas"], [1e8, "$100 Jt/hari"], [5e8, "$500 Jt/hari"], [1e9, "$1 M/hari"], [5e9, "$5 M/hari"]];
@@ -1514,7 +1514,7 @@ function gambarNT(){
   const iS = idx.length ? idx[idx.length - 1] : T.length - 1;
   document.getElementById("ntAtur").style.display = ntMode === "semua" ? "none" : "";
   document.getElementById("ntLabelMin").textContent = turun ? "Turun minimal" : "Naik minimal";
-  document.getElementById("ntUrut").innerHTML = (turun ? [["deret", "Deret terpanjang"], ["dalam", "Turun terdalam"]] : [["ciri", "Ciri lanjut dulu"], ["deret", "Deret terpanjang"]])
+  document.getElementById("ntUrut").innerHTML = (turun ? [["deret", "Deret terpanjang"], ["dalam", "Turun terdalam"]] : [["deret", "Deret terpanjang"], ["ciri", "Ciri lanjut dulu"]])
     .map(([v, j]) => `<option value="${v}" ${(turun ? ntUrutT : ntUrut) === v ? "selected" : ""}>${j}</option>`).join("");
   document.getElementById("ntBantu").textContent = ntMode === "semua" ? "" : turun
     ? "Close lebih rendah dari close kemarin, berturut-turut sampai tanggal Sampai. Gap dan Vol ditampilkan apa adanya tanpa warna — ciri lanjut-turun belum diuji."
