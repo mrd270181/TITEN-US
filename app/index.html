@@ -119,7 +119,11 @@ details.panduan dt{font-weight:700;color:var(--teks)}details.panduan dd{margin:0
 .lbl{display:inline-block;font-weight:800;border-radius:6px;padding:1px 8px}
 .lbl.Bagus{color:var(--naik);background:rgba(12,163,12,.12)}.lbl.Sedang{color:#a87400;background:rgba(230,170,0,.16)}.lbl.Jelek{color:var(--turun);background:rgba(208,59,59,.12)}.lbl.kosong{color:var(--teks-3);background:var(--surface-2)}
 .grid-rek{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:12px}
-.kartu-rek{background:var(--surface-1);border:1px solid var(--garis);border-radius:12px;padding:10px 12px}
+.kartu-rek{background:var(--surface-1);border:1px solid var(--garis);border-radius:12px;padding:10px 12px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.kartu-rek:hover{border-color:var(--merek);box-shadow:0 2px 10px rgba(106,63,181,.15)}
+.kartu-rek .ke{font-size:11px;color:var(--merek-tua);margin-top:6px;font-weight:700}
+.kilat{animation:kilat 1.2s ease-out}@keyframes kilat{0%{box-shadow:0 0 0 3px #f26a2e}100%{box-shadow:0 0 0 0 transparent}}
+.sig{display:block;font-size:11px}
 .kartu-rek .jd{font-size:11px;color:var(--teks-3);text-transform:uppercase;letter-spacing:.06em}
 .kartu-rek .nl{font-size:20px;margin:4px 0 2px}
 .kartu-rek .kt{font-size:12px;color:var(--teks-2)}
@@ -454,7 +458,7 @@ function ringkas(x, d = 2){           // 4.820.000.000.000 -> 4,82 T
   if (a >= 1e12) return angka(x / 1e12, a >= 1e14 ? 0 : a >= 1e13 ? 1 : d) + " T";
   if (a >= 1e9)  return angka(x / 1e9, a >= 1e11 ? 0 : 1) + " M";
   if (a >= 1e6)  return angka(x / 1e6, a >= 1e8 ? 0 : 1) + " Jt";
-  if (a >= 1e3)  return angka(x / 1e3, 0) + " Rb";
+  if (a >= 1e3)  return angka(x / 1e3, a >= 1e5 ? 0 : 1) + "K";
   return angka(x, 0);
 }
 /* mata uang tampilan: USD (bawaan) atau Rupiah. Satuan seperti TITEN: Jt / M / T. Harga per lembar tetap USD. */
@@ -966,25 +970,49 @@ function isiRekomendasi(t){
   const el = document.getElementById("rekIsi"), E = EMITEN[t] || {}, K = E.rek, r = PER_TICKER[t];
   if (!K){ el.innerHTML = `<div class="kartu kosong">Kartu rekomendasi untuk ${t} belum tersedia — muncul setelah pembaruan otomatis berikutnya.</div>`; return; }
   const L = K.lk, V = K.valuasi, A = K.analis, B = K.berita, eb = erBerikut(t);
-  const kartu = (jd, nl, kt) => `<div class="kartu-rek"><div class="jd">${jd}</div><div class="nl">${nl}</div><div class="kt">${kt}</div></div>`;
+  const kartu = (jd, nl, kt, tuju) => `<div class="kartu-rek" data-tuju="${tuju}" role="button" tabindex="0"><div class="jd">${jd}</div><div class="nl">${nl}</div><div class="kt">${kt}</div><div class="ke">${tuju === "kalender" ? "Buka di KALENDER ›" : "Lihat rincian ›"}</div></div>`;
   let h = `<div class="grid-rek">` +
     kartu("Kesimpulan LK", L ? `${lbl(L.label)} <b class="angka">${L.skor}</b><span class="redup" style="font-size:12px">/100</span>` : lbl(null, "Tidak ada LK"),
-      L ? `${L.bahaya.length ? "⚠ " + L.bahaya.map(b => b.judul.toLowerCase()).join(", ") : "tanpa tanda bahaya"} · LK s.d. ${L.periode ? tglId(L.periode) : "–"}` : "emiten baru / belum ada laporan tahunan di SEC") +
-    kartu("Valuasi", lbl(V.label, V.teks), esc(V.ket)) +
+      L ? `${L.bahaya.length ? "⚠ " + L.bahaya.map(b => b.judul.toLowerCase()).join(", ") : "tanpa tanda bahaya"} · LK s.d. ${L.periode ? tglId(L.periode) : "–"}` : "emiten baru / belum ada laporan tahunan di SEC", "rekLK") +
+    kartu("Valuasi", lbl(V.label, V.teks), esc(V.ket), "rekVal") +
     kartu("Sentimen analis", A ? lbl(A.label, A.kunci) : lbl(null, "Tidak ada"),
-      A ? `${A.jumlah} analis · target rata-rata $${angka(A.target)}${A.upside != null ? ` (<span class="${kelasArah(A.upside)}">${persen(A.upside, 1)}</span>)` : ""}` : "tidak ada analis yang meliput") +
-    kartu("Berita 7 hari", lbl(B.label, B.teks), B.jumlah ? `<span class="naik">${B.pos} positif</span> · <span class="turun">${B.neg} negatif</span> dari ${B.jumlah} judul` : "tidak ada berita yang menyebut emiten ini") +
-    kartu("Earnings berikutnya", eb ? `<b>${hariTgl(eb.tanggal)}</b>` : lbl(null, "–"), eb ? `${eb.waktu_label}${eb.eps_perkiraan != null ? ` · EPS perkiraan $${angka(eb.eps_perkiraan)}` : ""}` : "belum ada jadwal dalam 5 minggu ke depan") +
+      A ? `${A.jumlah} analis · target rata-rata $${angka(A.target)}${A.upside != null ? ` (<span class="${kelasArah(A.upside)}">${persen(A.upside, 1)}</span>)` : ""}` : "tidak ada analis yang meliput", "rekAnalis") +
+    kartu("Berita 7 hari", lbl(B.label, B.teks), B.jumlah ? `<span class="naik">${B.pos} positif</span> · <span class="turun">${B.neg} negatif</span> dari ${B.jumlah} judul` : "tidak ada berita yang menyebut emiten ini", "rekBerita") +
+    kartu("Earnings berikutnya", eb ? `<b>${hariTgl(eb.tanggal)}</b>` : lbl(null, "–"), eb ? `${eb.waktu_label}${eb.eps_perkiraan != null ? ` · EPS perkiraan $${angka(eb.eps_perkiraan)}` : ""}` : "belum ada jadwal dalam 5 minggu ke depan", "kalender") +
   `</div>`;
+  // tabel harian dengan rentang tanggal (seperti TITEN, tanpa net foreign)
+  h += `<div class="kartu" id="rekHarian"><div class="label-kecil" style="margin-top:0">Pergerakan harian</div>
+    <div class="baris-kontrol">
+      <label class="redup">Dari <input type="date" class="kotak" id="rhDari"></label>
+      <label class="redup">Sampai <input type="date" class="kotak" id="rhSampai"></label>
+      <button class="chip" id="rhTerbaru" title="Kembali ke 10 hari bursa terakhir">Terbaru</button>
+    </div>
+    <div class="ringkas-an" id="rhRingkas" style="margin-bottom:8px"></div>
+    <div class="bungkus-tabel" style="max-height:520px"><table class="data" id="rhTabel"></table></div>
+    <details class="panduan" style="margin:8px 0 0"><summary>Cara membaca tabel harian</summary><dl>
+      <dt>%Hrg</dt><dd>Perubahan close hari itu dibanding close hari bursa sebelumnya.</dd>
+      <dt>Volume · Value</dt><dd>Lembar saham dan nilai transaksi (close × volume) hari itu. Hijau = hari naik, merah = hari turun.</dd>
+      <dt>Σ</dt><dd>Jumlah berjalan sejak awal rentang: volume/nilai hari naik dihitung plus, hari turun minus. Σ yang terus naik = transaksi lebih banyak terjadi di hari harga naik.</dd>
+      <dt>VMA5/VMA20 · VMA5/VMA50</dt><dd>Rata-rata volume 5 hari dibanding rata-rata 20 / 50 hari. Di atas 1× (hijau) = belakangan lebih ramai dari biasanya.</dd>
+    </dl></details></div>`;
   // rincian LK
   if (L){
-    h += `<div class="kartu"><div class="label-kecil" style="margin-top:0">Kesimpulan laporan keuangan · skor ${L.skor}${L.skor !== L.skor_asli ? ` (skor asli ${L.skor_asli}, ${L.bahaya.some(b => b.berat) ? "dibatasi 59 karena tanda bahaya berat" : "−10 per tanda bahaya ringan"})` : ""}${L.keu ? " · dinilai sebagai lembaga keuangan" : ""}</div>
+    h += `<div class="kartu" id="rekLK"><div class="label-kecil" style="margin-top:0">Kesimpulan laporan keuangan · skor ${L.skor}${L.skor !== L.skor_asli ? ` (skor asli ${L.skor_asli}, ${L.bahaya.some(b => b.berat) ? "dibatasi 59 karena tanda bahaya berat" : "−10 per tanda bahaya ringan"})` : ""}${L.keu ? " · dinilai sebagai lembaga keuangan" : ""}</div>
       <div class="bungkus-tabel" style="max-height:none"><table class="data" id="tabelLKS"></table></div>` +
       L.bahaya.map(b => `<div class="bahaya">⚠ <b>${esc(b.judul)}</b>${b.berat ? " (berat)" : " (ringan)"} — ${esc(b.bukti)}<br><span class="redup">${esc(b.arti)}</span></div>`).join("") +
       L.catatan.map(c => `<p class="redup" style="font-size:12px;margin:8px 0 0">ℹ ${esc(c)}</p>`).join("") + `</div>`;
   }
+  // valuasi
+  const kali = x => x == null ? "–" : angka(x, 1) + "×";
+  h += `<div class="kartu" id="rekVal"><div class="label-kecil" style="margin-top:0">Valuasi dibanding sektor (${esc(r.sektor || "–")})</div>
+    <div class="grid-stat">
+      <div class="stat"><div class="k">P/E ${t}</div><div class="v angka">${kali(V.per)}</div><div class="s">median sektor ${kali(V.per_sektor)}</div></div>
+      <div class="stat"><div class="k">PBV ${t}</div><div class="v angka">${kali(V.pbv)}</div><div class="s">median sektor ${kali(V.pbv_sektor)}</div></div>
+      <div class="stat"><div class="k">FCF yield</div><div class="v angka">${persen(V.fcf_yield, 1, false)}</div><div class="s">arus kas bebas ÷ kapitalisasi</div></div>
+    </div>
+    <p class="redup" style="font-size:12px;margin-bottom:0">Murah = P/E ≤ 0,8× median sektor, Wajar = 0,8–1,25×, Mahal = di atasnya. Murah belum tentu bagus — bisa jadi pasar memperkirakan laba akan turun. <a href="#" id="keBanding" style="color:var(--merek-tua)">Bandingkan dengan emiten sejenis di CARI › BANDING</a></p></div>`;
   // analis
-  if (A) h += `<div class="kartu"><div class="label-kecil" style="margin-top:0">Sentimen analis</div><div style="font-size:13px">
+  if (A) h += `<div class="kartu" id="rekAnalis"><div class="label-kecil" style="margin-top:0">Sentimen analis</div><div style="font-size:13px">
       Rekomendasi rata-rata <b>${A.kunci}</b> dari <b>${A.jumlah}</b> analis (skor ${angka(A.rata2)}; skala 1 = beli kuat sampai 5 = jual).<br>
       Target harga: rata-rata <b>$${angka(A.target)}</b> · terendah $${angka(A.target_rendah)} · tertinggi $${angka(A.target_tinggi)} — close terakhir $${angka(r.close)}.</div></div>`;
   // berita
@@ -992,18 +1020,80 @@ function isiRekomendasi(t){
     `<div class="berita"><span class="nada ${b.nada}">${b.nada}</span><div><a href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.judul)}</a>
       <div class="redup" style="font-size:12px">${esc(b.sumber)} · ${waktuLalu(b.waktu)}</div></div></div>`).join("") : "";
   const bId = B.item.filter(b => b.bahasa === "id"), bEn = B.item.filter(b => b.bahasa !== "id");
-  h += `<div class="kartu"><div class="label-kecil" style="margin-top:0">Berita 7 hari terakhir</div>` +
+  h += `<div class="kartu" id="rekBerita"><div class="label-kecil" style="margin-top:0">Berita 7 hari terakhir</div>` +
     (B.item.length ? grup("Berita Indonesia (Google Berita)", bId) + grup("Berita internasional (Yahoo Finance, bahasa Inggris)", bEn)
                    : `<div class="kosong">Tidak ada berita yang menyebut ${t} dalam 7 hari terakhir.</div>`) +
     `<p class="redup" style="font-size:12px;margin-bottom:0">Label positif/negatif dari kata kunci di judul (Indonesia: daftar kata yang sama dengan TITEN) — panduan cepat, bukan penilaian pasti. Ketuk judul untuk membuka berita lengkap di situs aslinya.</p></div>`;
   h += `<p class="redup" style="font-size:12px">Semua label dihitung dari aturan tetap dan data publik (SEC, Yahoo Finance, Google Berita). <b>Bukan rekomendasi investasi.</b></p>`;
   el.innerHTML = h;
+  el.querySelectorAll(".kartu-rek").forEach(k => {
+    const pergi = () => {
+      const tj = k.dataset.tuju;
+      if (tj === "kalender"){ bukaHalaman("kalender"); setTimeout(() => {
+        if (!KAL) return; kalMode = "earnings"; kalRentang = "semua"; tampilKal();
+        document.getElementById("kalCari").value = t; saringKal();
+        document.querySelectorAll("#kalTab button").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === "earnings"));
+        document.querySelectorAll("#kalRentang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === "semua")); }, 60); return; }
+      const sasaran = document.getElementById(tj);
+      if (sasaran){ sasaran.scrollIntoView({behavior: "smooth", block: "start"}); sasaran.classList.remove("kilat"); void sasaran.offsetWidth; sasaran.classList.add("kilat"); }
+    };
+    k.onclick = pergi; k.onkeydown = e => { if (e.key === "Enter") pergi(); };
+  });
+  const kb = document.getElementById("keBanding");
+  if (kb) kb.onclick = e => { e.preventDefault(); bukaEmiten(t).then(() => bukaPanel("BANDING")); };
+  tabelHarian(t, true);
   if (L) buatTabel(document.getElementById("tabelLKS"), [
     {k:"n", label:"Aspek", kiri:true, f:c => `<b>${c.n}</b>`, urut:c => c.urutan},
     {k:"p", label:"Poin", f:c => c.p == null ? '<span class="redup">tidak dinilai</span>' : `<b>${c.p}</b><span class="redup">/${c.m}</span>`, urut:c => c.p == null ? null : c.p / c.m},
     {k:"t", label:"Angka", kiri:true, f:c => `<span style="white-space:normal;display:block;min-width:220px">${esc(c.t)}</span>`},
     {k:"acu", label:"Patokan", kiri:true, f:c => `<span class="redup" style="white-space:normal;display:block;min-width:200px">${esc(c.acu || "–")}</span>`},
   ], L.rinci.map((c, i) => ({...c, _id: "a" + i, urutan: i})), {urut: "n", arah: 1});
+}
+
+/* ---------- tabel harian REKOMENDASI (seperti TITEN, tanpa net foreign) ---------- */
+function tabelHarian(t, reset){
+  const a = (EMITEN[t] || {}).harga; const elT = document.getElementById("rhTabel"); if (!elT) return;
+  if (!a || !a.t.length){ elT.innerHTML = `<tbody><tr><td class="kosong kiri">Belum ada data harga.</td></tr></tbody>`; return; }
+  const dari = document.getElementById("rhDari"), sampai = document.getElementById("rhSampai");
+  dari.min = sampai.min = a.t[0]; dari.max = sampai.max = a.t[a.t.length - 1];
+  if (reset){ sampai.value = a.t[a.t.length - 1]; dari.value = a.t[Math.max(0, a.t.length - 10)]; }
+  dari.onchange = sampai.onchange = () => tabelHarian(t, false);
+  document.getElementById("rhTerbaru").onclick = () => tabelHarian(t, true);
+  if (dari.value > sampai.value) [dari.value, sampai.value] = [sampai.value, dari.value];
+  const rata = (i, n) => { if (i < n - 1) return null; let s = 0; for (let j = i - n + 1; j <= i; j++) s += a.v[j] || 0; return s / n; };
+  const baris = []; let sv = 0, sn = 0, tv = 0, tn = 0;
+  for (let i = 0; i < a.t.length; i++){
+    if (a.t[i] < dari.value || a.t[i] > sampai.value) continue;
+    const c = a.c[i], p = i > 0 ? a.c[i - 1] : null, v = a.v[i] || 0, nilai = c * v;
+    const ubah = p ? 100 * (c / p - 1) : null;
+    const arah = ubah == null ? (c >= (a.o[i] ?? c) ? 1 : -1) : ubah > 0 ? 1 : ubah < 0 ? -1 : 0;
+    sv += arah * v; sn += arah * nilai; tv += v; tn += nilai;
+    const m5 = rata(i, 5), m20 = rata(i, 20), m50 = rata(i, 50);
+    baris.push({_id: a.t[i], tgl: a.t[i], c, ubah, v, nilai, arah, sv, sn, r20: m5 && m20 ? m5 / m20 : null, r50: m5 && m50 ? m5 / m50 : null});
+  }
+  const w = x => x > 0 ? "naik" : x < 0 ? "turun" : "redup";
+  const tanda = (x, f) => (x > 0 ? "+" : x < 0 ? "−" : "") + f(Math.abs(x));
+  const rasio = x => x == null ? "–" : `<span class="${x >= 1 ? "naik" : "turun"}">${angka(x)}×</span>`;
+  buatTabel(elT, [
+    {k:"tgl", label:"Tanggal", kiri:true, f:b => `<b>${hariTgl(b.tgl)}</b>`},
+    {k:"c", label:"Tutup", f:b => angka(b.c)},
+    {k:"ubah", label:"%Hrg", f:b => `<span class="${w(b.ubah)}">${b.ubah == null ? "–" : persen(b.ubah, 1)}</span>`},
+    {k:"v", label:"Volume", f:b => `<span class="${w(b.arah)}">${ringkas(b.v)}</span><span class="sig ${w(b.sv)}">Σ ${tanda(b.sv, ringkas)}</span>`},
+    {k:"nilai", label:"Value", f:b => `<span class="${w(b.arah)}">${usd(b.nilai)}</span><span class="sig ${w(b.sn)}">Σ ${tanda(b.sn, x => usd(x))}</span>`},
+    {k:"r20", label:"VMA5/VMA20", f:b => rasio(b.r20)},
+    {k:"r50", label:"VMA5/VMA50", f:b => rasio(b.r50)},
+  ], baris, {urut: "tgl", arah: 1, klik: () => {}});
+  elT.querySelectorAll("tbody tr").forEach(tr => tr.style.cursor = "default");
+  const awal = baris.length ? baris[0] : null, akhir = baris.length ? baris[baris.length - 1] : null;
+  const i0 = awal ? a.t.indexOf(awal.tgl) : -1, dasar = i0 > 0 ? a.c[i0 - 1] : (awal && awal.c);
+  const u = akhir && dasar ? 100 * (akhir.c / dasar - 1) : null;
+  const naik = baris.filter(b => b.arah > 0).length, turun = baris.filter(b => b.arah < 0).length;
+  document.getElementById("rhRingkas").innerHTML = baris.length ? `
+    <div class="sel"><span class="k">${baris.length} hari bursa</span><span class="besar angka ${kelasArah(u)}">${persen(u)}</span></div>
+    <div class="sel"><span class="k">Naik · Turun</span><span class="besar"><span class="naik">${naik}</span> · <span class="turun">${turun}</span></span></div>
+    <div class="sel"><span class="k">Total volume</span><span class="besar angka">${ringkas(tv)}</span></div>
+    <div class="sel"><span class="k">Total value</span><span class="besar angka">${usd(tn)}</span></div>
+    <div class="sel"><span class="k">Σ value bersih</span><span class="besar angka ${w(sn)}">${tanda(sn, x => usd(x))}</span></div>` : `<span class="redup">Tidak ada hari bursa di rentang itu.</span>`;
 }
 
 /* ================= ANALISA TICKER (perubahan harga pada rentang tanggal) ================= */
