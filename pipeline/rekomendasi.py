@@ -119,6 +119,9 @@ def skor_lk(t, sektor, q, fy):
     roe = (li / ((eq + eq1) / 2) * 100 if eq1 and eq1 > 0 else li / eq * 100) if eq and eq > 0 else None
     roa = li / aset * 100 if aset else None
     tipis = not keu and eq is not None and eq > 0 and aset and eq / aset < 0.10 and roe is not None and roe >= 40
+    if lu is None and bunga is not None:            # laba usaha tidak dilaporkan: EBIT = laba sebelum pajak + beban bunga
+        lsp = ttm(s.get("laba_sebelum_pajak"), 1)
+        lu = lsp + bunga if lsp is not None else None
     ic = lu / bunga if (lu is not None and bunga and bunga > 0) else None
     gp, gl = g(pend, pend1), g(li, li1)
     npm = li / pend * 100 if pend else None
