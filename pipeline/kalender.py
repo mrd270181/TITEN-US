@@ -192,6 +192,58 @@ def earnings_yahoo(tickers, dari, sampai):
     return list(hasil.values())
 
 
+def gerak_satu(t, tgl, waktu):
+    """Gerak perkiraan (±%) saat earnings dari harga opsi: straddle at-the-money (call + put dengan strike
+    terdekat ke harga saham) pada tanggal jatuh tempo pertama SETELAH laporan keluar, dibagi harga saham."""
+    import yfinance as yf
+    tk = yf.Ticker(t)
+    d = date.fromisoformat(tgl)
+    exp = [e for e in (tk.options or ()) if (date.fromisoformat(e) >= d if waktu == "pra" else date.fromisoformat(e) > d)]
+    if not exp or (date.fromisoformat(exp[0]) - d).days > 14:
+        return None
+    ch = tk.option_chain(exp[0])
+    harga = (ch.underlying or {}).get("regularMarketPrice")
+    if not harga:
+        h = tk.history(period="5d")
+        harga = float(h["Close"].iloc[-1]) if not h.empty else None
+    if not harga:
+        return None
+    c, p = ch.calls.set_index("strike"), ch.puts.set_index("strike")
+    sama = sorted(set(c.index) & set(p.index), key=lambda k: abs(k - harga))
+    if not sama:
+        return None
+    k = sama[0]
+    def tengah(b):
+        bid, ask, akhir = float(b.get("bid") or 0), float(b.get("ask") or 0), float(b.get("lastPrice") or 0)
+        return (bid + ask) / 2 if bid > 0 and ask > 0 else akhir
+    pct = (tengah(c.loc[k]) + tengah(p.loc[k])) / harga * 100
+    return round(pct, 1) if 0.5 <= pct <= 60 else None
+
+
+def isi_gerak(er, lama_er):
+    """Isi gerak perkiraan untuk emiten yang lapor dalam 7 hari ke depan; yang sudah lapor memakai nilai
+    terakhir sebelum laporan (disimpan dari kalender sebelumnya)."""
+    import logging
+    logging.getLogger("yfinance").setLevel(logging.CRITICAL)
+    simpan = {(x["ticker"], x["tanggal"]): x.get("gerak_perkiraan") for x in lama_er if x.get("gerak_perkiraan") is not None}
+    hari_ini = date.today()
+    n_ok = n_coba = 0
+    for x in er:
+        x["gerak_perkiraan"] = simpan.get((x["ticker"], x["tanggal"]))
+        d = date.fromisoformat(x["tanggal"])
+        if x.get("eps_aktual") is None and hari_ini <= d <= hari_ini + timedelta(days=7) and n_coba < 120:
+            n_coba += 1
+            try:
+                v = gerak_satu(x["ticker"], x["tanggal"], x["waktu"])
+                if v is not None:
+                    x["gerak_perkiraan"] = v
+                    n_ok += 1
+            except Exception:
+                pass
+            time.sleep(0.3)
+    print(f"   gerak perkiraan opsi: {n_ok} dari {n_coba} emiten")
+
+
 def tulis(keluar, tickers, lama=None):
     hari_ini = date.today()
     dari, sampai = (hari_ini - timedelta(days=14)).isoformat(), (hari_ini + timedelta(days=35)).isoformat()
@@ -208,6 +260,14 @@ def tulis(keluar, tickers, lama=None):
         sumber = "sebelumnya"
         print(f"   PERINGATAN: kalender earnings {gagal} hari gagal - pakai kalender earnings sebelumnya")
         er = json.load(open(lama, encoding="utf-8")).get("earnings", [])
+    try:
+        lama_er = json.load(open(lama, encoding="utf-8")).get("earnings", []) if lama and os.path.exists(lama) else []
+    except Exception:
+        lama_er = []
+    try:
+        isi_gerak(er, lama_er)
+    except Exception as e:
+        print(f"   gerak perkiraan gagal ({e})")
     obj = {"dibuat": datetime.now(WIB).isoformat(timespec="minutes"), "dari": dari, "sampai": sampai, "sumber": sumber,
            "earnings": sorted(er, key=lambda x: (x["tanggal"], x["ticker"])),
            "makro": makro((hari_ini - timedelta(days=14)).isoformat(), (hari_ini + timedelta(days=120)).isoformat())}

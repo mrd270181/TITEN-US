@@ -239,8 +239,10 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
         <dt>Tanggal</dt><dd>Hari laporan menurut waktu New York. Laporan “setelah bursa tutup” baru keluar dini hari WIB keesokan harinya.</dd>
         <dt>Waktu</dt><dd>Sebelum bursa buka = laporan keluar ±19.00 WIB, sebelum sesi malam itu. Setelah bursa tutup = ±04.00 WIB, pengaruhnya baru terlihat di sesi malam berikutnya.</dd>
         <dt>EPS Perk.</dt><dd>Rata-rata perkiraan analis untuk laba per saham kuartal itu (USD).</dd>
-        <dt>EPS Aktual · Kejutan</dt><dd>Laba per saham yang diumumkan dan selisihnya terhadap perkiraan. <span class="naik">+</span> = lebih baik dari perkiraan.</dd>
+        <dt>EPS Aktual · Kejutan EPS</dt><dd>Laba per saham yang diumumkan dan selisihnya terhadap perkiraan. <span class="naik">+</span> = lebih baik dari perkiraan.</dd>
+        <dt>Gerak Perk.</dt><dd>Perkiraan pasar opsi soal seberapa jauh harga bergerak saat laporan keluar — bisa naik atau turun (±). Dihitung dari harga opsi at-the-money yang jatuh tempo tepat setelah laporan. Diisi untuk emiten yang lapor dalam 7 hari ke depan.</dd>
         <dt>Reaksi</dt><dd>Perubahan harga pada sesi pertama setelah laporan keluar. Kejutan positif tidak selalu berarti harga naik — panduan (guidance) ke depan sering lebih menentukan.</dd>
+        <dt>Kejutan Gerak</dt><dd>Besar reaksi dibanding gerak perkiraan. 1× = sesuai perkiraan; di bawah 1× = lebih tenang (laporan sudah “diperhitungkan”); 1,5× ke atas (berwarna) = pasar benar-benar kaget.</dd>
         <dt>Tips</dt><dd>Harga bisa bergerak 5–20% dalam semalam saat laporan keluar, tanpa batas ARB. Kalau tidak siap dengan risiko itu, hindari membeli tepat sebelum tanggal laporan.</dd>
       </dl></details>
       <div class="bungkus-tabel"><table class="data" id="kalTabel"></table></div>
@@ -371,8 +373,10 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
         <li><b>Waktu (WIB)</b> — <i>Sebelum bursa buka (±19.00 WIB)</i>: laporan keluar sekitar jam 7 malam WIB, sebelum bursa AS buka 21.30 WIB, jadi reaksinya langsung terlihat malam itu. <i>Setelah bursa tutup (±04.00 WIB besoknya)</i>: laporan keluar dini hari WIB, reaksinya baru terlihat di sesi malam berikutnya.</li>
         <li><b>EPS Perk.</b> — <i>$3,83</i>: rata-rata perkiraan analis untuk laba per saham kuartal itu.</li>
         <li><b>EPS Aktual</b>: laba per saham yang diumumkan. Tertulis “belum” kalau emiten belum lapor.</li>
-        <li><b>Kejutan</b>: selisih EPS aktual terhadap perkiraan. Perkiraan $3,83, aktual $4,00 → <span class="naik">+4,4%</span> (lebih baik dari perkiraan, “beat”). Merah = di bawah perkiraan (“miss”).</li>
+        <li><b>Kejutan EPS</b>: selisih EPS aktual terhadap perkiraan. Perkiraan $3,83, aktual $4,00 → <span class="naik">+4,4%</span> (lebih baik dari perkiraan, “beat”). Merah = di bawah perkiraan (“miss”).</li>
+        <li><b>Gerak Perk.</b> — <i>±5,0%</i>: perkiraan pasar opsi soal seberapa jauh harga bergerak saat laporan keluar, <b>bisa naik atau turun</b>. Kalau HD ditutup $350, pasar memperkirakan harganya ke sekitar $332,50 (−5%) atau $367,50 (+5%). Diisi untuk emiten yang lapor dalam 7 hari ke depan.</li>
         <li><b>Reaksi</b>: perubahan harga pada sesi pertama setelah laporan keluar — cara pasar menilai laporan itu.</li>
+        <li><b>Kejutan Gerak</b>: besar reaksi dibanding gerak perkiraan. Reaksi +2% dari perkiraan ±5% = 0,4× (lebih tenang, laporan sudah “diperhitungkan”); −12% = 2,4× (pasar benar-benar kaget). Arah tetap dilihat dari tanda di kolom Reaksi.</li>
         <li><b>Kap. Pasar</b> — <i>$348 M</i>: nilai perusahaan 348 miliar dolar. Makin besar, makin besar pengaruhnya ke indeks.</li>
         <li><b>%1Bln</b> — <i>+13,1%</i>: perubahan harga sebulan terakhir. Kalau harga sudah naik banyak menjelang laporan, harapan pasar sudah tinggi.</li>
       </ul>
@@ -386,7 +390,8 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       <h4>Cara memakainya</h4>
       <ul>
         <li><b>Sebelum membeli</b>, cek apakah emiten akan lapor dalam waktu dekat. Saat laporan keluar harga bisa bergerak 5–20% dalam semalam, dan bursa AS tidak punya batas ARA/ARB. Kalau tidak siap dengan risiko itu, hindari membeli tepat sebelum tanggal laporan.</li>
-        <li><b>Setelah lapor</b>, bandingkan Kejutan dengan Reaksi. Kejutan positif tapi harga turun biasanya berarti guidance (proyeksi ke depan) mengecewakan, atau harga sudah naik duluan.</li>
+        <li><b>Sebelum lapor</b>, Gerak Perk. menunjukkan risikonya: ±12% berarti harga bisa naik atau turun sekitar 12% dalam semalam.</li>
+        <li><b>Setelah lapor</b>, bandingkan Kejutan EPS dengan Reaksi dan Kejutan Gerak. Contoh: EPS +8% di atas perkiraan tapi harga −12% (2,4× gerak perkiraan) = guidance mengecewakan. Kejutan positif tapi harga turun biasanya berarti guidance (proyeksi ke depan) mengecewakan, atau harga sudah naik duluan.</li>
         <li>Pada <b>hari FOMC, CPI dan NFP</b>, seluruh pasar bisa bergerak tajam. Banyak trader menahan diri sampai data keluar.</li>
         <li>Musim laporan ramai pada akhir Jan–Feb, akhir Apr–Mei, akhir Jul–Agu, dan akhir Okt–Nov. Pada musim ini LK di TITEN US juga banyak berubah.</li>
         <li>Lencana <b>DOW</b> di samping ticker = anggota indeks Dow Jones (30 emiten terbesar dan paling mapan).</li>
@@ -1374,6 +1379,10 @@ function reaksi(e){
   if (a == null || a < 0 || b >= HS.t.length || c[a] == null || c[b] == null) return null;
   return 100 * (c[b] / c[a] - 1);
 }
+function kejutanGerak(e){
+  const r = reaksi(e);
+  return r == null || !e.gerak_perkiraan ? null : Math.abs(r) / e.gerak_perkiraan;
+}
 async function bukaKalender(){
   const el = document.getElementById("kalSumber");
   if (!KAL){ document.getElementById("kalTabel").innerHTML = `<tbody><tr><td class="kosong kiri">Kalender belum tersedia — akan muncul setelah pembaruan otomatis berikutnya.</td></tr></tbody>`; return; }
@@ -1399,8 +1408,10 @@ const kolomKal = [
   {k:"waktu", label:"Waktu (WIB)", kiri:true, f:e => `<span style="white-space:normal">${e.waktu_label}</span>`},
   {k:"eps_perkiraan", label:"EPS Perk.", judul:"Perkiraan analis, USD per saham", f:e => e.eps_perkiraan == null ? "–" : "$" + angka(e.eps_perkiraan)},
   {k:"eps_aktual", label:"EPS Aktual", f:e => e.eps_aktual == null ? '<span class="redup">belum</span>' : "<b>$" + angka(e.eps_aktual) + "</b>"},
-  {k:"kejutan_persen", label:"Kejutan", judul:"Selisih EPS aktual terhadap perkiraan", f:e => e.kejutan_persen == null ? "–" : `<b class="${kelasArah(e.kejutan_persen)}">${persen(e.kejutan_persen, 1)}</b>`},
+  {k:"kejutan_persen", label:"Kejutan EPS", judul:"Selisih EPS aktual terhadap perkiraan", f:e => e.kejutan_persen == null ? "–" : `<b class="${kelasArah(e.kejutan_persen)}">${persen(e.kejutan_persen, 1)}</b>`},
+  {k:"gerak_perkiraan", label:"Gerak Perk.", judul:"Perkiraan besar gerak harga saat laporan keluar, dari harga opsi (naik atau turun)", f:e => e.gerak_perkiraan == null ? "–" : "±" + angka(e.gerak_perkiraan, 1) + "%"},
   {k:"reaksi", label:"Reaksi", judul:"Perubahan harga sesi pertama setelah laporan keluar", f:e => e.reaksi == null ? "–" : `<b class="${kelasArah(e.reaksi)}">${persen(e.reaksi)}</b>`},
+  {k:"kejutan_gerak", label:"Kejutan Gerak", judul:"Besar reaksi dibanding gerak perkiraan; ≥ 1× = lebih besar dari perkiraan", f:e => e.kejutan_gerak == null ? "–" : `<b class="${e.kejutan_gerak >= 1.5 ? (e.reaksi > 0 ? "naik" : "turun") : "redup"}">${angka(e.kejutan_gerak, 1)}×</b>`},
   {k:"kap_pasar", label:"Kap. Pasar", f:e => usd(e.kap_pasar)},
   {k:"chg_1bl", label:"%1Bln", f:e => `<span class="${kelasArah(e.chg_1bl)}">${persen(e.chg_1bl, 1)}</span>`},
 ];
@@ -1409,7 +1420,7 @@ function saringKal(){
   const batas = {depan7: [HARI_INI, tambahHari(HARI_INI, 7)], depan35: [HARI_INI, tambahHari(HARI_INI, 35)], lalu: [tambahHari(HARI_INI, -14), tambahHari(HARI_INI, -1)], semua: ["0000", "9999"]}[kalRentang];
   const hasil = KAL.earnings.filter(e => e.tanggal >= batas[0] && e.tanggal <= batas[1]).map(e => {
     const r = PER_TICKER[e.ticker] || {};
-    return {...e, _id: e.ticker, nama: r.nama, dow: r.dow, sp500: r.sp500, ndx: r.ndx, kap_pasar: r.kap_pasar, chg_1bl: r.chg_1bl, reaksi: reaksi(e)};
+    return {...e, _id: e.ticker, nama: r.nama, dow: r.dow, sp500: r.sp500, ndx: r.ndx, kap_pasar: r.kap_pasar, chg_1bl: r.chg_1bl, reaksi: reaksi(e), kejutan_gerak: kejutanGerak(e)};
   }).filter(e => (kalIndeks === "semua" || e[kalIndeks]) && (!q || e.ticker.includes(q) || (e.nama || "").toUpperCase().includes(q)));
   document.getElementById("kalJumlah").textContent = `${hasil.length} laporan`;
   const urut = kalRentang === "lalu" ? {urut: "tanggal", arah: -1} : {urut: "tanggal", arah: 1};
