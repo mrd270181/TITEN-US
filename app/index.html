@@ -344,6 +344,51 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       </ul>
     </div></details>
 
+    <details class="artikel"><summary>Satuan angka &amp; cara membaca baris screener</summary><div class="isi-artikel">
+      <h4>Satuan angka (sama dengan TITEN)</h4>
+      <div class="bungkus-tabel" style="max-height:none;min-height:0;margin:6px 0;max-width:460px"><table class="data" id="tabelSatuan"></table></div>
+      <ul>
+        <li><b>M di TITEN US = miliar</b>, bukan million. Di situs berita AS “M” berarti million (juta) dan “B” berarti billion (miliar). Jadi “$59.2B” di berita sama dengan <b>$59,2 M</b> di TITEN US.</li>
+        <li><b>Volume</b> dihitung dalam <b>lembar</b> saham, bukan dolar. Di bursa AS tidak ada lot; 1 lembar pun bisa dibeli.</li>
+        <li><b>Nilai</b> dan <b>Kap. pasar</b> dalam dolar. Tombol <b>$ → Rp</b> mengalikan semua nilai dolar dengan kurs terakhir, satuannya tetap sama (Rp 1.078 T = 1.078 triliun rupiah).</li>
+      </ul>
+      <h4>Contoh: membaca baris AAPL (13 Nov 2026)</h4>
+      <div class="bungkus-tabel" style="max-height:none;min-height:0;margin:6px 0"><table class="data" id="tabelContohAAPL"></table></div>
+      <p style="font-size:13px">Kesimpulannya: AAPL sedang tren naik kuat (naik 31% sejak awal tahun dan hampir di puncak 52 minggu), tapi transaksi hari itu biasa saja tanpa lonjakan volume. Panah ▼ di judul kolom menunjukkan tabel sedang diurutkan menurut kolom itu.</p>
+    </div></details>
+
+    <details class="artikel"><summary>Cara membaca Kesimpulan LK (skor laporan keuangan)</summary><div class="isi-artikel">
+      <p>Di menu <b>REKOMENDASI</b>, kotak <b>Kesimpulan LK</b> merangkum laporan keuangan emiten jadi satu skor 0–100 dengan label <span class="lbl Bagus">Bagus</span> 75–100, <span class="lbl Sedang">Sedang</span> 60–74, atau <span class="lbl Jelek">Jelek</span> di bawah 60. Aturannya sama dengan TITEN, ditambah beberapa penyesuaian karena emiten AS punya kebiasaan keuangan yang berbeda.</p>
+      <h4>Tujuh aspek yang dinilai</h4>
+      <div class="bungkus-tabel" style="max-height:none;min-height:0;margin:6px 0"><table class="data" id="tabelAspekLK"></table></div>
+      <p style="font-size:13px">Semua angka memakai <b>4 kuartal terakhir</b> (TTM) dibanding 4 kuartal sebelumnya, jadi tidak terganggu musim. Aspek yang tidak berlaku dikeluarkan dari hitungan, lalu skornya disetarakan ke 0–100.</p>
+      <h4>Bank, asuransi dan broker</h4>
+      <ul>
+        <li>Utang lembaga keuangan sebagian besar dana nasabah, jadi utang, kualitas laba dan arus kas bebas <b>tidak dinilai</b>.</li>
+        <li>Bobotnya jadi profitabilitas 40, pertumbuhan 20, konsistensi 20, arah margin 20.</li>
+        <li>Yang dihitung lembaga keuangan: sektor Financials yang <b>tidak melaporkan aset lancar</b> (JPM, BAC, GS, BRK-B, asuransi). Visa, Mastercard, PayPal melaporkan aset lancar, jadi dinilai seperti emiten biasa.</li>
+      </ul>
+      <h4>Tanda bahaya</h4>
+      <ul>
+        <li><b>Berat</b>, membuat skor paling tinggi 59 (Jelek): <b>rugi</b> dalam 4 kuartal terakhir, atau <b>ekuitas negatif</b> yang bukan karena buyback.</li>
+        <li><b>Ringan</b>, masing-masing −10: <b>arus kas operasi negatif</b>, atau <b>utang besar</b> (liabilitas &gt; 3× ekuitas dan laba usaha kurang dari 4× beban bunga).</li>
+      </ul>
+      <h4>Kenapa saham AS perlu penyesuaian</h4>
+      <ul>
+        <li><b>Buyback besar-besaran.</b> Emiten AS yang sangat untung (HD, MCD, SBUX) membeli kembali sahamnya terus-menerus sampai ekuitasnya negatif secara buku. Di IDX ekuitas negatif hampir selalu berarti perusahaan bermasalah; di AS sering justru tanda perusahaan kelebihan uang. Karena itu ekuitas negatif dengan laba dan arus kas positif <b>bukan tanda bahaya</b>, dan profitabilitasnya dinilai dengan ROA.</li>
+        <li><b>ROE menggelembung.</b> Kalau ekuitas tinggal kurang dari 10% aset, ROE bisa tampak 80–150% padahal perusahaannya biasa saja. Nilai penuh profitabilitas hanya diberikan kalau <b>ROA ≥ 10%</b>.</li>
+        <li><b>Utang murah.</b> Emiten AS memakai utang lebih banyak karena bunganya murah. Rasio liabilitas/ekuitas saja terlalu keras, jadi dilihat juga <b>interest coverage</b>: laba usaha dibagi beban bunga. Di atas 8× berarti bunga sangat mudah dibayar.</li>
+        <li><b>Gaji berupa saham (SBC).</b> Emiten teknologi membayar karyawan dengan saham bernilai miliaran dolar. Biaya itu tidak keluar sebagai uang tunai, sehingga arus kas operasi tampak lebih besar. Kualitas laba memakai <b>arus kas operasi dikurangi SBC</b>.</li>
+      </ul>
+      <h4>Cara membacanya</h4>
+      <ul>
+        <li>Lihat label dulu, lalu buka rinciannya: aspek mana yang membuat skor turun dan tanda bahaya apa yang muncul. Setiap baris memuat angka buktinya dan batas "bagus"-nya.</li>
+        <li>Skor LK menilai <b>kesehatan perusahaan</b>, bukan murah atau mahalnya saham. Emiten Bagus bisa saja sedang mahal; lihat juga kotak Valuasi.</li>
+        <li>Skor memakai laporan yang sudah diajukan ke SEC. Laporan kuartal (10-Q) terbit paling lambat 40–45 hari setelah kuartal berakhir, laporan tahunan (10-K) 60–90 hari. TITEN US mengambilnya setiap Minggu pagi WIB, jadi angka baru masuk paling lambat sekitar seminggu setelah emiten lapor. Tanggal "LK s.d." di kotak menunjukkan periode yang dipakai.</li>
+        <li>Semua dihitung dari aturan tetap. <b>Bukan rekomendasi investasi.</b></li>
+      </ul>
+    </div></details>
+
     <details class="artikel"><summary>Cara memakai TITEN US</summary><div class="isi-artikel">
       <ul>
         <li><b>📊 SCREENER</b> — semua 518 emiten (S&amp;P 500, Nasdaq-100, Dow) dengan saringan cepat. Panduan tiap kolom ada di tombol ⓘ.</li>
@@ -352,16 +397,8 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
         <li><b>📅 KALENDER</b> — jadwal laporan keuangan emiten dan data makro AS (FOMC, CPI, NFP) dalam jam WIB.</li>
         <li><b>🔍 CARI</b> — chart candle, keystats, laporan keuangan per kuartal/tahun, perbandingan, profil.</li>
       </ul>
-      <h4>Kesimpulan LK (aturan sama dengan TITEN)</h4>
-      <ul>
-        <li>Skor 0–100 dari 7 aspek: profitabilitas 20, pertumbuhan 20, kualitas laba 20, utang &amp; likuiditas 15, konsistensi 10, arah margin 10, arus kas bebas 5. Bank & lembaga keuangan: profitabilitas 40, pertumbuhan 20, konsistensi 20, arah margin 20.</li>
-        <li>Bagus 75–100, Sedang 60–74, Jelek di bawah 60. Tanda bahaya berat (rugi, ekuitas negatif) membatasi skor maksimal 59; tanda ringan (utang besar, arus kas operasi negatif) −10 per tanda.</li>
-        <li>Penyesuaian AS: ekuitas negatif karena pembelian kembali saham (buyback) pada emiten yang untung dan arus kasnya positif bukan tanda bahaya; profitabilitasnya dinilai dengan ROA.</li>
-        <li>Ekuitas sangat tipis (&lt; 10% aset) membuat ROE menggelembung; nilai penuh profitabilitas hanya jika ROA ≥ 10%.</li>
-        <li>Utang dilihat juga dari kemampuan bayar bunga: laba usaha ≥ 8× beban bunga dinilai aman walau liabilitas/ekuitas tinggi.</li>
-        <li>Kualitas laba memakai arus kas operasi dikurangi kompensasi saham (SBC), karena gaji berupa saham bukan uang tunai yang benar-benar tersisa.</li>
-        <li>Lembaga keuangan (bank, asuransi, broker) = sektor Financials yang tidak melaporkan aset lancar; V, MA dan sejenisnya dinilai seperti emiten biasa.</li>
-      </ul>
+      <h4>Kesimpulan LK</h4>
+      <ul><li>Skor 0–100 dari 7 aspek laporan keuangan, label Bagus / Sedang / Jelek. Penjelasan lengkapnya di artikel <b>Cara membaca Kesimpulan LK</b>.</li></ul>
       <h4>Pembaruan data</h4>
       <ul>
         <li>Otomatis setiap Selasa–Sabtu pagi WIB setelah bursa AS tutup (GitHub kadang menunda sampai ±09.00 WIB; ada jadwal cadangan kalau gagal). Laporan keuangan & daftar emiten diperbarui setiap Minggu.</li>
@@ -521,6 +558,7 @@ function bukaHalaman(h){
   if (h === "analisa") bukaAnalisa();
   if (h === "kalender") bukaKalender();
   if (h === "rekomendasi") bukaRek();
+  if (h === "pustaka"){ isiAspekLK(); isiPustakaSatuan(); }
   window.scrollTo(0, 0);
 }
 
@@ -1052,6 +1090,56 @@ function isiRekomendasi(t){
     {k:"t", label:"Angka", kiri:true, f:c => `<span style="white-space:normal;display:block;min-width:220px">${esc(c.t)}</span>`},
     {k:"acu", label:"Patokan", kiri:true, f:c => `<span class="redup" style="white-space:normal;display:block;min-width:200px">${esc(c.acu || "–")}</span>`},
   ], L.rinci.map((c, i) => ({...c, _id: "a" + i, urutan: i})), {urut: "n", arah: 1});
+}
+
+/* ---------- PUSTAKA: tabel satuan & contoh baris screener ---------- */
+function isiPustakaSatuan(){
+  const el = document.getElementById("tabelSatuan"); if (!el || el.dataset.isi) return; el.dataset.isi = 1;
+  buatTabel(el, [
+    {k: "s", label: "Singkatan", kiri: true, f: r => `<b>${r.s}</b>`, urut: r => r.n},
+    {k: "arti", label: "Arti", kiri: true, f: r => r.arti, urut: r => r.n},
+    {k: "n", label: "Jumlah nol", f: r => r.n},
+    {k: "contoh", label: "Contoh", kiri: true, f: r => r.contoh, urut: r => r.n},
+  ], [["K", "ribu", 3, "850K lembar"], ["Jt", "juta", 6, "40,0 Jt lembar"], ["M", "miliar", 9, "$14,2 M"], ["T", "triliun", 12, "$5,18 T"]]
+     .map(x => ({_id: x[0], s: x[0], arti: x[1], n: x[2], contoh: x[3]})), {urut: "n", arah: 1});
+  const B = [
+    ["Close", "356,27", "Harga penutupan $356,27 per lembar."],
+    ["%1H", "+0,39%", "Naik 0,39% dibanding penutupan hari bursa sebelumnya."],
+    ["Gap", "+0,87%", "Saat bursa buka, harga langsung 0,87% di atas penutupan kemarin (gap up). Tutupnya lebih rendah dari harga buka itu."],
+    ["Volume", "40,0 Jt", "40 juta lembar berpindah tangan hari itu."],
+    ["Vol/MA5", "1,05×", "Volume 5% di atas rata-rata 5 hari terakhir: normal. Menarik kalau ≥ 2×."],
+    ["Nilai", "$14,2 M", "Uang yang ditransaksikan 14,2 miliar dolar, kira-kira volume × harga."],
+    ["%1Bln", "+4,2%", "Naik 4,2% dalam sebulan terakhir."],
+    ["%YTD", "+31,0%", "Naik 31% sejak awal tahun."],
+    ["Dari High52", "−1,3%", "Hanya 1,3% di bawah harga tertinggi 52 minggu: dekat puncak."],
+    ["Kap. pasar", "$5,18 T", "Nilai seluruh perusahaan 5,18 triliun dolar (saham beredar × harga)."],
+  ].map((x, i) => ({_id: i, i, kol: x[0], nilai: x[1], arti: x[2]}));
+  buatTabel(document.getElementById("tabelContohAAPL"), [
+    {k: "kol", label: "Kolom", kiri: true, f: r => `<b>${r.kol}</b>`, urut: r => r.i},
+    {k: "nilai", label: "AAPL", f: r => r.nilai, urut: r => r.i},
+    {k: "arti", label: "Artinya", kiri: true, f: r => `<span style="white-space:normal;display:block;min-width:220px">${r.arti}</span>`, urut: r => r.i},
+  ], B, {urut: "kol", arah: 1});
+}
+
+/* ---------- PUSTAKA: tabel aspek skor LK ---------- */
+function isiAspekLK(){
+  const el = document.getElementById("tabelAspekLK"); if (!el || el.dataset.isi) return; el.dataset.isi = 1;
+  const B = [
+    ["Profitabilitas", 20, "ROE (laba bersih ÷ ekuitas)", "ROE ≥ 15% → 20, ≥ 8% → 12, positif → 5. Ekuitas negatif karena buyback atau sangat tipis: dinilai dengan ROA (≥ 10% penuh)."],
+    ["Pertumbuhan", 20, "Pendapatan & laba 4 kuartal vs 4 kuartal sebelumnya", "Masing-masing 10: naik ≥ 10% → 10, naik 0–10% → 5, turun → 0. Laba berbalik dari rugi ke untung → 5."],
+    ["Kualitas laba", 20, "Arus kas operasi dikurangi kompensasi saham ÷ laba bersih", "≥ 1× → 20, ≥ 0,7× → 12, positif → 4. Laba yang tidak jadi uang tunai patut dicurigai."],
+    ["Utang & likuiditas", 15, "Liabilitas ÷ ekuitas, laba usaha ÷ beban bunga, aset lancar ÷ liabilitas lancar", "Utang 10: liabilitas/ekuitas ≤ 1× (padat modal ≤ 2×) atau bunga tertutup ≥ 8×. Likuiditas 5: rasio lancar ≥ 1,5×."],
+    ["Konsistensi", 10, "Jumlah tahun untung dari 4 tahun buku terakhir", "4 tahun → 10, 3 → 7, 2 → 4, 1 → 2."],
+    ["Arah margin", 10, "Margin laba bersih sekarang vs setahun sebelumnya", "Naik atau tetap → 10, turun tapi masih positif → 4, negatif → 0."],
+    ["Arus kas bebas", 5, "Arus kas operasi − belanja modal", "Positif → 5. Negatif karena ekspansi (arus kas operasi tetap positif) tidak dihukum."],
+  ].map((x, i) => ({_id: i, urutan: i, aspek: x[0], bobot: x[1], ukur: x[2], nilai: x[3]}));
+  const bungkus = t => `<span style="white-space:normal;display:block;min-width:200px">${t}</span>`;
+  buatTabel(el, [
+    {k: "aspek", label: "Aspek", kiri: true, f: r => `<b>${r.aspek}</b>`, urut: r => r.urutan},
+    {k: "bobot", label: "Bobot", f: r => r.bobot},
+    {k: "ukur", label: "Yang diukur", kiri: true, f: r => bungkus(r.ukur)},
+    {k: "nilai", label: "Cara memberi nilai", kiri: true, f: r => bungkus(r.nilai)},
+  ], B, {urut: "aspek", arah: 1});
 }
 
 /* ---------- tabel harian REKOMENDASI (seperti TITEN, tanpa net foreign) ---------- */
