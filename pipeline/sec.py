@@ -66,6 +66,16 @@ PETA = {
     "total_liabilitas": ("posisi", False, ["us-gaap:Liabilities", "ifrs-full:Liabilities"]),
     "aset_lancar": ("posisi", False, ["us-gaap:AssetsCurrent", "ifrs-full:CurrentAssets"]),
     "liabilitas_lancar": ("posisi", False, ["us-gaap:LiabilitiesCurrent", "ifrs-full:CurrentLiabilities"]),
+    "beban_bunga": ("durasi", True, [
+        "us-gaap:InterestExpense",
+        "us-gaap:InterestExpenseNonoperating",
+        "us-gaap:InterestExpenseDebt",
+        "us-gaap:InterestAndDebtExpense",
+        "ifrs-full:FinanceCosts"]),
+    "kompensasi_saham": ("durasi", True, [
+        "us-gaap:ShareBasedCompensation",
+        "us-gaap:AllocatedShareBasedCompensationExpense",
+        "ifrs-full:AdjustmentsForSharebasedPayments"]),
     "_liabilitas_dan_ekuitas": ("posisi", False, [
         "us-gaap:LiabilitiesAndStockholdersEquity", "ifrs-full:EquityAndLiabilities"]),
     "_ekuitas_total": ("posisi", False, [

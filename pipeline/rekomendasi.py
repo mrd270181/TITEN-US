@@ -8,6 +8,11 @@
 #   Label: >= 75 Bagus, 60-74 Sedang, < 60 Jelek.
 # Penyesuaian AS: ekuitas negatif karena pembelian kembali saham (laba & arus kas operasi positif, umum di AS:
 #   HD, MCD, dll.) BUKAN tanda bahaya; profitabilitasnya dinilai dengan ROA.
+#   (15 Nov 2026) + ekuitas sangat tipis (< 10% aset) -> ROE menggelembung, dinilai dengan ROA;
+#   + interest coverage (laba usaha / beban bunga) melonggarkan penilaian utang;
+#   + kualitas laba memakai arus kas operasi DIKURANGI kompensasi saham (SBC);
+#   + lembaga keuangan = sektor Financials yang tidak melaporkan aset lancar (bank, asuransi, broker),
+#     sehingga V, MA, dll. dinilai seperti emiten biasa.
 import html, json, logging, os, re, time, urllib.parse, urllib.request
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
@@ -16,8 +21,8 @@ from email.utils import parsedate_to_datetime
 
 LABEL = lambda s: None if s is None else ("Bagus" if s >= 75 else "Sedang" if s >= 60 else "Jelek")
 ACU = {"Profitabilitas": "bagus jika ROE ≥ 15%", "Pertumbuhan": "bagus jika pendapatan & laba naik ≥ 10%",
-       "Kualitas laba": "bagus jika arus kas operasi ≥ laba bersih",
-       "Utang & likuiditas": "penuh jika liabilitas/ekuitas ≤ 1× (sektor padat modal ≤ 2×); ⚠ Utang besar jika > 3×",
+       "Kualitas laba": "bagus jika arus kas operasi (dikurangi kompensasi saham) ≥ laba bersih",
+       "Utang & likuiditas": "penuh jika liabilitas/ekuitas ≤ 1× (sektor padat modal ≤ 2×) atau laba usaha ≥ 8× beban bunga; ⚠ Utang besar jika > 3× dan bunga tertutup < 4×",
        "Konsistensi": "bagus jika untung 4 tahun berturut-turut", "Arah margin": "bagus jika margin naik atau tetap",
        "Arus kas bebas": "bagus jika positif, atau negatif karena belanja modal (ekspansi) sementara arus kas operasi positif"}
 PADAT = {"Real Estate", "Utilities"}
@@ -89,6 +94,10 @@ def ttm(seri, awal):
     return sum(x[1] for x in k)
 
 
+def lancar_ada(seri):
+    return bool(seri) and any(v is not None for _, v in seri.values())
+
+
 def skor_lk(t, sektor, q, fy):
     s = q.get(t)
     if not s or "laba_bersih" not in s:
@@ -98,16 +107,19 @@ def skor_lk(t, sektor, q, fy):
     pend, pend1 = ttm(s.get("pendapatan"), 1), ttm(s.get("pendapatan"), 5)
     li, li1 = ttm(s.get("laba_bersih"), 1), ttm(s.get("laba_bersih"), 5)
     cfo, capex = ttm(s.get("arus_kas_operasi"), 1), ttm(s.get("belanja_modal"), 1)
+    lu, bunga, sbc = ttm(s.get("laba_usaha"), 1), ttm(s.get("beban_bunga"), 1), ttm(s.get("kompensasi_saham"), 1)
     if li is None:
         return None
     eq, eq1, liab, aset = saldo("ekuitas"), saldo("ekuitas", 5), saldo("total_liabilitas"), saldo("total_aset")
     lancar, liab_lancar = saldo("aset_lancar"), saldo("liabilitas_lancar")
-    keu = sektor == "Financials" and lancar is None
+    keu = sektor == "Financials" and not lancar_ada(s.get("aset_lancar"))
     padat = sektor in PADAT
     eq_neg = eq is not None and eq <= 0
     buyback = eq_neg and li > 0 and cfo is not None and cfo > 0      # penyesuaian AS
     roe = (li / ((eq + eq1) / 2) * 100 if eq1 and eq1 > 0 else li / eq * 100) if eq and eq > 0 else None
     roa = li / aset * 100 if aset else None
+    tipis = not keu and eq is not None and eq > 0 and aset and eq / aset < 0.10 and roe is not None and roe >= 40
+    ic = lu / bunga if (lu is not None and bunga and bunga > 0) else None
     gp, gl = g(pend, pend1), g(li, li1)
     npm = li / pend * 100 if pend else None
     npm1 = li1 / pend1 * 100 if (li1 is not None and pend1) else None
@@ -122,7 +134,11 @@ def skor_lk(t, sektor, q, fy):
             tot[0] += p
         cat.append({"n": n, "p": p, "m": m, "t": teks, "acu": acu or ACU.get(n, "")})
 
-    if roe is not None:
+    if tipis and roa is not None:
+        pr = 20 if roa >= 10 else 12 if roa > 0 else 0
+        tambah("Profitabilitas", pr, 20, f"ROE {f1(roe)}% menggelembung karena ekuitas tinggal {f1(eq / aset * 100)}% dari aset — dinilai dengan ROA {f1(roa)}%",
+               "ROE dibatasi: nilai penuh hanya jika ROA ≥ 10% (ekuitas sangat tipis)")
+    elif roe is not None:
         pr = 20 if roe >= 15 else 12 if roe >= 8 else 5 if roe > 0 else 0
         tambah("Profitabilitas", pr * 2 if keu else pr, 40 if keu else 20, f"ROE {f1(roe)}%")
     elif buyback and roa is not None:
@@ -141,19 +157,28 @@ def skor_lk(t, sektor, q, fy):
     if keu:
         tambah("Kualitas laba", None, 20, "tidak dinilai untuk lembaga keuangan", "")
     else:
-        c = cfo / li if (cfo is not None and li > 0) else None
-        tambah("Kualitas laba", 20 if c is not None and c >= 1 else 12 if c is not None and c >= 0.7 else 4 if c is not None and c > 0 else 0, 20,
-               f"arus kas operasi {f1(c)}× laba bersih" if c is not None else "laba atau arus kas operasi negatif")
+        kas_inti = cfo - sbc if (cfo is not None and sbc is not None and sbc > 0) else cfo
+        c = kas_inti / li if (kas_inti is not None and li > 0) else None
+        if sbc and sbc > 0 and cfo is not None:
+            tk = (f"arus kas operasi dikurangi kompensasi saham {f1(c)}× laba bersih (kompensasi saham {f1(sbc / cfo * 100)}% dari arus kas operasi)"
+                  if c is not None else "laba atau arus kas operasi (setelah kompensasi saham) negatif")
+        else:
+            tk = f"arus kas operasi {f1(c)}× laba bersih" if c is not None else "laba atau arus kas operasi negatif"
+        tambah("Kualitas laba", 20 if c is not None and c >= 1 else 12 if c is not None and c >= 0.7 else 4 if c is not None and c > 0 else 0, 20, tk)
     der_longgar = not keu and roe is not None and roe >= 30 and li > 0 and cfo is not None and cfo > 0 and der is not None and der <= 4
     b1, b2 = (2, 3.5) if padat else (1, 2)
     if keu:
         tambah("Utang & likuiditas", None, 15, "tidak dinilai: utang lembaga keuangan sebagian besar dana nasabah", "")
     else:
+        tic = "" if ic is None else f", laba usaha {f1(ic)}× beban bunga"
         if buyback:
-            pd_, k = 5, "ekuitas negatif karena buyback — liabilitas/ekuitas tidak berlaku, diberi nilai tengah"
+            pd_ = 5 if ic is None else 10 if ic >= 8 else 7 if ic >= 4 else 2
+            k = "ekuitas negatif karena buyback — liabilitas/ekuitas tidak berlaku" + (tic if ic is not None else ", diberi nilai tengah")
         else:
             pd_ = 10 if der_longgar else 10 if (der is not None and der <= b1) else 5 if (der is not None and der <= b2) else 0
-            k = f"liabilitas/ekuitas {f1(der)}×" + (f" (ROE {f1(roe)}% — modal kecil karena laba dibagikan, tidak dihukum)" if der_longgar else
+            if ic is not None:
+                pd_ = max(pd_, 10 if ic >= 8 else 5 if ic >= 4 else 0)
+            k = f"liabilitas/ekuitas {f1(der)}×" + tic + (f" (ROE {f1(roe)}% — modal kecil karena laba dibagikan, tidak dihukum)" if der_longgar else
                                                      " (sektor padat modal)" if padat else "")
         if cr is not None:
             tambah("Utang & likuiditas", pd_ + (5 if cr >= 1.5 else 2 if cr >= 1 else 0), 15, f"{k}, rasio lancar {f1(cr)}×")
@@ -183,8 +208,9 @@ def skor_lk(t, sektor, q, fy):
         F.append(["Rugi", f"laba bersih 4 kuartal {juta(li)}", "Perusahaan merugi dalam 4 kuartal terakhir, sehingga modal tergerus.", True])
     if not keu and cfo is not None and cfo < 0:
         F.append(["Arus kas operasi negatif", f"arus kas operasi 4 kuartal {juta(cfo)}", "Kegiatan usaha justru menghabiskan uang; untuk menutupnya perusahaan bisa perlu utang atau saham baru.", False])
-    if not keu and not der_longgar and der is not None and der > 3:
-        F.append(["Utang besar", f"liabilitas {f1(der)}× ekuitas", "Kewajiban lebih dari 3 kali modal sendiri; kalau usaha melemah perusahaan bisa kesulitan bayar.", False])
+    if not keu and not der_longgar and der is not None and der > 3 and (ic is None or ic < 4):
+        F.append(["Utang besar", f"liabilitas {f1(der)}× ekuitas" + ("" if ic is None else f", laba usaha hanya {f1(ic)}× beban bunga"),
+                  "Kewajiban lebih dari 3 kali modal sendiri; kalau usaha melemah perusahaan bisa kesulitan bayar.", False])
     maks = sum(c["m"] for c in cat if c["p"] is not None)
     asli = round(tot[0] * 100 / maks)
     ringan, berat = [f for f in F if not f[3]], [f for f in F if f[3]]
@@ -193,6 +219,8 @@ def skor_lk(t, sektor, q, fy):
     baru = 59 if berat and baru > 59 else baru
     skor = max(lama, baru)
     catatan = ["Ekuitas negatif karena pembelian kembali saham (buyback) — umum di emiten AS yang untung besar, tidak dianggap tanda bahaya."] if buyback else []
+    if tipis:
+        catatan.append("Ekuitas sangat tipis dibanding aset, jadi ROE terlihat sangat tinggi; profitabilitas dinilai dengan ROA supaya tidak menyesatkan.")
     return {"skor": skor, "skor_asli": asli, "label": LABEL(skor), "keu": keu, "rinci": cat,
             "bahaya": [{"judul": f[0], "bukti": f[1], "arti": f[2], "berat": f[3]} for f in F], "catatan": catatan,
             "periode": max((x[0].isoformat() for x in (s.get("laba_bersih") or {}).values()), default=None)}
