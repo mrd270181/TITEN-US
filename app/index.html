@@ -31,6 +31,7 @@ nav.bawah{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;backgro
 nav.bawah button{flex:1;min-width:0;border:0;background:none;padding:8px 0 9px;font-weight:600;letter-spacing:-.01em;color:#cbbdf0;cursor:pointer;font-size:9.5px;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
 nav.bawah button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 nav.bawah button[data-hal="rekomendasi"]{flex:1.35}
+@media (max-width:420px){nav.bawah button{font-size:8.6px;letter-spacing:-.02em}nav.bawah button[data-hal="rekomendasi"]{flex:1.5}}
 nav.bawah button[aria-current="true"]{color:#fff}
 nav.bawah button[aria-current="true"] svg{stroke:#f26a2e;stroke-width:2.3}
 /* laptop: menu pindah ke kiri, berjajar ke bawah (sama seperti TITEN) */
@@ -125,6 +126,33 @@ details.panduan dt{font-weight:700;color:var(--teks)}details.panduan dd{margin:0
 #rekHarian,#rekLK,#rekVal,#rekAnalis,#rekBerita{scroll-margin-top:66px}
 .kilat{animation:kilat 1.2s ease-out}@keyframes kilat{0%{box-shadow:0 0 0 3px #f26a2e}100%{box-shadow:0 0 0 0 transparent}}
 .sig{display:block;font-size:11px}
+/* menu HARGA */
+.hv-bdg{display:inline-block;margin-top:3px;font-size:10.5px;font-weight:800;color:var(--naik);background:rgba(12,163,12,.12);border-radius:6px;padding:1px 6px}
+.hv-bdg.t{color:var(--turun);background:rgba(208,59,59,.12)}
+.hv-bintang{color:#d8a13a;font-weight:800;margin-left:3px}
+.hv-ciri{display:flex;gap:3px;margin-top:3px;flex-wrap:wrap}
+.hv-cp{font-size:10px;font-weight:700;border-radius:5px;padding:0 5px;border:1px solid var(--garis);color:var(--teks-2)}
+.hv-cp.ok{color:var(--naik);border-color:var(--naik)}.hv-cp.no{color:var(--turun);border-color:var(--turun)}
+.hv-hl{font-size:10px;line-height:1.25;margin-top:1px}
+.hv-c{font-size:10.5px;color:var(--teks-2)}
+table.hv{border-collapse:separate;border-spacing:0;font-size:12.5px}
+table.hv th,table.hv td{padding:6px 8px;border-bottom:1px solid var(--garis);white-space:nowrap;text-align:right;background:var(--surface-1)}
+table.hv thead th{position:sticky;background:var(--merek-lembut);font-size:11px;font-weight:800;color:var(--teks-2);z-index:3}
+table.hv thead tr:first-child th{top:0}
+table.hv .em{position:sticky;left:0;z-index:2;text-align:left;min-width:150px;max-width:180px;white-space:normal;border-right:1px solid var(--garis)}
+table.hv thead .em{z-index:5}
+table.hv .kiri-tgl{border-left:2px solid var(--garis-kuat)}
+table.hv td.deret{background:rgba(12,163,12,.10)}table.hv td.deret-t{background:rgba(208,59,59,.09)}
+table.hv th.urut-tgl{cursor:pointer}
+table.hv tbody tr:hover td{background:var(--merek-lembut)}
+.ph-dua{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.ph-dua > div{flex:1 1 560px;min-width:0}
+.ph-judul{font-weight:800;font-size:13px;margin:4px 0 6px}
+.ph-judul.naik{color:var(--naik)}.ph-judul.turun{color:var(--turun)}
+tr.ph-sorot td{background:rgba(242,106,46,.16)!important}
+#phNaik .nama-kecil,#phTurun .nama-kecil{max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#phNaik,#phTurun{font-size:12.5px}
+#phNaik th,#phNaik td,#phTurun th,#phTurun td{padding-left:6px;padding-right:6px}
 table.data tfoot td{position:sticky;bottom:0;background:var(--merek-lembut);font-weight:800;border-top:2px solid var(--garis-kuat)}
 .kartu-rek .jd{font-size:11px;color:var(--teks-3);text-transform:uppercase;letter-spacing:.06em}
 .kartu-rek .nl{font-size:20px;margin:4px 0 2px}
@@ -244,7 +272,8 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
         <dt>Tanggal</dt><dd>Hari laporan menurut waktu New York. Laporan “setelah bursa tutup” baru keluar dini hari WIB keesokan harinya.</dd>
         <dt>Waktu</dt><dd>Sebelum bursa buka = laporan keluar ±19.00 WIB, sebelum sesi malam itu. Setelah bursa tutup = ±04.00 WIB, pengaruhnya baru terlihat di sesi malam berikutnya.</dd>
         <dt>EPS Perk.</dt><dd>Rata-rata perkiraan analis untuk laba per saham kuartal itu (USD).</dd>
-        <dt>Rentang tanggal</dt><dd>Tombol cepat di atas mengisi Dari–Sampai otomatis; isi sendiri untuk melihat laporan lama (riwayat ±2 tahun).</dd>
+        <dt>Rentang tanggal</dt><dd>Tombol cepat di atas mengisi Dari–Sampai otomatis; isi sendiri untuk melihat laporan lama (riwayat ±2 tahun). Tanggal di luar tahun ini ditulis lengkap dengan tahunnya.</dd>
+        <dt>Kap. Pasar · %1Bln</dt><dd>Untuk jadwal mendatang: kapitalisasi hari ini dan perubahan harga 1 bulan terakhir. Untuk laporan yang sudah lewat: Kap. Pasar ditulis –, dan %1Bln = perubahan harga 1 bulan <b>menjelang</b> laporan itu (harga sudah naik banyak sebelum lapor = harapan pasar tinggi).</dd>
         <dt>EPS Aktual · Kejutan EPS</dt><dd>Laba per saham yang diumumkan (<span class="naik">hijau</span> = untung, <span class="turun">merah</span> = rugi) dan selisihnya terhadap perkiraan (<span class="naik">hijau</span> = lebih baik dari perkiraan, <span class="turun">merah</span> = lebih buruk).</dd>
         <dt>Gerak Perk.</dt><dd>Perkiraan pasar opsi soal seberapa jauh harga bergerak saat laporan keluar — bisa naik atau turun (±). Dihitung dari harga opsi at-the-money yang jatuh tempo tepat setelah laporan. Diisi untuk emiten yang lapor dalam 7 hari ke depan.</dd>
         <dt>Reaksi</dt><dd>Perubahan harga pada sesi pertama setelah laporan keluar. Kejutan positif tidak selalu berarti harga naik — panduan (guidance) ke depan sering lebih menentukan.</dd>
@@ -263,6 +292,64 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       <div class="bungkus-tabel"><table class="data" id="makroTabel"></table></div>
     </div>
     <p class="redup" style="font-size:12px" id="kalSumber"></p>
+  </section>
+
+  <section class="halaman" id="hal-harga">
+    <div class="rel" id="hrgTab"></div>
+
+    <div id="hrg-nt">
+      <div class="kartu">
+        <div class="baris-kontrol">
+          <label class="redup">Dari <input type="date" class="kotak" id="ntDari"></label>
+          <label class="redup">Sampai <input type="date" class="kotak" id="ntSampai"></label>
+          <button class="chip" id="ntTerbaru" title="Kembali ke 10 hari bursa terakhir">Terbaru</button>
+          <input class="kotak" id="ntTambah" list="daftarTicker" placeholder="Tambah emiten + Enter" style="min-width:170px">
+        </div>
+        <div class="rel" id="ntMode"></div>
+        <div class="baris-kontrol" id="ntAtur">
+          <label class="redup"><span id="ntLabelMin">Naik minimal</span> <select class="kotak" id="ntMin"></select></label>
+          <label class="redup">Transaksi min. <select class="kotak" id="ntMinNilai"></select></label>
+          <label class="redup">Urut <select class="kotak" id="ntUrut"></select></label>
+        </div>
+        <p class="redup" id="ntBantu" style="font-size:12px;margin:4px 0"></p>
+        <div id="ntChip" class="rel" style="margin:4px 0"></div>
+        <div style="font-weight:800" id="ntHitung"></div>
+        <div class="redup" style="font-size:12px" id="ntKet"></div>
+      </div>
+      <div class="bungkus-tabel" style="max-height:72vh" id="ntBungkus"><table class="hv" id="ntTabel"></table></div>
+      <details class="panduan"><summary>Cara membaca NAIK &amp; TURUN</summary><dl>
+        <dt>Kolom per tanggal</dt><dd>Terbaru di kiri. Hrg: persen = perubahan close hari itu dibanding close hari bursa sebelumnya; angka kecil = close; T = harga tertinggi, R = terendah hari itu. Vol = lembar saham diperdagangkan.</dd>
+        <dt>Deret</dt><dd>Lencana ▲ 7 hari · +45,8% = close naik 7 hari bursa berturut-turut sampai tanggal Sampai, total +45,8% dari close sebelum deret dimulai. Sel hari-hari dalam deret diberi latar hijau (merah untuk TURUN BERUNTUN).</dd>
+        <dt>Gap · Vol</dt><dd>Di hari terakhir: Gap = harga buka dibanding close kemarin; Vol = volume dibanding rata-rata 20 hari sebelumnya. Hijau: gap ≤ 0,5% / Vol ≥ 1,5×. ★ = keduanya hijau.</dd>
+        <dt>Seberapa berguna ★?</dt><dd>Diuji pada ±66 ribu deret naik ≥ 2 hari di 518 emiten selama 2 tahun: peluang hari berikutnya naik lagi rata-rata 50,1%; dengan Vol ≥ 1,5× jadi 51,7%; dengan ★ 53,2%. Gap saja tidak berpengaruh di saham AS. Selisihnya kecil — pakai untuk menyaring, bukan jaminan.</dd>
+        <dt>Urutan</dt><dd>Ketuk judul tanggal untuk mengurutkan menurut perubahan hari itu (ketuk lagi untuk membalik); ketuk Emiten untuk kembali ke urutan semula. Emiten yang ditambah lewat kotak di atas tampil sesuai urutan dipilih.</dd>
+      </dl></details>
+    </div>
+
+    <div id="hrg-ph" hidden>
+      <div class="kartu">
+        <div class="baris-kontrol">
+          <label class="redup">Dari <input type="date" class="kotak" id="phDari"></label>
+          <label class="redup">Sampai <input type="date" class="kotak" id="phSampai"></label>
+          <button class="chip" id="phTerbaru" title="Hari bursa terakhir">Terbaru</button>
+          <label class="redup">Value min. <select class="kotak" id="phMin"></select></label>
+          <input class="kotak" id="phCari" placeholder="Cari ticker" style="width:120px">
+        </div>
+        <div class="redup" style="font-size:12.5px" id="phRingkas"></div>
+        <div id="phHasilCari"></div>
+      </div>
+      <div class="ph-dua">
+        <div><div class="ph-judul naik">50 %HARGA TERTINGGI</div><div class="bungkus-tabel" style="max-height:72vh"><table class="data" id="phNaik"></table></div></div>
+        <div><div class="ph-judul turun">50 %HARGA TERENDAH</div><div class="bungkus-tabel" style="max-height:72vh"><table class="data" id="phTurun"></table></div></div>
+      </div>
+      <details class="panduan"><summary>Cara membaca %HARGA TINGGI &amp; RENDAH</summary><dl>
+        <dt>%Harga</dt><dd>Close hari terakhir rentang dibanding close SEBELUM hari pertama rentang (seperti TOT. %HARGA di TITEN), sudah disesuaikan stock split. Angka kecil di bawahnya: harga awal → harga akhir.</dd>
+        <dt>LK</dt><dd>Kesimpulan laporan keuangan (Bagus 75–100, Sedang 60–74, Jelek &lt; 60).</dd>
+        <dt>Avg · Volume · Value</dt><dd>Value = jumlah close × volume tiap hari sepanjang rentang; Volume = jumlah lembar; Avg = Value ÷ Volume (rata-rata harga tertimbang volume).</dd>
+        <dt>Value min.</dt><dd>Menyaring emiten yang rata-rata transaksinya per hari di bawah batas itu.</dd>
+        <dt>Lainnya</dt><dd>Nomor # tetap peringkat %Harga walau tabel diurutkan menurut kolom lain. Ketuk baris untuk membuka REKOMENDASI emiten itu dengan rentang tanggal yang sama.</dd>
+      </dl></details>
+    </div>
   </section>
 
   <section class="halaman" id="hal-rekomendasi">
@@ -476,7 +563,7 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
         <li><b>Reaksi</b>: perubahan harga pada sesi pertama setelah laporan keluar — cara pasar menilai laporan itu.</li>
         <li><b>Kejutan Gerak</b>: besar reaksi dibanding gerak perkiraan. Reaksi +2% dari perkiraan ±5% = 0,4× (lebih tenang, laporan sudah “diperhitungkan”); −12% = 2,4× (pasar benar-benar kaget). Arah tetap dilihat dari tanda di kolom Reaksi.</li>
         <li><b>Kap. Pasar</b> — <i>$348 M</i>: nilai perusahaan 348 miliar dolar. Makin besar, makin besar pengaruhnya ke indeks.</li>
-        <li><b>%1Bln</b> — <i>+13,1%</i>: perubahan harga sebulan terakhir. Kalau harga sudah naik banyak menjelang laporan, harapan pasar sudah tinggi.</li>
+        <li><b>%1Bln</b> — <i>+13,1%</i>: perubahan harga sebulan terakhir (untuk laporan yang sudah lewat: sebulan <b>menjelang</b> laporan itu; Kap. Pasar-nya ditulis –). Kalau harga sudah naik banyak menjelang laporan, harapan pasar sudah tinggi.</li>
       </ul>
       <h4>Tab Data makro AS</h4>
       <ul>
@@ -585,6 +672,7 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
 <nav class="bawah">
   <button data-hal="screener" aria-current="true"><svg viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4"/></svg>SCREENER</button>
   <button data-hal="analisa" aria-current="false"><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 4 5-8 4 5"/><path d="M3 21h18"/></svg>ANALISA</button>
+  <button data-hal="harga" aria-current="false"><svg viewBox="0 0 24 24"><path d="M7 20V9M7 9l-3 3M7 9l3 3"/><path d="M17 4v11M17 15l-3-3M17 15l3-3"/></svg>HARGA</button>
   <button data-hal="rekomendasi" aria-current="false"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>REKOMENDASI</button>
   <button data-hal="kalender" aria-current="false"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h2M14 14h2"/></svg>KALENDER</button>
   <button data-hal="cari" aria-current="false"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>CARI</button>
@@ -697,6 +785,7 @@ function bukaHalaman(h){
   if (h === "analisa") bukaAnalisa();
   if (h === "kalender") bukaKalender();
   if (h === "rekomendasi") bukaRek();
+  if (h === "harga") bukaHarga();
   if (h === "pustaka"){ isiAspekLK(); isiPustakaSatuan(); isiPustakaJam(); }
   window.scrollTo(0, 0);
 }
@@ -1325,13 +1414,247 @@ function isiAspekLK(){
   ], B, {urut: "aspek", arah: 1});
 }
 
+/* ================= HARGA: NAIK & TURUN, %HARGA TINGGI & RENDAH ================= */
+let RH_PAKSA = null;                       // rentang tabel harian REKOMENDASI saat dibuka dari menu HARGA
+let OH = null, hrgSiap = false, hrgMode = "nt";
+let ntSiap = false, ntMode = "naik", ntMin = 2, ntMinNilai = 0, ntUrut = "ciri", ntUrutT = "deret", ntPilih = [], ntSort = null;
+let phSiap = false, phMin = 0, phNaik = [], phTurun = [];
+const NT_HARI = 22, NT_GAP_OK = 0.5, NT_VOL_OK = 1.5;
+const NT_MIN_NILAI = [[0, "tanpa batas"], [1e8, "$100 Jt/hari"], [5e8, "$500 Jt/hari"], [1e9, "$1 M/hari"], [5e9, "$5 M/hari"]];
+const PH_MIN = [[0, "Semua"], [1e7, "$10 Jt/hari"], [1e8, "$100 Jt/hari"], [5e8, "$500 Jt/hari"], [1e9, "$1 M/hari"]];
+const PH_JUMLAH = 50;
+
+function rkTgl(t){ return hariTgl(t) + (t.slice(0, 4) !== HARI_INI.slice(0, 4) ? " " + t.slice(0, 4) : ""); }
+function bukaRekRentang(t, dari, sampai){
+  RH_PAKSA = [dari, sampai]; bukaHalaman("rekomendasi"); tampilRek(t);
+}
+function bukaHarga(){
+  if (!hrgSiap){
+    hrgSiap = true;
+    buatChip(document.getElementById("hrgTab"), [["nt", "NAIK & TURUN"], ["ph", "%HARGA TINGGI & RENDAH"]], hrgMode, m => { hrgMode = m; tampilHarga(); });
+  }
+  tampilHarga();
+}
+async function tampilHarga(){
+  document.getElementById("hrg-nt").hidden = hrgMode !== "nt";
+  document.getElementById("hrg-ph").hidden = hrgMode !== "ph";
+  if (hrgMode === "nt"){
+    if (!OH){
+      document.getElementById("ntHitung").textContent = "Memuat harga harian…";
+      try { OH = await ambilJSON("data/harga-ohlc.json?v=" + MAN.versi); }
+      catch (e) { document.getElementById("ntHitung").textContent = "Data NAIK & TURUN belum tersedia — muncul setelah pembaruan otomatis berikutnya."; return; }
+    }
+    if (!ntSiap) siapNT();
+    gambarNT();
+  } else {
+    if (!HS){
+      document.getElementById("phRingkas").textContent = "Memuat harga harian…";
+      try { HS = await ambilJSON("data/harga-semua.json?v=" + MAN.versi); }
+      catch (e) { document.getElementById("phRingkas").textContent = "Gagal memuat harga."; return; }
+    }
+    if (!phSiap) siapPH();
+    gambarPH();
+  }
+}
+
+/* ---------- NAIK & TURUN ---------- */
+function siapNT(){
+  ntSiap = true;
+  const T = OH.t, dari = document.getElementById("ntDari"), sampai = document.getElementById("ntSampai");
+  dari.min = sampai.min = T[0]; dari.max = sampai.max = T[T.length - 1];
+  const reset = () => { sampai.value = T[T.length - 1]; dari.value = T[Math.max(0, T.length - 10)]; };
+  reset();
+  dari.onchange = sampai.onchange = () => { if (dari.value > sampai.value) [dari.value, sampai.value] = [sampai.value, dari.value]; ntSort = null; gambarNT(); };
+  document.getElementById("ntTerbaru").onclick = () => { reset(); ntSort = null; gambarNT(); };
+  buatChip(document.getElementById("ntMode"), [["naik", "NAIK BERUNTUN"], ["turun", "TURUN BERUNTUN"], ["semua", "SEMUA EMITEN"]], ntMode, m => { ntMode = m; ntSort = null; gambarNT(); });
+  const sMin = document.getElementById("ntMin");
+  sMin.innerHTML = [1, 2, 3, 4, 5].map(x => `<option value="${x}" ${x === ntMin ? "selected" : ""}>${x} hari</option>`).join("");
+  sMin.onchange = () => { ntMin = +sMin.value; gambarNT(); };
+  const sN = document.getElementById("ntMinNilai");
+  sN.innerHTML = NT_MIN_NILAI.map(([v, t]) => `<option value="${v}" ${v === ntMinNilai ? "selected" : ""}>${t}</option>`).join("");
+  sN.onchange = () => { ntMinNilai = +sN.value; gambarNT(); };
+  document.getElementById("ntUrut").onchange = e => { if (ntMode === "turun") ntUrutT = e.target.value; else ntUrut = e.target.value; ntSort = null; gambarNT(); };
+  const inp = document.getElementById("ntTambah");
+  const tambah = () => {
+    const q = inp.value.trim().toUpperCase(); if (!q) return;
+    const t = PER_TICKER[q] ? q : (R.find(r => r.ticker.includes(q) || (r.nama || "").toUpperCase().includes(q)) || {}).ticker;
+    if (!t || !OH.d[t]) { inp.select(); return; }
+    if (!ntPilih.includes(t)) ntPilih.push(t);
+    inp.value = ""; gambarNT();
+  };
+  inp.onkeydown = e => { if (e.key === "Enter"){ e.preventDefault(); tambah(); } };
+  inp.onchange = tambah;
+}
+/* Deret naik (atau turun) yang berakhir di hari iS: close lebih tinggi dari close hari bursa sebelumnya,
+   berturut-turut. Hari tanpa transaksi atau harga tetap memutus deret. */
+function deretNT(t, iS, turun){
+  const d = OH.d[t]; if (!d) return null;
+  const [o, , , c, v] = d;
+  if (c[iS] == null || !v[iS]) return null;
+  let st = 0, j = iS, nilai = 0;
+  while (j > 0 && c[j] != null && c[j - 1] != null && v[j] && (turun ? c[j] < c[j - 1] : c[j] > c[j - 1])){
+    nilai += c[j] * v[j]; st++; j--;
+  }
+  if (!st) return null;
+  let jv = 0, nv = 0;
+  for (let k = Math.max(0, iS - 20); k < iS; k++) if (v[k]){ jv += v[k]; nv++; }
+  return {st, tot: 100 * (c[iS] / c[iS - st] - 1), nilaiRata: nilai / st, mulai: iS - st + 1,
+          gap: o[iS] != null && c[iS - 1] ? 100 * (o[iS] / c[iS - 1] - 1) : null,
+          volx: nv >= 10 ? v[iS] / (jv / nv) : null};
+}
+const ntGapOk = n => n.gap != null && n.gap <= NT_GAP_OK;
+const ntVolOk = n => n.volx != null && n.volx >= NT_VOL_OK;
+const ntSkor = n => (ntGapOk(n) && ntVolOk(n) ? 2 : 0) + (ntVolOk(n) ? 1 : 0);
+const ntPersen = x => (x > 0 ? "+" : x < 0 ? "−" : "") + angka(Math.abs(x), 1) + "%";
+function gambarNT(){
+  const T = OH.t, turun = ntMode === "turun";
+  const dariV = document.getElementById("ntDari").value, sampaiV = document.getElementById("ntSampai").value;
+  let idx = T.map((t, i) => i).filter(i => T[i] >= dariV && T[i] <= sampaiV);
+  if (idx.length > NT_HARI) idx = idx.slice(-NT_HARI);
+  const iS = idx.length ? idx[idx.length - 1] : T.length - 1;
+  document.getElementById("ntAtur").style.display = ntMode === "semua" ? "none" : "";
+  document.getElementById("ntLabelMin").textContent = turun ? "Turun minimal" : "Naik minimal";
+  document.getElementById("ntUrut").innerHTML = (turun ? [["deret", "Deret terpanjang"], ["dalam", "Turun terdalam"]] : [["ciri", "Ciri lanjut dulu"], ["deret", "Deret terpanjang"]])
+    .map(([v, j]) => `<option value="${v}" ${(turun ? ntUrutT : ntUrut) === v ? "selected" : ""}>${j}</option>`).join("");
+  document.getElementById("ntBantu").textContent = ntMode === "semua" ? "" : turun
+    ? "Close lebih rendah dari close kemarin, berturut-turut sampai tanggal Sampai. Gap dan Vol ditampilkan apa adanya tanpa warna — ciri lanjut-turun belum diuji."
+    : "Gap = harga buka dibanding close kemarin, Vol = volume dibanding rata-rata 20 hari, keduanya di hari terakhir. Hijau: gap ≤ 0,5% / Vol ≥ 1,5×. ★ = keduanya hijau. Selisih peluang berlanjutnya kecil (±2–3 poin), jadi pakai untuk menyaring, bukan jaminan.";
+  const semua = R.filter(r => OH.d[r.ticker]).map(r => ({t: r.ticker, nama: r.nama, kap: r.kap_pasar || 0,
+    n: ntMode === "semua" && !ntPilih.length ? null : deretNT(r.ticker, iS, turun)}));
+  let daftar;
+  if (ntPilih.length) daftar = ntPilih.map(t => semua.find(x => x.t === t)).filter(Boolean);
+  else if (ntMode === "semua") daftar = semua.slice().sort((a, b) => b.kap - a.kap);
+  else {
+    daftar = semua.filter(x => x.n && x.n.st >= ntMin && x.n.nilaiRata >= ntMinNilai);
+    daftar.sort(turun
+      ? (a, b) => (ntUrutT === "dalam" ? a.n.tot - b.n.tot : 0) || (b.n.st - a.n.st) || (a.n.tot - b.n.tot)
+      : (a, b) => (ntUrut === "ciri" ? ntSkor(b.n) - ntSkor(a.n) : 0) || (b.n.st - a.n.st) || (b.n.tot - a.n.tot));
+  }
+  if (ntSort){
+    const j = ntSort.i, ub = x => { const c = OH.d[x.t][3]; return c[j] != null && c[j - 1] != null ? c[j] / c[j - 1] - 1 : null; };
+    daftar = daftar.slice().sort((a, b) => { const x = ub(a), y = ub(b); return x == null ? 1 : y == null ? -1 : (y - x) * ntSort.a; });
+  }
+  const chip = document.getElementById("ntChip");
+  chip.innerHTML = ntPilih.length ? ntPilih.map(t => `<button class="chip" data-t="${t}" title="Buang ${t}">${t} ×</button>`).join("") + `<button class="chip" data-t="">Kosongkan</button>` : "";
+  chip.onclick = e => { const b = e.target.closest("button"); if (!b) return; ntPilih = b.dataset.t ? ntPilih.filter(x => x !== b.dataset.t) : []; gambarNT(); };
+  const minTeks = ntMinNilai ? ` · transaksi ≥ ${NT_MIN_NILAI.find(x => x[0] === ntMinNilai)[1]}` : "";
+  document.getElementById("ntHitung").textContent = ntPilih.length ? `${daftar.length} emiten dipilih`
+    : ntMode === "semua" ? `${daftar.length} emiten` : `${daftar.length} emiten ${turun ? "turun" : "naik"} ≥ ${ntMin} hari beruntun s/d ${tglId(T[iS])}${minTeks}`;
+  document.getElementById("ntKet").textContent = `${idx.length} hari bursa terakhir dalam rentang · terbaru di kiri` +
+    (ntPilih.length ? "" : " · ketik kode di kotak Tambah emiten untuk melihat emiten tertentu");
+  const kol = idx.slice().reverse();
+  let h = `<thead><tr><th class="em" rowspan="2" id="ntEm" style="cursor:pointer" title="Kembali ke urutan semula">Emiten</th>` +
+    kol.map(i => `<th colspan="2" class="kiri-tgl urut-tgl" data-i="${i}" style="text-align:center" title="Urutkan menurut perubahan hari itu">${rkTgl(T[i])}${ntSort && ntSort.i === i ? (ntSort.a > 0 ? " ▼" : " ▲") : ""}</th>`).join("") +
+    `</tr><tr>` + kol.map(() => `<th class="kiri-tgl">Hrg</th><th>Vol</th>`).join("") + `</tr></thead><tbody>`;
+  if (!daftar.length) h += `<tr><td class="em kosong">Tidak ada emiten yang cocok</td>${kol.map(() => "<td></td><td></td>").join("")}</tr>`;
+  for (const x of daftar){
+    const [, hi, lo, c, v] = OH.d[x.t], n = x.n && (ntPilih.length || x.n.st >= ntMin) ? x.n : null;
+    let sel = `<td class="em"><span class="tkr">${x.t}</span>`;
+    if (n && !turun && ntGapOk(n) && ntVolOk(n)) sel += `<span class="hv-bintang" title="Gap kecil dan volume tinggi">★</span>`;
+    sel += `<span class="nama-kecil">${esc(x.nama)}</span>`;
+    if (n){
+      sel += `<span class="hv-bdg${turun ? " t" : ""}">${turun ? "▼" : "▲"} ${n.st} hari · ${ntPersen(n.tot)}</span><div class="hv-ciri">` +
+        `<span class="hv-cp${n.gap == null || turun ? "" : ntGapOk(n) ? " ok" : " no"}">Gap ${n.gap == null ? "–" : ntPersen(n.gap)}</span>` +
+        `<span class="hv-cp${n.volx == null || turun ? "" : ntVolOk(n) ? " ok" : ""}">Vol ${n.volx == null ? "–" : angka(n.volx, 1) + "×"}</span></div>`;
+    }
+    sel += `</td>`;
+    for (const i of kol){
+      const dalam = n && i >= n.mulai && i <= iS ? (turun ? "deret-t" : "deret") : "";
+      if (c[i] == null){ sel += `<td class="kiri-tgl ${dalam}">–</td><td class="${dalam}">–</td>`; continue; }
+      const u = i > 0 && c[i - 1] != null ? 100 * (c[i] / c[i - 1] - 1) : null;
+      sel += `<td class="kiri-tgl ${dalam}"><b class="${kelasArah(u)}">${u == null ? "–" : (u > 0 ? "▲" : u < 0 ? "▼" : "▬") + angka(Math.abs(u), 2) + "%"}</b>` +
+        `<div class="hv-c">${angka(c[i])}</div><div class="hv-hl"><span class="naik">T ${hi[i] == null ? "–" : angka(hi[i])}</span><br><span class="turun">R ${lo[i] == null ? "–" : angka(lo[i])}</span></div></td>` +
+        `<td class="${dalam}">${ringkas(v[i])}</td>`;
+    }
+    h += `<tr data-t="${x.t}" style="cursor:pointer">${sel}</tr>`;
+  }
+  const tb = document.getElementById("ntTabel");
+  tb.innerHTML = h + "</tbody>";
+  tb.querySelectorAll("th.urut-tgl").forEach(th => th.onclick = () => {
+    const i = +th.dataset.i; ntSort = ntSort && ntSort.i === i ? {i, a: -ntSort.a} : {i, a: 1}; gambarNT(); });
+  document.getElementById("ntEm").onclick = () => { ntSort = null; gambarNT(); };
+  tb.querySelectorAll("tbody tr[data-t]").forEach(tr => tr.onclick = () => bukaRekRentang(tr.dataset.t, T[idx[0]], T[iS]));
+  requestAnimationFrame(() => {      // baris kepala kedua ditempel di bawah yang pertama (ukur sel tanggal, bukan <tr>)
+    const s1 = tb.querySelector("thead th.urut-tgl"), tinggi = s1 ? s1.getBoundingClientRect().height : 0;
+    tb.querySelectorAll("thead tr:nth-child(2) th").forEach(x => x.style.top = tinggi + "px");
+  });
+}
+
+/* ---------- %HARGA TINGGI & RENDAH ---------- */
+function siapPH(){
+  phSiap = true;
+  const T = HS.t, dari = document.getElementById("phDari"), sampai = document.getElementById("phSampai");
+  dari.min = sampai.min = T[1]; dari.max = sampai.max = T[T.length - 1];
+  const terbaru = () => { dari.value = sampai.value = T[T.length - 1]; };
+  terbaru();
+  dari.onchange = sampai.onchange = () => { if (dari.value > sampai.value) [dari.value, sampai.value] = [sampai.value, dari.value]; gambarPH(); };
+  document.getElementById("phTerbaru").onclick = () => { terbaru(); gambarPH(); };
+  const sm = document.getElementById("phMin");
+  sm.innerHTML = PH_MIN.map(([v, t]) => `<option value="${v}" ${v === phMin ? "selected" : ""}>${t}</option>`).join("");
+  sm.onchange = () => { phMin = +sm.value; gambarPH(); };
+  const ic = document.getElementById("phCari");
+  ic.oninput = () => { ic.value = ic.value.toUpperCase().replace(/[^A-Z.\-]/g, ""); sorotPH(); };
+}
+function hitungPH(dariV, sampaiV){
+  const T = HS.t;
+  const idx = T.map((t, i) => i).filter(i => T[i] >= dariV && T[i] <= sampaiV);
+  if (!idx.length) return {idx, baris: []};
+  const iD = idx[0], iS = idx[idx.length - 1], baris = [];
+  for (const r of R){
+    const d = HS.d[r.ticker]; if (!d) continue;
+    const [c, v] = d;
+    let vol = 0, nilai = 0, akhir = null, awal = null;
+    for (let i = iD; i <= iS; i++) if (c[i] != null){ akhir = c[i]; if (v[i]){ vol += v[i] * 1000; nilai += c[i] * v[i] * 1000; } }
+    for (let i = iD - 1; i >= 0 && awal == null; i--) awal = c[i];   // close SEBELUM hari pertama rentang
+    if (!vol || awal == null || akhir == null) continue;
+    baris.push({_id: r.ticker, t: r.ticker, nama: r.nama, lk: r.label_lk, skor: r.skor_lk ?? -1, awal, akhir,
+                pct: 100 * (akhir / awal - 1), vol, nilai, avg: nilai / vol, nilaiHari: nilai / idx.length});
+  }
+  return {idx, baris};
+}
+function lencanaLK(x){ return x.lk ? `<span class="lbl ${x.lk}" style="font-size:11px" title="Skor ${x.skor}">${x.lk}</span>` : `<span class="redup">–</span>`; }
+const kolomPH = rk => [
+  {k: rk, label: "#", f: x => `<span class="redup">${x[rk]}</span>`},
+  {k: "t", label: "Emiten", kiri: true, f: x => `<span class="tkr">${x.t}</span><span class="nama-kecil">${esc(x.nama)}</span>`},
+  {k: "skor", label: "LK", kiri: true, judul: "Kesimpulan laporan keuangan (diurutkan menurut skor)", f: lencanaLK},
+  {k: "pct", label: "%Harga", f: x => `<b class="${kelasArah(x.pct)}">${x.pct > 0 ? "▲ " : x.pct < 0 ? "▼ " : ""}${persen(x.pct, 1)}</b><span class="nama-kecil">${angka(x.awal)} → ${angka(x.akhir)}</span>`},
+  {k: "avg", label: "Avg", judul: "Value ÷ Volume sepanjang rentang", f: x => angka(x.avg)},
+  {k: "vol", label: "Volume", f: x => ringkas(x.vol)},
+  {k: "nilai", label: "Value", f: x => usd(x.nilai)},
+];
+function gambarPH(){
+  const T = HS.t, dariV = document.getElementById("phDari").value, sampaiV = document.getElementById("phSampai").value;
+  const {idx, baris} = hitungPH(dariV, sampaiV);
+  const b = baris.filter(x => !phMin || x.nilaiHari >= phMin);
+  phNaik = b.slice().sort((x, y) => y.pct - x.pct); phNaik.forEach((x, i) => x.rkN = i + 1);
+  phTurun = b.slice().sort((x, y) => x.pct - y.pct); phTurun.forEach((x, i) => x.rkT = i + 1);
+  const nN = b.filter(x => x.pct > 0).length, nT = b.filter(x => x.pct < 0).length;
+  document.getElementById("phRingkas").textContent = idx.length
+    ? `${tglId(T[idx[0]])}${idx.length > 1 ? " – " + tglId(T[idx[idx.length - 1]]) : ""} · ${idx.length} hari bursa · ${b.length} emiten · ${nN} naik, ${nT} turun`
+    : "Tidak ada hari bursa di rentang itu.";
+  const klik = t => { if (idx.length) bukaRekRentang(t, T[idx[0]], T[idx[idx.length - 1]]); };
+  buatTabel(document.getElementById("phNaik"), kolomPH("rkN"), phNaik.slice(0, PH_JUMLAH), {urut: "rkN", arah: 1, klik});
+  buatTabel(document.getElementById("phTurun"), kolomPH("rkT"), phTurun.slice(0, PH_JUMLAH), {urut: "rkT", arah: 1, klik});
+  sorotPH();
+}
+function sorotPH(){
+  const v = document.getElementById("phCari").value, el = document.getElementById("phHasilCari");
+  document.querySelectorAll("#phNaik tbody tr, #phTurun tbody tr").forEach(tr => tr.classList.toggle("ph-sorot", !!v && tr.dataset.id === v));
+  if (!v || !PER_TICKER[v]){ el.innerHTML = ""; return; }
+  const x = phNaik.find(a => a.t === v);
+  el.innerHTML = x
+    ? `<p style="margin:6px 0 0;font-size:13px"><b>${v}</b>: <b class="${kelasArah(x.pct)}">${persen(x.pct, 1)}</b> (${angka(x.awal)} → ${angka(x.akhir)}) · peringkat <b>${x.rkN}</b> dari ${phNaik.length} (urut naik terbesar) · value ${usd(x.nilai)} · LK ${lencanaLK(x)}</p>`
+    : `<p class="redup" style="margin:6px 0 0;font-size:13px">${v} tidak ada di rentang ini${phMin ? " (atau di bawah Value min.)" : ""}.</p>`;
+}
+
 /* ---------- tabel harian REKOMENDASI (seperti TITEN, tanpa net foreign) ---------- */
 function tabelHarian(t, reset){
   const a = (EMITEN[t] || {}).harga; const elT = document.getElementById("rhTabel"); if (!elT) return;
   if (!a || !a.t.length){ elT.innerHTML = `<tbody><tr><td class="kosong kiri">Belum ada data harga.</td></tr></tbody>`; return; }
   const dari = document.getElementById("rhDari"), sampai = document.getElementById("rhSampai");
   dari.min = sampai.min = a.t[0]; dari.max = sampai.max = a.t[a.t.length - 1];
-  if (reset){ sampai.value = a.t[a.t.length - 1]; dari.value = a.t[Math.max(0, a.t.length - 10)]; }
+  if (reset && RH_PAKSA){ dari.value = RH_PAKSA[0]; sampai.value = RH_PAKSA[1]; RH_PAKSA = null; }
+  else if (reset){ sampai.value = a.t[a.t.length - 1]; dari.value = a.t[Math.max(0, a.t.length - 10)]; }
   dari.onchange = sampai.onchange = () => tabelHarian(t, false);
   document.getElementById("rhTerbaru").onclick = () => tabelHarian(t, true);
   if (dari.value > sampai.value) [dari.value, sampai.value] = [sampai.value, dari.value];
@@ -1553,7 +1876,7 @@ function tampilKal(){
 }
 const kolomKal = [
   {k:"ticker", label:"Ticker", kiri:true, f:e => `<span class="tkr">${e.ticker}</span>${e.dow ? '<span class="lencana">DOW</span>' : ""}<span class="nama-kecil">${esc(e.nama)}</span>`},
-  {k:"tanggal", label:"Tanggal", kiri:true, judul:"Tanggal laporan (waktu New York)", f:e => `<b>${hariTgl(e.tanggal)}</b>`},
+  {k:"tanggal", label:"Tanggal", kiri:true, judul:"Tanggal laporan (waktu New York)", f:e => `<b>${hariTgl(e.tanggal)}${e.tanggal.slice(0, 4) !== HARI_INI.slice(0, 4) ? " " + e.tanggal.slice(0, 4) : ""}</b>`},
   {k:"waktu", label:"Waktu (WIB)", kiri:true, f:e => `<span style="white-space:normal">${e.waktu_label}</span>`},
   {k:"eps_perkiraan", label:"EPS Perk.", judul:"Perkiraan analis, USD per saham", f:e => e.eps_perkiraan == null ? "–" : (e.eps_perkiraan < 0 ? "−$" + angka(-e.eps_perkiraan) : "$" + angka(e.eps_perkiraan))},
   {k:"eps_aktual", label:"EPS Aktual", f:e => e.eps_aktual == null ? `<span class="redup">${e.tanggal < HARI_INI ? "–" : "belum"}</span>` : `<b class="${kelasArah(e.eps_aktual)}">${e.eps_aktual < 0 ? "−$" + angka(-e.eps_aktual) : "$" + angka(e.eps_aktual)}</b>`},
@@ -1561,9 +1884,17 @@ const kolomKal = [
   {k:"gerak_perkiraan", label:"Gerak Perk.", judul:"Perkiraan besar gerak harga saat laporan keluar, dari harga opsi (naik atau turun)", f:e => e.gerak_perkiraan == null ? "–" : "±" + angka(e.gerak_perkiraan, 1) + "%"},
   {k:"reaksi", label:"Reaksi", judul:"Perubahan harga sesi pertama setelah laporan keluar", f:e => e.reaksi == null ? "–" : `<b class="${kelasArah(e.reaksi)}">${persen(e.reaksi)}</b>`},
   {k:"kejutan_gerak", label:"Kejutan Gerak", judul:"Besar reaksi dibanding gerak perkiraan; ≥ 1× = lebih besar dari perkiraan", f:e => e.kejutan_gerak == null ? "–" : `<b class="${e.kejutan_gerak >= 1.5 ? (e.reaksi > 0 ? "naik" : "turun") : "redup"}">${angka(e.kejutan_gerak, 1)}×</b>`},
-  {k:"kap_pasar", label:"Kap. Pasar", f:e => usd(e.kap_pasar)},
-  {k:"chg_1bl", label:"%1Bln", f:e => `<span class="${kelasArah(e.chg_1bl)}">${persen(e.chg_1bl, 1)}</span>`},
+  {k:"kap_pasar", label:"Kap. Pasar", judul:"Kapitalisasi pasar hari ini; untuk laporan yang sudah lewat ditulis –", f:e => e.lewat ? "–" : usd(e.kap_pasar)},
+  {k:"chg_1bl", label:"%1Bln", judul:"Jadwal mendatang: perubahan harga 1 bulan terakhir. Sudah lapor: perubahan 1 bulan (21 hari bursa) MENJELANG laporan itu", f:e => `<span class="${kelasArah(e.chg_1bl)}">${persen(e.chg_1bl, 1)}</span>`},
 ];
+function sebulanSebelum(e){
+  if (!HS) return null;
+  const d = HS.d[e.ticker]; if (!d) return null;
+  const c = d[0], i = HS.t.indexOf(e.tanggal);
+  if (i < 0) return null;
+  const b = e.waktu === "pasca" ? i : i - 1, a = b - 21;   // close terakhir sebelum laporan keluar
+  return a < 0 || c[a] == null || c[b] == null ? null : 100 * (c[b] / c[a] - 1);
+}
 function batasKal(){
   return {depan7: [HARI_INI, tambahHari(HARI_INI, 7)], depan35: [HARI_INI, tambahHari(HARI_INI, 35)], lalu: [tambahHari(HARI_INI, -14), tambahHari(HARI_INI, -1)],
           semua: [KAL.dari, KAL.sampai]}[kalRentang];
@@ -1577,7 +1908,7 @@ function saringKal(){
   const batas = [document.getElementById("kalDari").value || "0000", document.getElementById("kalSampai").value || "9999"];
   const hasil = KAL.earnings.filter(e => e.tanggal >= batas[0] && e.tanggal <= batas[1]).map(e => {
     const r = PER_TICKER[e.ticker] || {};
-    return {...e, _id: e.ticker, nama: r.nama, dow: r.dow, sp500: r.sp500, ndx: r.ndx, kap_pasar: r.kap_pasar, chg_1bl: r.chg_1bl, reaksi: reaksi(e), kejutan_gerak: kejutanGerak(e)};
+    return {...e, _id: e.ticker, nama: r.nama, dow: r.dow, sp500: r.sp500, ndx: r.ndx, kap_pasar: r.kap_pasar, lewat: e.tanggal < HARI_INI, chg_1bl: e.tanggal < HARI_INI ? sebulanSebelum(e) : r.chg_1bl, reaksi: reaksi(e), kejutan_gerak: kejutanGerak(e)};
   }).filter(e => (kalIndeks === "semua" || e[kalIndeks]) && (!q || e.ticker.includes(q) || (e.nama || "").toUpperCase().includes(q)));
   document.getElementById("kalJumlah").textContent = `${hasil.length} laporan`;
   const urut = batas[1] < HARI_INI ? {urut: "tanggal", arah: -1} : {urut: "tanggal", arah: 1};

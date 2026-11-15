@@ -13,6 +13,9 @@ POS = ["pendapatan", "laba_kotor", "laba_usaha", "laba_sebelum_pajak", "laba_ber
        "arus_kas_operasi", "belanja_modal", "total_aset", "total_liabilitas", "ekuitas", "kas", "utang_jangka_panjang"]
 
 
+HARI_OHLC = 44          # hari bursa OHLCV untuk menu HARGA > NAIK & TURUN (22 ditampilkan + ruang deret)
+
+
 def bersih(x, d=4):
     if x is None:
         return None
@@ -96,6 +99,20 @@ def tulis(con, keluar, batas, info_jalan, rek=None):
             v[posisi[d]] = round((a["v"][i] or 0) / 1000)
         semua[t] = [c, v]
     sidik["harga-semua.json"] = tulis_json(os.path.join(data_dir, "harga-semua.json"), {"t": tanggal, "d": semua})
+
+    # OHLCV lengkap 44 hari bursa terakhir untuk menu HARGA > NAIK & TURUN (deret naik/turun, gap, tertinggi/terendah)
+    akhir44 = tanggal[-HARI_OHLC:]
+    pos44 = {d: i for i, d in enumerate(akhir44)}
+    ohlc = {}
+    for t, a in harga.items():
+        o, h, l, c, v = ([None] * len(akhir44) for _ in range(5))
+        for i, d in enumerate(a["t"]):
+            j = pos44.get(d)
+            if j is None:
+                continue
+            o[j], h[j], l[j], c[j], v[j] = a["o"][i], a["h"][i], a["l"][i], a["c"][i], a["v"][i]
+        ohlc[t] = [o, h, l, c, v]
+    sidik["harga-ohlc.json"] = tulis_json(os.path.join(data_dir, "harga-ohlc.json"), {"t": akhir44, "d": ohlc})
 
     versi = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
     tulis_json(os.path.join(data_dir, "manifest.json"), {
