@@ -124,6 +124,7 @@ details.panduan dt{font-weight:700;color:var(--teks)}details.panduan dd{margin:0
 .kartu-rek .ke{font-size:11px;color:var(--merek-tua);margin-top:6px;font-weight:700}
 .kilat{animation:kilat 1.2s ease-out}@keyframes kilat{0%{box-shadow:0 0 0 3px #f26a2e}100%{box-shadow:0 0 0 0 transparent}}
 .sig{display:block;font-size:11px}
+table.data tfoot td{position:sticky;bottom:0;background:var(--merek-lembut);font-weight:800;border-top:2px solid var(--garis-kuat)}
 .kartu-rek .jd{font-size:11px;color:var(--teks-3);text-transform:uppercase;letter-spacing:.06em}
 .kartu-rek .nl{font-size:20px;margin:4px 0 2px}
 .kartu-rek .kt{font-size:12px;color:var(--teks-2)}
@@ -357,6 +358,41 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       <p style="font-size:13px">Kesimpulannya: AAPL sedang tren naik kuat (naik 31% sejak awal tahun dan hampir di puncak 52 minggu), tapi transaksi hari itu biasa saja tanpa lonjakan volume. Panah ▼ di judul kolom menunjukkan tabel sedang diurutkan menurut kolom itu.</p>
     </div></details>
 
+    <details class="artikel"><summary>Cara membaca KALENDER (earnings &amp; makro)</summary><div class="isi-artikel">
+      <p>Menu <b>KALENDER</b> punya dua tab: <b>Earnings emiten</b> (jadwal laporan keuangan per emiten) dan <b>Data makro AS</b> (jadwal data ekonomi yang menggerakkan seluruh pasar). Semua jam dalam WIB.</p>
+      <h4>Tombol di atas tabel earnings</h4>
+      <ul>
+        <li><b>7 hari ke depan / 5 minggu ke depan</b>: jadwal laporan yang akan datang. <b>Sudah lapor (2 minggu)</b>: emiten yang baru lapor, lengkap dengan hasilnya. <b>Semua</b>: keduanya.</li>
+        <li><b>Semua indeks / S&amp;P 500 / Nasdaq-100 / Dow 30</b>: menyaring menurut indeks. Angka di kanan (mis. “16 laporan”) = jumlah baris yang cocok.</li>
+      </ul>
+      <h4>Kolom tabel earnings (contoh HD, Home Depot)</h4>
+      <ul>
+        <li><b>Tanggal</b> — <i>Sel, 17 Nov</i>: hari laporan menurut waktu New York.</li>
+        <li><b>Waktu (WIB)</b> — <i>Sebelum bursa buka (±19.00 WIB)</i>: laporan keluar sekitar jam 7 malam WIB, sebelum bursa AS buka 21.30 WIB, jadi reaksinya langsung terlihat malam itu. <i>Setelah bursa tutup (±04.00 WIB besoknya)</i>: laporan keluar dini hari WIB, reaksinya baru terlihat di sesi malam berikutnya.</li>
+        <li><b>EPS Perk.</b> — <i>$3,83</i>: rata-rata perkiraan analis untuk laba per saham kuartal itu.</li>
+        <li><b>EPS Aktual</b>: laba per saham yang diumumkan. Tertulis “belum” kalau emiten belum lapor.</li>
+        <li><b>Kejutan</b>: selisih EPS aktual terhadap perkiraan. Perkiraan $3,83, aktual $4,00 → <span class="naik">+4,4%</span> (lebih baik dari perkiraan, “beat”). Merah = di bawah perkiraan (“miss”).</li>
+        <li><b>Reaksi</b>: perubahan harga pada sesi pertama setelah laporan keluar — cara pasar menilai laporan itu.</li>
+        <li><b>Kap. Pasar</b> — <i>$348 M</i>: nilai perusahaan 348 miliar dolar. Makin besar, makin besar pengaruhnya ke indeks.</li>
+        <li><b>%1Bln</b> — <i>+13,1%</i>: perubahan harga sebulan terakhir. Kalau harga sudah naik banyak menjelang laporan, harapan pasar sudah tinggi.</li>
+      </ul>
+      <h4>Tab Data makro AS</h4>
+      <ul>
+        <li><b>FOMC</b>: keputusan suku bunga The Fed, sekitar 8 kali setahun. Diumumkan ±02.00 WIB (01.00 WIB saat musim panas AS) — menggerakkan hampir semua saham sekaligus.</li>
+        <li><b>CPI</b>: data inflasi AS, sekitar pertengahan bulan. Lebih tinggi dari perkiraan biasanya buruk untuk saham karena bunga sulit turun.</li>
+        <li><b>NFP</b>: data tenaga kerja AS, biasanya Jumat pertama tiap bulan.</li>
+        <li>CPI dan NFP dirilis 20.30 WIB (19.30 WIB saat musim panas AS), satu jam sebelum bursa buka. Baris yang sudah lewat ditandai “sudah lewat”.</li>
+      </ul>
+      <h4>Cara memakainya</h4>
+      <ul>
+        <li><b>Sebelum membeli</b>, cek apakah emiten akan lapor dalam waktu dekat. Saat laporan keluar harga bisa bergerak 5–20% dalam semalam, dan bursa AS tidak punya batas ARA/ARB. Kalau tidak siap dengan risiko itu, hindari membeli tepat sebelum tanggal laporan.</li>
+        <li><b>Setelah lapor</b>, bandingkan Kejutan dengan Reaksi. Kejutan positif tapi harga turun biasanya berarti guidance (proyeksi ke depan) mengecewakan, atau harga sudah naik duluan.</li>
+        <li>Pada <b>hari FOMC, CPI dan NFP</b>, seluruh pasar bisa bergerak tajam. Banyak trader menahan diri sampai data keluar.</li>
+        <li>Musim laporan ramai pada akhir Jan–Feb, akhir Apr–Mei, akhir Jul–Agu, dan akhir Okt–Nov. Pada musim ini LK di TITEN US juga banyak berubah.</li>
+        <li>Lencana <b>DOW</b> di samping ticker = anggota indeks Dow Jones (30 emiten terbesar dan paling mapan).</li>
+      </ul>
+    </div></details>
+
     <details class="artikel"><summary>Cara membaca Kesimpulan LK (skor laporan keuangan)</summary><div class="isi-artikel">
       <p>Di menu <b>REKOMENDASI</b>, kotak <b>Kesimpulan LK</b> merangkum laporan keuangan emiten jadi satu skor 0–100 dengan label <span class="lbl Bagus">Bagus</span> 75–100, <span class="lbl Sedang">Sedang</span> 60–74, atau <span class="lbl Jelek">Jelek</span> di bawah 60. Aturannya sama dengan TITEN, ditambah beberapa penyesuaian karena emiten AS punya kebiasaan keuangan yang berbeda.</p>
       <h4>Tujuh aspek yang dinilai</h4>
@@ -580,7 +616,8 @@ function buatTabel(el, kolom, baris, opsi = {}){
     const kepala = kolom.map(c => `<th class="${c.kiri ? "kiri" : ""}" data-k="${c.k}" title="${esc(c.judul || c.label)}">${c.label}${urut === c.k ? `<span class="panah">${arah > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
     const isi = data.map(r => `<tr data-id="${esc(r._id ?? r.ticker)}" class="${opsi.sorot && opsi.sorot(r) ? "sorot" : ""} ${opsi.kelas ? opsi.kelas(r) : ""}">` +
       kolom.map(c => `<td class="${c.kiri ? "kiri" : ""} angka">${c.f(r)}</td>`).join("") + "</tr>").join("");
-    el.innerHTML = `<thead><tr>${kepala}</tr></thead><tbody>${isi || `<tr><td colspan="${kolom.length}" class="kosong kiri">Tidak ada yang cocok.</td></tr>`}</tbody>`;
+    el.innerHTML = `<thead><tr>${kepala}</tr></thead><tbody>${isi || `<tr><td colspan="${kolom.length}" class="kosong kiri">Tidak ada yang cocok.</td></tr>`}</tbody>` +
+      (opsi.kaki && data.length ? `<tfoot><tr>${opsi.kaki()}</tr></tfoot>` : "");
   }
   el.onclick = e => {
     const th = e.target.closest("th");
@@ -1030,11 +1067,11 @@ function isiRekomendasi(t){
       <button class="chip" id="rhTerbaru" title="Kembali ke 10 hari bursa terakhir">Terbaru</button>
     </div>
     <div class="ringkas-an" id="rhRingkas" style="margin-bottom:8px"></div>
-    <div class="bungkus-tabel" style="max-height:520px"><table class="data" id="rhTabel"></table></div>
+    <div class="bungkus-tabel" style="max-height:520px;min-height:0"><table class="data" id="rhTabel"></table></div>
     <details class="panduan" style="margin:8px 0 0"><summary>Cara membaca tabel harian</summary><dl>
       <dt>%Hrg</dt><dd>Perubahan close hari itu dibanding close hari bursa sebelumnya.</dd>
       <dt>Volume · Value</dt><dd>Lembar saham dan nilai transaksi (close × volume) hari itu. Hijau = hari naik, merah = hari turun.</dd>
-      <dt>Σ</dt><dd>Jumlah berjalan sejak awal rentang: volume/nilai hari naik dihitung plus, hari turun minus. Σ yang terus naik = transaksi lebih banyak terjadi di hari harga naik.</dd>
+      <dt>Total</dt><dd>Baris paling bawah: %Hrg = perubahan harga selama rentang (dari close sebelum hari pertama sampai close hari terakhir); Volume dan Value = jumlah selama rentang.</dd>
       <dt>VMA5/VMA20 · VMA5/VMA50</dt><dd>Rata-rata volume 5 hari dibanding rata-rata 20 / 50 hari. Di atas 1× (hijau) = belakangan lebih ramai dari biasanya.</dd>
     </dl></details></div>`;
   // rincian LK
@@ -1164,28 +1201,29 @@ function tabelHarian(t, reset){
     baris.push({_id: a.t[i], tgl: a.t[i], c, ubah, v, nilai, arah, sv, sn, r20: m5 && m20 ? m5 / m20 : null, r50: m5 && m50 ? m5 / m50 : null});
   }
   const w = x => x > 0 ? "naik" : x < 0 ? "turun" : "redup";
+  const awal = baris.length ? baris[0] : null, akhir = baris.length ? baris[baris.length - 1] : null;
+  const i0 = awal ? a.t.indexOf(awal.tgl) : -1, dasar = i0 > 0 ? a.c[i0 - 1] : (awal && awal.c);
+  const u = akhir && dasar ? 100 * (akhir.c / dasar - 1) : null;
   const tanda = (x, f) => (x > 0 ? "+" : x < 0 ? "−" : "") + f(Math.abs(x));
   const rasio = x => x == null ? "–" : `<span class="${x >= 1 ? "naik" : "turun"}">${angka(x)}×</span>`;
   buatTabel(elT, [
     {k:"tgl", label:"Tanggal", kiri:true, f:b => `<b>${hariTgl(b.tgl)}</b>`},
     {k:"c", label:"Tutup", f:b => angka(b.c)},
     {k:"ubah", label:"%Hrg", f:b => `<span class="${w(b.ubah)}">${b.ubah == null ? "–" : persen(b.ubah, 1)}</span>`},
-    {k:"v", label:"Volume", f:b => `<span class="${w(b.arah)}">${ringkas(b.v)}</span><span class="sig ${w(b.sv)}">Σ ${tanda(b.sv, ringkas)}</span>`},
-    {k:"nilai", label:"Value", f:b => `<span class="${w(b.arah)}">${usd(b.nilai)}</span><span class="sig ${w(b.sn)}">Σ ${tanda(b.sn, x => usd(x))}</span>`},
+    {k:"v", label:"Volume", f:b => `<span class="${w(b.arah)}">${ringkas(b.v)}</span>`},
+    {k:"nilai", label:"Value", f:b => `<span class="${w(b.arah)}">${usd(b.nilai)}</span>`},
     {k:"r20", label:"VMA5/VMA20", f:b => rasio(b.r20)},
     {k:"r50", label:"VMA5/VMA50", f:b => rasio(b.r50)},
-  ], baris, {urut: "tgl", arah: 1, klik: () => {}});
+  ], baris, {urut: "tgl", arah: 1, klik: () => {}, kaki: () =>
+    `<td class="kiri">Total</td><td></td>` +
+    `<td class="angka ${w(u)}">${u == null ? "–" : persen(u, 1)}</td><td class="angka">${ringkas(tv)}</td><td class="angka">${usd(tn)}</td><td></td><td></td>`});
   elT.querySelectorAll("tbody tr").forEach(tr => tr.style.cursor = "default");
-  const awal = baris.length ? baris[0] : null, akhir = baris.length ? baris[baris.length - 1] : null;
-  const i0 = awal ? a.t.indexOf(awal.tgl) : -1, dasar = i0 > 0 ? a.c[i0 - 1] : (awal && awal.c);
-  const u = akhir && dasar ? 100 * (akhir.c / dasar - 1) : null;
   const naik = baris.filter(b => b.arah > 0).length, turun = baris.filter(b => b.arah < 0).length;
   document.getElementById("rhRingkas").innerHTML = baris.length ? `
     <div class="sel"><span class="k">${baris.length} hari bursa</span><span class="besar angka ${kelasArah(u)}">${persen(u)}</span></div>
     <div class="sel"><span class="k">Naik · Turun</span><span class="besar"><span class="naik">${naik}</span> · <span class="turun">${turun}</span></span></div>
     <div class="sel"><span class="k">Total volume</span><span class="besar angka">${ringkas(tv)}</span></div>
-    <div class="sel"><span class="k">Total value</span><span class="besar angka">${usd(tn)}</span></div>
-    <div class="sel"><span class="k">Σ value bersih</span><span class="besar angka ${w(sn)}">${tanda(sn, x => usd(x))}</span></div>` : `<span class="redup">Tidak ada hari bursa di rentang itu.</span>`;
+    <div class="sel"><span class="k">Total value</span><span class="besar angka">${usd(tn)}</span></div>` : `<span class="redup">Tidak ada hari bursa di rentang itu.</span>`;
 }
 
 /* ================= ANALISA TICKER (perubahan harga pada rentang tanggal) ================= */
