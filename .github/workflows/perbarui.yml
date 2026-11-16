@@ -31,6 +31,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 100      # riwayat commit app/ untuk nomor versi aplikasi
 
       - name: Ambil situs & state terakhir (cabang gh-pages)
         run: |

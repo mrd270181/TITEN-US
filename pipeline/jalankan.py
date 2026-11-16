@@ -188,11 +188,32 @@ def main():
         if os.path.exists(lama_k):
             shutil.copy2(lama_k, os.path.join(a.keluar, "data", "kalender.json"))
 
-    # salin aplikasi
+    # salin aplikasi; nomor versi = tanggal (WIB) commit terakhir yang mengubah app/ + urutan hari itu
+    versi = versi_app()
     for f in os.listdir(os.path.join(AKAR, "app")):
-        shutil.copy2(os.path.join(AKAR, "app", f), a.keluar)
+        if f == "index.html":
+            teks = open(os.path.join(AKAR, "app", f), encoding="utf-8").read().replace("__VERSI_APP__", versi)
+            open(os.path.join(a.keluar, f), "w", encoding="utf-8").write(teks)
+        else:
+            shutil.copy2(os.path.join(AKAR, "app", f), a.keluar)
+    print(f"versi aplikasi: {versi}")
     open(os.path.join(a.keluar, ".nojekyll"), "w").close()
     print(f"Selesai: situs di {a.keluar}")
+
+
+def versi_app():
+    """Mis. 2026-11-16-2 = perubahan aplikasi ke-2 pada 16 Nov 2026 (WIB)."""
+    import subprocess
+    try:
+        keluaran = subprocess.run(["git", "log", "--format=%ct", "-n", "100", "--", "app"], cwd=AKAR,
+                                  capture_output=True, text=True, timeout=30).stdout.split()
+        if not keluaran:
+            return "dev"
+        wib = ZoneInfo("Asia/Jakarta")
+        hari = [datetime.fromtimestamp(int(x), wib).date() for x in keluaran]
+        return f"{hari[0].isoformat()}-{sum(1 for h in hari if h == hari[0])}"
+    except Exception:
+        return "dev"
 
 
 if __name__ == "__main__":
