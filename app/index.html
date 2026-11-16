@@ -525,8 +525,8 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       </ul>
       <h4>Pergerakan harian</h4>
       <ul>
-        <li>Tabel per hari bursa: Tutup, %Hrg, Volume, Value, VMA5/VMA20 dan VMA5/VMA50, dengan rentang <b>Dari–Sampai</b> dan baris <b>Total</b> di bawah.</li>
-        <li>Volume/Value hijau = hari harga naik, merah = hari turun. VMA5/VMA20 di atas 1× = belakangan lebih ramai dari biasanya; di atas 2× bersamaan dengan harga naik = tanda akumulasi.</li>
+        <li>Tabel per hari bursa: Tutup, %Hrg, Volume, Value dan Vol/MA5, dengan rentang <b>Dari–Sampai</b> dan baris <b>Total</b> di bawah.</li>
+        <li>Volume/Value hijau = hari harga naik, merah = hari turun. Vol/MA5 = volume hari itu dibanding rata-rata 5 hari sebelumnya; ≥ 2× ditebalkan. Hari naik dengan volume ≥ 2× sedikit lebih sering berlanjut naik; hari turun dengan volume ≥ 2× sedikit lebih sering memantul.</li>
       </ul>
       <p style="font-size:13px">Semua label dihitung dari aturan tetap dan data publik. <b>Bukan rekomendasi beli atau jual.</b></p>
     </div></details>
@@ -1266,7 +1266,7 @@ function isiRekomendasi(t){
   // level harga: support & resistance (cara TITEN) dengan tanggal terjadinya
   h += kotakLevel(t);
   // tabel harian dengan rentang tanggal (seperti TITEN, tanpa net foreign)
-  h += `<div class="kartu" id="rekHarian"><div class="label-kecil" style="margin-top:0">Pergerakan harian</div>
+  h += `<div class="kartu" id="rekHarian"><div class="label-kecil" style="margin-top:0">Pergerakan harian · <b style="color:var(--merek-tua);letter-spacing:.02em">${t}</b> <span style="text-transform:none;letter-spacing:0">${esc(r.nama || "")}</span></div>
     <div class="baris-kontrol">
       <label class="redup">Dari <input type="date" class="kotak" id="rhDari"></label>
       <label class="redup">Sampai <input type="date" class="kotak" id="rhSampai"></label>
@@ -1278,7 +1278,8 @@ function isiRekomendasi(t){
       <dt>%Hrg</dt><dd>Perubahan close hari itu dibanding close hari bursa sebelumnya.</dd>
       <dt>Volume · Value</dt><dd>Lembar saham dan nilai transaksi (close × volume) hari itu. Hijau = hari naik, merah = hari turun.</dd>
       <dt>Total</dt><dd>Baris paling bawah: %Hrg = perubahan harga selama rentang (dari close sebelum hari pertama sampai close hari terakhir); Volume dan Value = jumlah selama rentang.</dd>
-      <dt>VMA5/VMA20 · VMA5/VMA50</dt><dd>Rata-rata volume 5 hari dibanding rata-rata 20 / 50 hari. Di atas 1× (hijau) = belakangan lebih ramai dari biasanya.</dd>
+      <dt>Vol/MA5</dt><dd>Volume hari itu dibanding rata-rata volume <b>5 hari bursa sebelumnya</b>. Tebal kalau ≥ 2× (dua kali lebih ramai): hijau = hari harga naik, merah = hari turun.</dd>
+      <dt>Kenapa bukan VMA5/VMA20 lagi?</dt><dd>Diuji pada ±250 ribu hari bursa di 518 emiten selama 2 tahun. VMA5/VMA20 dan VMA5/VMA50 hampir tidak membedakan apa-apa. Vol/MA5 yang paling berguna: hari <b>naik</b> dengan Vol/MA5 ≥ 2× → besoknya naik lagi 54,2% (biasanya 50,3%), rata-rata 3 hari +0,41% (biasanya +0,10%). Hari <b>turun</b> dengan volume ≥ 2× justru lebih sering memantul: rata-rata 3 hari +0,65% (biasanya +0,27%) — penjualan besar sering menandai akhir tekanan jual. Selisihnya kecil; pakai untuk menyaring, bukan jaminan.</dd>
     </dl></details></div>`;
   // rincian LK
   if (L){
@@ -1748,26 +1749,26 @@ function tabelHarian(t, reset){
     const ubah = p ? 100 * (c / p - 1) : null;
     const arah = ubah == null ? (c >= (a.o[i] ?? c) ? 1 : -1) : ubah > 0 ? 1 : ubah < 0 ? -1 : 0;
     sv += arah * v; sn += arah * nilai; tv += v; tn += nilai;
-    const m5 = rata(i, 5), m20 = rata(i, 20), m50 = rata(i, 50);
-    baris.push({_id: a.t[i], tgl: a.t[i], c, ubah, v, nilai, arah, sv, sn, r20: m5 && m20 ? m5 / m20 : null, r50: m5 && m50 ? m5 / m50 : null});
+    let j5 = 0, n5 = 0;                                        // rata-rata volume 5 hari bursa SEBELUMNYA
+    for (let k = Math.max(0, i - 5); k < i; k++) if (a.v[k]){ j5 += a.v[k]; n5++; }
+    baris.push({_id: a.t[i], tgl: a.t[i], c, ubah, v, nilai, arah, sv, sn, r5: n5 >= 4 && v ? v / (j5 / n5) : null});
   }
   const w = x => x > 0 ? "naik" : x < 0 ? "turun" : "redup";
   const awal = baris.length ? baris[0] : null, akhir = baris.length ? baris[baris.length - 1] : null;
   const i0 = awal ? a.t.indexOf(awal.tgl) : -1, dasar = i0 > 0 ? a.c[i0 - 1] : (awal && awal.c);
   const u = akhir && dasar ? 100 * (akhir.c / dasar - 1) : null;
   const tanda = (x, f) => (x > 0 ? "+" : x < 0 ? "−" : "") + f(Math.abs(x));
-  const rasio = x => x == null ? "–" : `<span class="${x >= 1 ? "naik" : "turun"}">${angka(x)}×</span>`;
+  const rasio = b => b.r5 == null ? "–" : `<span class="${b.r5 >= 2 ? w(b.arah) : "redup"}" style="${b.r5 >= 2 ? "font-weight:800" : ""}">${angka(b.r5, 1)}×</span>`;
   buatTabel(elT, [
     {k:"tgl", label:"Tanggal", kiri:true, f:b => `<b>${hariTgl(b.tgl)}</b>`},
     {k:"c", label:"Tutup", f:b => angka(b.c)},
     {k:"ubah", label:"%Hrg", f:b => `<span class="${w(b.ubah)}">${b.ubah == null ? "–" : persen(b.ubah, 1)}</span>`},
     {k:"v", label:"Volume", f:b => `<span class="${w(b.arah)}">${ringkas(b.v)}</span>`},
     {k:"nilai", label:"Value", f:b => `<span class="${w(b.arah)}">${usd(b.nilai)}</span>`},
-    {k:"r20", label:"VMA5/VMA20", f:b => rasio(b.r20)},
-    {k:"r50", label:"VMA5/VMA50", f:b => rasio(b.r50)},
+    {k:"r5", label:"Vol/MA5", judul:"Volume hari itu dibanding rata-rata 5 hari bursa sebelumnya", f:rasio},
   ], baris, {urut: "tgl", arah: 1, klik: () => {}, kaki: () =>
     `<td class="kiri">Total</td><td></td>` +
-    `<td class="angka ${w(u)}">${u == null ? "–" : persen(u, 1)}</td><td class="angka">${ringkas(tv)}</td><td class="angka">${usd(tn)}</td><td></td><td></td>`});
+    `<td class="angka ${w(u)}">${u == null ? "–" : persen(u, 1)}</td><td class="angka">${ringkas(tv)}</td><td class="angka">${usd(tn)}</td><td></td>`});
   elT.querySelectorAll("tbody tr").forEach(tr => tr.style.cursor = "default");
   const naik = baris.filter(b => b.arah > 0).length, turun = baris.filter(b => b.arah < 0).length;
   document.getElementById("rhRingkas").innerHTML = baris.length ? `
