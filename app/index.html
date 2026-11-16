@@ -127,6 +127,17 @@ details.panduan dt{font-weight:700;color:var(--teks)}details.panduan dd{margin:0
 #rekHarian,#rekLK,#rekVal,#rekAnalis,#rekBerita{scroll-margin-top:66px}
 .kilat{animation:kilat 1.2s ease-out}@keyframes kilat{0%{box-shadow:0 0 0 3px #f26a2e}100%{box-shadow:0 0 0 0 transparent}}
 .sig{display:block;font-size:11px}
+/* LEVEL HARGA di REKOMENDASI */
+.lv-tangga{display:grid;grid-template-columns:auto auto auto 1fr;gap:0;font-size:13.5px;max-width:520px}
+.lv-tangga > div{padding:7px 10px;border-bottom:1px solid var(--garis)}
+.lv-tangga .lb{font-weight:800;font-size:12px;letter-spacing:.03em}
+.lv-tangga .hg{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.lv-tangga .jr{text-align:right;font-variant-numeric:tabular-nums}
+.lv-tangga .tg{color:var(--teks-2);font-size:12px}
+.lv-tangga .res{background:rgba(208,59,59,.06)}.lv-tangga .sup{background:rgba(12,163,12,.07)}
+.lv-tangga .ath{background:rgba(216,161,58,.12)}
+.lv-tangga .kini{background:var(--merek-lembut);font-weight:800}
+#rekLevel{scroll-margin-top:66px}
 /* menu HARGA */
 .hv-bdg{display:inline-block;margin-top:3px;font-size:10.5px;font-weight:800;color:var(--naik);background:rgba(12,163,12,.12);border-radius:6px;padding:1px 6px}
 .hv-bdg.t{color:var(--turun);background:rgba(208,59,59,.12)}
@@ -1252,6 +1263,8 @@ function isiRekomendasi(t){
     kartu("Berita 7 hari", lbl(B.label, B.teks), B.jumlah ? `<span class="naik">${B.pos} positif</span> · <span class="turun">${B.neg} negatif</span> dari ${B.jumlah} judul` : "tidak ada berita yang menyebut emiten ini", "rekBerita") +
     kartu("Earnings berikutnya", eb ? `<b>${hariTgl(eb.tanggal)}</b>` : lbl(null, "–"), eb ? `${eb.waktu_label}${eb.eps_perkiraan != null ? ` · EPS perkiraan $${angka(eb.eps_perkiraan)}` : ""}` : "belum ada jadwal dalam 5 minggu ke depan", "kalender") +
   `</div>`;
+  // level harga: support & resistance (cara TITEN) dengan tanggal terjadinya
+  h += kotakLevel(t);
   // tabel harian dengan rentang tanggal (seperti TITEN, tanpa net foreign)
   h += `<div class="kartu" id="rekHarian"><div class="label-kecil" style="margin-top:0">Pergerakan harian</div>
     <div class="baris-kontrol">
@@ -1650,6 +1663,70 @@ function sorotPH(){
   el.innerHTML = x
     ? `<p style="margin:6px 0 0;font-size:13px"><b>${v}</b>: <b class="${kelasArah(x.pct)}">${persen(x.pct, 1)}</b> (${angka(x.awal)} → ${angka(x.akhir)}) · peringkat <b>${x.rkN}</b> dari ${phNaik.length} (urut naik terbesar) · value ${usd(x.nilai)} · LK ${lencanaLK(x)}</p>`
     : `<p class="redup" style="margin:6px 0 0;font-size:13px">${v} tidak ada di rentang ini${phMin ? " (atau di bawah Value min.)" : ""}.</p>`;
+}
+
+/* ---------- LEVEL HARGA (support & resistance) — cara TITEN ----------
+   Titik balik = hari yang low-nya paling rendah (support) / high-nya paling tinggi (resistance)
+   dibanding 3 hari bursa sebelum dan sesudahnya (untuk 3 hari terakhir: sesudahnya sejauh yang ada,
+   supaya terendah/tertinggi baru seperti NVDA 12 Nov tidak terlewat). Titik balik yang berjarak ≤ 1,5% dari dasar
+   kelompoknya digabung; dari tiap kelompok diambil harga terendah (S) / tertinggi (R) yang pernah
+   tersentuh, beserta tanggalnya. Jendela 250 hari bursa (±1 tahun); kalau tidak ada level di sisi
+   itu (mis. harga di titik terendah setahun), dicari di seluruh riwayat (±2 tahun).
+   MA sengaja tidak dipakai — uji TITEN: MA bukan penahan harga. */
+const LV_HARI = 250, LV_PIVOT = 3, LV_TOL = 0.015;
+function levelHarga(a, sisi, hari, jumlah){
+  const n = a.t.length, mulai = Math.max(0, n - hari), x = sisi === "s" ? a.l : a.h, kini = a.c[n - 1];
+  const piv = [];
+  for (let i = mulai + LV_PIVOT; i < n; i++){          // hari-hari terakhir ikut dihitung (jendela kanan dipotong)
+    if (x[i] == null) continue;
+    let ok = true;
+    for (let j = i - LV_PIVOT; j <= Math.min(n - 1, i + LV_PIVOT) && ok; j++) if (x[j] != null && (sisi === "s" ? x[j] < x[i] : x[j] > x[i])) ok = false;
+    if (ok) piv.push([x[i], a.t[i]]);
+  }
+  piv.sort((p, q) => sisi === "s" ? p[0] - q[0] : q[0] - p[0]);
+  const kel = [];
+  for (const p of piv){
+    const akhir = kel[kel.length - 1];
+    if (!akhir || (sisi === "s" ? p[0] > akhir[0] * (1 + LV_TOL) : p[0] < akhir[0] * (1 - LV_TOL))) kel.push(p);
+  }
+  return sisi === "s" ? kel.filter(p => p[0] < kini).sort((p, q) => q[0] - p[0]).slice(0, jumlah || 3)
+                      : kel.filter(p => p[0] > kini).sort((p, q) => p[0] - q[0]).slice(0, jumlah || 2);
+}
+function kotakLevel(t){
+  const a = (EMITEN[t] || {}).harga;
+  if (!a || a.t.length < 20) return "";
+  const n = a.t.length, kini = a.c[n - 1];
+  // ±1 tahun dulu; kalau kurang dari 3 support / 2 resistance, dilengkapi dari riwayat ±2 tahun (lebih jauh dari level terakhir)
+  let sup = levelHarga(a, "s", LV_HARI), res = levelHarga(a, "r", LV_HARI), supJauh = false, resJauh = false;
+  if (sup.length < 3){
+    const batas = sup.length ? sup[sup.length - 1][0] / (1 + LV_TOL) : Infinity;
+    const tambah = levelHarga(a, "s", n, 99).filter(p => p[0] < batas).slice(0, 3 - sup.length);
+    supJauh = tambah.length > 0; sup = sup.concat(tambah);
+  }
+  if (res.length < 2){
+    const batas = res.length ? res[res.length - 1][0] * (1 + LV_TOL) : -Infinity;
+    const tambah = levelHarga(a, "r", n, 99).filter(p => p[0] > batas).slice(0, 2 - res.length);
+    resJauh = tambah.length > 0; res = res.concat(tambah);
+  }
+  let iT = 0; for (let i = 1; i < n; i++) if ((a.h[i] ?? -1) > (a.h[iT] ?? -1)) iT = i;
+  let iR = 0; for (let i = 1; i < n; i++) if ((a.l[i] ?? Infinity) < (a.l[iR] ?? Infinity)) iR = i;
+  const jarak = x => { const u = 100 * (x / kini - 1); return `<span class="${kelasArah(u)}">${persen(u, 1)}</span>`; };
+  const tg = d => `${hariTgl(d)} ${d.slice(0, 4)}`;
+  const baris = (kelas, lb, harga, kanan, tgl) =>
+    `<div class="${kelas} lb">${lb}</div><div class="${kelas} hg">${harga == null ? "–" : angka(harga)}</div><div class="${kelas} jr">${kanan}</div><div class="${kelas} tg">${tgl}</div>`;
+  let h = `<div class="kartu" id="rekLevel"><div class="label-kecil" style="margin-top:0">Level harga · support &amp; resistance</div><div class="lv-tangga">`;
+  h += baris("ath", "TERTINGGI", a.h[iT], jarak(a.h[iT]), tg(a.t[iT]) + " · tertinggi sejak " + tglId(a.t[0]));
+  for (let i = res.length - 1; i >= 0; i--) h += baris("res", "R" + (i + 1), res[i][0], jarak(res[i][0]), tg(res[i][1]));
+  if (!res.length) h += baris("res", "R", null, "–", "tidak ada resistance — harga di atas semua puncak 2 tahun");
+  h += baris("kini", "HARGA", kini, "close", tg(a.t[n - 1]));
+  sup.forEach((p, i) => h += baris("sup", "S" + (i + 1), p[0], jarak(p[0]), tg(p[1])));
+  if (!sup.length) h += baris("sup", "S", null, "–", "tidak ada support — harga di titik terendah 2 tahun");
+  h += baris("ath", "TERENDAH", a.l[iR], jarak(a.l[iR]), tg(a.t[iR]) + " · terendah sejak " + tglId(a.t[0]));
+  h += `</div><p class="redup" style="font-size:12px;margin:8px 0 0">` +
+    `S = support (lantai), R = resistance (atap): harga terendah/tertinggi yang benar-benar pernah tersentuh di titik balik ±1 tahun terakhir, ` +
+    `tanggal = hari harga itu tersentuh. ${supJauh || resJauh ? `Karena dalam setahun terakhir levelnya kurang, sebagian ${[supJauh ? "support" : "", resJauh ? "resistance" : ""].filter(Boolean).join(" dan ")} <b>diambil dari riwayat ±2 tahun</b> (lihat tahunnya). ` : ""}` +
+    `Support/resistance adalah daerah, bukan angka pasti; harga bisa menembusnya. Persen = jarak dari close terakhir.</p></div>`;
+  return h;
 }
 
 /* ---------- tabel harian REKOMENDASI (seperti TITEN, tanpa net foreign) ---------- */
