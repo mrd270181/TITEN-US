@@ -321,8 +321,8 @@ dl.profil dt{color:var(--teks-3)}dl.profil dd{margin:0}
       <details class="panduan"><summary>Cara membaca NAIK &amp; TURUN</summary><dl>
         <dt>Kolom per tanggal</dt><dd>Terbaru di kiri. Hrg: persen = perubahan close hari itu dibanding close hari bursa sebelumnya; angka kecil = close; T = harga tertinggi, R = terendah hari itu. Vol = lembar saham diperdagangkan, dan di bawahnya kelipatan terhadap rata-rata 20 hari.</dd>
         <dt>Deret</dt><dd>Lencana ▲ 7 hari · +45,8% = close naik 7 hari bursa berturut-turut sampai tanggal Sampai, total +45,8% dari close sebelum deret dimulai. Sel hari-hari dalam deret diberi latar hijau (merah untuk TURUN BERUNTUN).</dd>
-        <dt>Angka × di bawah volume</dt><dd>Volume hari itu dibanding rata-rata volume <b>20 hari bursa sebelumnya</b> (bukan dibanding kemarin saja). 1,5× = 50% lebih ramai dari biasanya; hijau tebal kalau ≥ 1,5×.</dd>
-        <dt>Seberapa berguna volume tinggi?</dt><dd>Diuji pada ±66 ribu deret naik ≥ 2 hari di 518 emiten selama 2 tahun: peluang hari berikutnya naik lagi rata-rata 50,1%; kalau volume hari terakhir ≥ 1,5× jadi 51,7%. Selisihnya kecil — pakai untuk menyaring, bukan jaminan.</dd>
+        <dt>Angka × di bawah volume</dt><dd>Volume hari itu dibanding rata-rata volume <b>5 hari bursa sebelumnya</b> (sama dengan Vol/MA5 di SCREENER). 2× = dua kali lebih ramai dari biasanya; hijau tebal kalau ≥ 2×.</dd>
+        <dt>Kenapa 5 hari dan 2×?</dt><dd>Diuji pada ±66 ribu deret naik ≥ 2 hari di 518 emiten selama 2 tahun, membandingkan volume hari terakhir dengan kemarin saja, rata-rata 5, 10, 20 dan 50 hari. Paling berguna: rata-rata 5 hari dengan batas 2× — peluang besoknya naik lagi 55,5% (rata-rata semua deret 50,2%) dan rata-rata hasil 3 hari +0,44% (semua deret +0,04%). Dibanding kemarin saja hampir tidak berguna. Kejadiannya jarang (±4% deret) dan selisihnya tetap kecil — pakai untuk menyaring, bukan jaminan.</dd>
         <dt>Urutan</dt><dd>Ketuk judul tanggal untuk mengurutkan menurut perubahan hari itu (ketuk lagi untuk membalik); ketuk Emiten untuk kembali ke urutan semula. Emiten yang ditambah lewat kotak di atas tampil sesuai urutan dipilih.</dd>
       </dl></details>
     </div>
@@ -1503,12 +1503,12 @@ function deretNT(t, iS, turun){
           gap: o[iS] != null && c[iS - 1] ? 100 * (o[iS] / c[iS - 1] - 1) : null,
           volx: nv >= 10 ? v[iS] / (jv / nv) : null};
 }
-function volKali(v, i){       // volume hari i dibanding rata-rata 20 hari bursa sebelumnya
+function volKali(v, i){       // volume hari i dibanding rata-rata 5 hari bursa sebelumnya (diuji paling berguna)
   let j = 0, n = 0;
-  for (let k = Math.max(0, i - 20); k < i; k++) if (v[k]){ j += v[k]; n++; }
-  if (n < 10 || !v[i]) return "";
+  for (let k = Math.max(0, i - 5); k < i; k++) if (v[k]){ j += v[k]; n++; }
+  if (n < 4 || !v[i]) return "";
   const x = v[i] / (j / n);
-  return `<div class="hv-c" style="${x >= NT_VOL_OK ? "font-weight:800;color:var(--naik)" : ""}" title="Dibanding rata-rata ${n} hari bursa sebelumnya">${angka(x, 1)}×</div>`;
+  return `<div class="hv-c" style="${x >= 2 ? "font-weight:800;color:var(--naik)" : ""}" title="Dibanding rata-rata ${n} hari bursa sebelumnya">${angka(x, 1)}×</div>`;
 }
 const ntGapOk = n => n.gap != null && n.gap <= NT_GAP_OK;
 const ntVolOk = n => n.volx != null && n.volx >= NT_VOL_OK;
@@ -1525,8 +1525,8 @@ function gambarNT(){
   document.getElementById("ntUrut").innerHTML = (turun ? [["deret", "Deret terpanjang"], ["dalam", "Turun terdalam"]] : [["deret", "Deret terpanjang"], ["besar", "Naik terbesar"]])
     .map(([v, j]) => `<option value="${v}" ${(turun ? ntUrutT : ntUrut) === v ? "selected" : ""}>${j}</option>`).join("");
   document.getElementById("ntBantu").textContent = ntMode === "semua" ? "" : turun
-    ? "Close lebih rendah dari close kemarin, berturut-turut sampai tanggal Sampai. Angka × di bawah volume = volume hari itu dibanding rata-rata 20 hari bursa sebelumnya."
-    : "Close lebih tinggi dari close kemarin, berturut-turut sampai tanggal Sampai. Angka × di bawah volume = volume hari itu dibanding rata-rata 20 hari bursa sebelumnya; hijau = ≥ 1,5× (jauh lebih ramai dari biasanya).";
+    ? "Close lebih rendah dari close kemarin, berturut-turut sampai tanggal Sampai. Angka × di bawah volume = volume hari itu dibanding rata-rata 5 hari bursa sebelumnya."
+    : "Close lebih tinggi dari close kemarin, berturut-turut sampai tanggal Sampai. Angka × di bawah volume = volume hari itu dibanding rata-rata 5 hari bursa sebelumnya; hijau = ≥ 2× (dua kali lebih ramai dari biasanya).";
   const semua = R.filter(r => OH.d[r.ticker]).map(r => ({t: r.ticker, nama: r.nama, kap: r.kap_pasar || 0,
     n: ntMode === "semua" && !ntPilih.length ? null : deretNT(r.ticker, iS, turun)}));
   let daftar;
