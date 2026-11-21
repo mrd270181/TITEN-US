@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#4b2a8a"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M150 300v80M150 220v40" stroke="#f26a2e" stroke-width="14"/>
+    <rect x="128" y="250" width="44" height="80" rx="6" fill="#f26a2e"/>
+    <path d="M256 150v60M256 330v50" stroke="#ffffff" stroke-width="14"/>
+    <rect x="234" y="205" width="44" height="130" rx="6" stroke="#ffffff" stroke-width="12"/>
+    <path d="M362 110v50M362 270v40" stroke="#ffffff" stroke-width="14"/>
+    <rect x="340" y="155" width="44" height="120" rx="6" stroke="#ffffff" stroke-width="12"/>
+  </g>
+  <text x="256" y="452" text-anchor="middle" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="64" font-weight="800" fill="#ffd9c7" letter-spacing="6">US</text>
+</svg>

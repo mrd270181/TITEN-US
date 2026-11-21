@@ -1,0 +1,16 @@
+{
+  "name": "TITEN US",
+  "short_name": "TITEN US",
+  "description": "Screener & analisis saham AS: S&P 500, Nasdaq-100, Dow 30",
+  "lang": "id",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#15112a",
+  "theme_color": "#4b2a8a",
+  "icons": [
+    {"src": "ikon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "ikon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "ikon.svg", "sizes": "any", "type": "image/svg+xml"}
+  ]
+}
